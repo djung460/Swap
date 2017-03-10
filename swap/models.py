@@ -35,10 +35,10 @@ class ClassRequiresEquipment(models.Model):
 
 class ConfirmedTrade(models.Model):
     tradeid = models.IntegerField(db_column='tradeID', primary_key=True)  # Field name made lowercase.
-    requestusername = models.ForeignKey('Student', models.DO_NOTHING, db_column='requestUsername')  # Field name made lowercase.
-    responseusername = models.ForeignKey('Student', models.DO_NOTHING, db_column='responseUsername')  # Field name made lowercase.
-    requestequipid = models.ForeignKey('Equipment', models.DO_NOTHING, db_column='requestEquipID')  # Field name made lowercase.
-    reponseequipid = models.ForeignKey('Equipment', models.DO_NOTHING, db_column='reponseEquipID')  # Field name made lowercase.
+    requestusername = models.ForeignKey('Student', models.DO_NOTHING, db_column='requestUsername', related_name='%(class)s_requestUsername')  # Field name made lowercase.
+    responseusername = models.ForeignKey('Student', models.DO_NOTHING, db_column='responseUsername', related_name='%(class)s_responseUsername')  # Field name made lowercase.
+    requestequipid = models.ForeignKey('Equipment', models.DO_NOTHING, db_column='requestEquipID', related_name='%(class)s_requestEquipID')  # Field name made lowercase.
+    reponseequipid = models.ForeignKey('Equipment', models.DO_NOTHING, db_column='reponseEquipID', related_name='%(class)s_responseEquipID')  # Field name made lowercase.
     dateconfirmed = models.DateTimeField(db_column='dateConfirmed')  # Field name made lowercase.
 
     class Meta:

@@ -1,22 +1,26 @@
 <html>
-  <head>
+<head>
     <title>CPSC 304</title>
-  </head>
-  <body bgcolor=white>
 
-    <table border="0" cellpadding="10">
-      <tr>
-        <td>
-        </td>
-        <td>
-          <h1>SWAP - JOIN PAGE</h1>
-        </td>
-      </tr>
-    </table>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"
+            integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ=="
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://fb.me/react-with-addons-0.14.1.js"></script>
+    <script type="text/javascript" src="https://fb.me/react-dom-0.14.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+</head>
+{% load static %}
+<script src="{% static "swap/js/join.jsx" %}" type="text/babel"></script>
 
-    <ul>
-        <li><a href="/">HOME</a></li>
-    </ul>
+<body bgcolor=white>
 
-  </body>
+<h1>SWAP - JOIN PAGE</h1>
+
+<ul>
+    <li><a href="/">HOME</a></li>
+</ul>
+
+<div class="container" id="page-content"></div>
+</body>
 </html>

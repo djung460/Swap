@@ -1,5 +1,7 @@
 from django.conf.urls import url
-from rest_framework.urlpatterns import format_suffix_patterns
+from django.conf import settings
+from django.conf.urls.static import static
+
 from swap import handlers
 from swap import views
 from swap.auth import auth
@@ -12,8 +14,8 @@ urlpatterns = [
     #url(r'^(?P<user>[0-9a-zA-Z]+)',views.user),
 
     # api stuff gets passed off to the handler
-    url(r'^api/auth/login$', auth.user),
-    url(r'^api/auth/join$', auth.user),
+    url(r'^api/auth/login$', auth.login),
+    url(r'^api/auth/join$', auth.join),
 
     url(r'^api/equipment/add$', handlers.equipment),
     url(r'^api/equipment/delete$', handlers.equipment),
@@ -30,7 +32,5 @@ urlpatterns = [
     url(r'^api/instructor/add$', handlers.instructor),
     url(r'^api/instructor/delete$', handlers.instructor),
     url(r'^api/instructor/get$', handlers.instructor),	
-]
-
-urlpatters = format_suffix_patterns(urlpatterns)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

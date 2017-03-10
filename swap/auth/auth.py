@@ -40,3 +40,10 @@ def join(request):
     student.insert()
 
     return HttpResponse(status=201)
+
+def login(request):
+    """
+    Handles put requests for logins
+    """
+
+    return HttpResponse(status=401)
