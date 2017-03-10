@@ -7,8 +7,7 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
 
-from django.db import models
-
+from django.db import models, connection
 
 class Class(models.Model):
     faculty = models.CharField(primary_key=True, max_length=4)
@@ -59,6 +58,7 @@ class Equipment(models.Model):
 
 class Instructor(models.Model):
     username = models.CharField(primary_key=True, max_length=32)
+    pwhash = models.TextField()  # This field type is a guess.
     faculty = models.CharField(max_length=4)
     email = models.CharField(max_length=64)
     name = models.CharField(max_length=128)
@@ -84,6 +84,7 @@ class PendingTrade(models.Model):
 
 class Student(models.Model):
     username = models.CharField(primary_key=True, max_length=32)
+    pwhash = models.TextField()  # This field type is a guess.
     year = models.IntegerField()
     faculty = models.CharField(max_length=4)
     email = models.CharField(max_length=64)
@@ -94,6 +95,31 @@ class Student(models.Model):
         managed = False
         db_table = 'Student'
 
+    def insert(self):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO (username,pwhash, year, faculty, email, name, phonenumber) VALUES (%s,%s,%s,%s,%s,%s)",
+                self.username,self.pwhash,self.year,self.faculty,self.email, self.name, self.phonenumber)
+
+    def update(self):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE Student SET (username, year, faculty, email, name, phonenumber) VALUES (%s,%s,%s,%s,%s)",
+                self.username, self.year, self.faculty, self.email, self.name, self.phonenumber)
+
+    def get(self):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT (username, year, faculty, email, name, phonenumber) FROM Student WHERE username = %s",
+                self.username)
+            row = cursor.fetchone()
+            return row
+
+    def remove(self):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE Student WHERE username = %s AND pwhash = %s",
+                self.username, self.pwhash)
 
 class StudentHasEquipment(models.Model):
     username = models.ForeignKey(Student, models.DO_NOTHING, db_column='username', primary_key=True)

@@ -2,6 +2,7 @@ from django.conf.urls import url
 from rest_framework.urlpatterns import format_suffix_patterns
 from swap import handlers
 from swap import views
+from swap.auth import auth
 
 urlpatterns = [
     # view stuff displays pages
@@ -11,8 +12,8 @@ urlpatterns = [
     #url(r'^(?P<user>[0-9a-zA-Z]+)',views.user),
 
     # api stuff gets passed off to the handler
-    url(r'^api/auth/login$', handlers.user),
-    url(r'^api/auth/join$',handlers.user),
+    url(r'^api/auth/login$', auth.user),
+    url(r'^api/auth/join$', auth.user),
 
     url(r'^api/equipment/add$', handlers.equipment),
     url(r'^api/equipment/delete$', handlers.equipment),
