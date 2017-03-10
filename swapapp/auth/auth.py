@@ -1,7 +1,7 @@
 import bcrypt
 from django.http import HttpResponse
 from django.db import connection
-from swap.models import Student
+from swapapp.models import Student
 from rest_framework.parsers import JSONParser
 from django.views.decorators.csrf import csrf_exempt
 

@@ -2,9 +2,9 @@ from django.conf.urls import url
 from django.conf import settings
 from django.conf.urls.static import static
 
-from swap import handlers
-from swap import views
-from swap.auth import auth
+from swapapp import handlers
+from swapapp import views
+from swapapp.auth import auth
 
 urlpatterns = [
     # view stuff displays pages
