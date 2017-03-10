@@ -98,20 +98,20 @@ class Student(models.Model):
     def insert(self):
         with connection.cursor() as cursor:
             cursor.execute(
-                "INSERT INTO (username,pwhash, year, faculty, email, name, phonenumber) VALUES (%s,%s,%s,%s,%s,%s)",
-                self.username,self.pwhash,self.year,self.faculty,self.email, self.name, self.phonenumber)
+                "INSERT INTO Student (username, pwhash, year, faculty, email, name, phonenumber) VALUES (%s,%s,%s,%s,%s,%s,%s)",
+                (self.username,self.pwhash,self.year,self.faculty,self.email, self.name, self.phonenumber))
 
     def update(self):
         with connection.cursor() as cursor:
             cursor.execute(
                 "UPDATE Student SET (username, year, faculty, email, name, phonenumber) VALUES (%s,%s,%s,%s,%s)",
-                self.username, self.year, self.faculty, self.email, self.name, self.phonenumber)
+                [self.username, self.year, self.faculty, self.email, self.name, self.phonenumber])
 
     def get(self):
         with connection.cursor() as cursor:
             cursor.execute(
                 "SELECT (username, year, faculty, email, name, phonenumber) FROM Student WHERE username = %s",
-                self.username)
+                [self.username])
             row = cursor.fetchone()
             return row
 
@@ -119,7 +119,7 @@ class Student(models.Model):
         with connection.cursor() as cursor:
             cursor.execute(
                 "DELETE Student WHERE username = %s AND pwhash = %s",
-                self.username, self.pwhash)
+                [self.username, self.pwhash])
 
 class StudentHasEquipment(models.Model):
     username = models.ForeignKey(Student, models.DO_NOTHING, db_column='username', primary_key=True)

@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from django.db import connection
 from swap.models import Student
 from rest_framework.parsers import JSONParser
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 def join(request):
     """
     Handles put requests for joins
