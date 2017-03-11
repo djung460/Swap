@@ -107,13 +107,13 @@ class Student(models.Model):
                 "UPDATE Student SET (username, year, faculty, email, name, phonenumber) VALUES (%s,%s,%s,%s,%s)",
                 [self.username, self.year, self.faculty, self.email, self.name, self.phonenumber])
 
-    def get(self):
+    def get(username):
         with connection.cursor() as cursor:
+            print(username)
             cursor.execute(
-                "SELECT (username, year, faculty, email, name, phonenumber) FROM Student WHERE username = %s",
-                [self.username])
+                "SELECT * FROM Student WHERE username = %s",[username])
             row = cursor.fetchone()
-            return row
+        return row
 
     def remove(self):
         with connection.cursor() as cursor:

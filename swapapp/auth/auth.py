@@ -10,7 +10,6 @@ def join(request):
     """
     Handles put requests for joins
     """
-
     data = JSONParser().parse(request)
 
     username = data['username']
@@ -43,9 +42,31 @@ def join(request):
 
     return HttpResponse(status=201)
 
+@csrf_exempt
 def login(request):
     """
     Handles put requests for logins
     """
+    data = JSONParser().parse(request)
 
-    return HttpResponse(status=401)
+    username = data['username']
+
+    res = Student.get(username)
+    # assign the tuple
+    student = Student(
+            username=res[0],
+            pwhash=res[1],
+            year=res[2],
+            faculty=res[3],
+            email=res[4],
+            name=res[5],
+            phonenumber=res[6])
+
+
+    if student == None:
+        return HttpResponse(201)
+
+    if bcrypt.hashpw(data['password'].encode('utf-8'),student.pwhash)==student.pwhash:
+        return HttpResponse(201)
+    else:
+        return HttpResponse(400)
