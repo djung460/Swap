@@ -68,6 +68,32 @@ class Instructor(models.Model):
         managed = False
         db_table = 'Instructor'
 
+    def insert(self):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO Instructor (username, pwhash, faculty, email, name, phonenumber) VALUES (%s,%s,%s,%s,%s,%s)",
+                (self.username,self.pwhash,self.faculty,self.email, self.name, self.phonenumber))
+
+    def update(self):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE Student SET (username, year, faculty, email, name, phonenumber) VALUES (%s,%s,%s,%s,%s)",
+                [self.username, self.faculty, self.email, self.name, self.phonenumber])
+
+    def get(username):
+        with connection.cursor() as cursor:
+            print(username)
+            cursor.execute(
+                "SELECT * FROM Instructor WHERE username = %s",[username])
+            row = cursor.fetchone()
+        return row
+
+    def remove(self):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE Student WHERE username = %s AND pwhash = %s",
+                [self.username, self.pwhash])
+
 
 class PendingTrade(models.Model):
     tradeid = models.IntegerField(db_column='tradeID', primary_key=True)  # Field name made lowercase.

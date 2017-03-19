@@ -1,26 +1,70 @@
 <html>
 <head>
-    <title>CPSC 304</title>
-
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"
-            integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ=="
-            crossorigin="anonymous"></script>
-    <script type="text/javascript" src="https://fb.me/react-with-addons-0.14.1.js"></script>
-    <script type="text/javascript" src="https://fb.me/react-dom-0.14.1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    <title>JOIN</title>
 </head>
-{% load static %}
-<script src="{% static "swapapp/js/join.jsx" %}" type="text/babel"></script>
-
 <body bgcolor=white>
+<h1>Join Swap</h1>
 
-<h1>SWAP - JOIN PAGE</h1>
+<form action="/api/auth/join" method="post">
+    <div class="field-wrap">
+        <label>
+            Join as <span class="req">*</span>
+        </label> <br>
+        <input type="radio" name="kind" value="student" checked> Student<br>
+        <input type="radio" name="kind" value="instructor"> Instructor<br>
+    </div>
 
-<ul>
-    <li><a href="/">HOME</a></li>
-</ul>
+    <div class="field-wrap">
+        <label>
+            Username<span class="req">*</span>
+        </label>
+        <input name="username" type="text" required autocomplete="off"/>
+    </div>
 
-<div class="container" id="page-content"></div>
+    <div class="field-wrap">
+        <label>
+            Password<span class="req">*</span>
+        </label>
+        <input name="password" type="password" required autocomplete="off"/>
+    </div>
+
+    <div class="field-wrap">
+        <label>
+            Name<span class="req">*</span>
+        </label>
+        <input name="name" required autocomplete="off"/>
+    </div>
+
+    <div class="field-wrap">
+        <label>
+            Faculty<span class="req">*</span>
+        </label>
+        <input name="faculty" type="text" required autocomplete="off"/>
+    </div>
+
+    <div class="field-wrap">
+        <label>
+            Year<span class="req">*</span>
+        </label>
+        <input name="year" type="number" min="1" max="5" required autocomplete="off"/>
+    </div>
+
+    <div class="field-wrap">
+        <label>
+            Phone Number<span class="req">*</span>
+        </label>
+        <input name="phonenumber" type="text" required autocomplete="off"/>
+    </div>
+
+    <div class="field-wrap">
+        <label>
+            Email<span class="req">*</span>
+        </label>
+        <input name="email" type="text" required autocomplete="off"/>
+    </div>
+
+    <button type="submit" class="button button-block"/>
+    JOIN</button>
+</form>
 </body>
 </html>

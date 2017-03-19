@@ -17,21 +17,21 @@ class JSONResponse(HttpResponse):
 
 @csrf_exempt
 def user(request):
-	return HttpResponse(status=400)
+    return HttpResponse(status=400)
 
 @csrf_exempt
 def equipment(request):
-	return HttpResponse(status=400)
+    return HttpResponse(status=400)
 
 @csrf_exempt
 def trade(request):
-	return HttpResponse(status=400)
+    return HttpResponse(status=400)
 
 @csrf_exempt
 def course(request):
-	return HttpResponse(status=400)
+    return HttpResponse(status=400)
 
 @csrf_exempt
 def instructor(request):
-	return HttpResponse(status=400)
+    return HttpResponse(status=400)
 

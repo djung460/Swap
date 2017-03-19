@@ -1,22 +1,35 @@
 <html>
-  <head>
-    <title>CPSC 304</title>
-  </head>
-  <body bgcolor=white>
+<head>
+    <title>JOIN</title>
+</head>
+<body bgcolor=white>
+<h1>Join Swap</h1>
 
-    <table border="0" cellpadding="10">
-      <tr>
-        <td>
-        </td>
-        <td>
-          <h1>SWAP - LOGIN PAGE</h1>
-        </td>
-      </tr>
-    </table>
+<form action="/api/auth/login" method="post">
+    <div class="field-wrap">
+        <label>
+            Login as <span class="req">*</span>
+        </label> <br>
+        <input type="radio" name="kind" value="student" checked> Student<br>
+        <input type="radio" name="kind" value="instructor"> Instructor<br>
+    </div>
 
-    <ul>
-        <li><a href="/">HOME</a></li>
-    </ul>
+    <div class="field-wrap">
+        <label>
+            Username<span class="req">*</span>
+        </label>
+        <input name="username" type="text" required autocomplete="off"/>
+    </div>
 
-  </body>
+    <div class="field-wrap">
+        <label>
+            Password<span class="req">*</span>
+        </label>
+        <input name="password" type="password" required autocomplete="off"/>
+    </div>
+
+    <button type="submit" class="button button-block"/>
+    LOGIN</button>
+</form>
+</body>
 </html>

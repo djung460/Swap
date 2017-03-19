@@ -11,7 +11,7 @@ urlpatterns = [
     url(r'^$',views.index),
     url(r'^login$',views.login),
     url(r'^join$',views.join),
-    #url(r'^(?P<user>[0-9a-zA-Z]+)',views.user),
+    url(r'^user/(?P<user>[0-9a-zA-Z]+)',views.user),
 
     # api stuff gets passed off to the handler
     url(r'^api/auth/login$', auth.login),
