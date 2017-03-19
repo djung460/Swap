@@ -16,6 +16,7 @@ urlpatterns = [
     # api stuff gets passed off to the handler
     url(r'^api/auth/login$', auth.login),
     url(r'^api/auth/join$', auth.join),
+    url(r'^api/auth/logout', auth.logout),
 
     url(r'^api/equipment/add$', handlers.equipment),
     url(r'^api/equipment/delete$', handlers.equipment),

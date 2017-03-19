@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
 
 # Create your views here
 def index(request):
@@ -8,5 +9,8 @@ def login(request):
 def join(request):
     return render(request, 'swap/join.html')
 def user(request, user=''):
-    return render(request, 'swap/user.html')
+    if request.user.is_authenticated:
+        return render(request, 'swap/user.html')
+    else:
+        return HttpResponseRedirect('/')
 

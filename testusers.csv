@@ -1,0 +1,3 @@
+kind,username,password,name,faculty,year,phone number,email
+student,testuser1,test,Jane Doe,CPEN,3,6048675309,janedoe@test.com
+student,testuser2,test,John Doe,CPSC,3,6048675310,johndoe@test.com
