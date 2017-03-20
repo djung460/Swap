@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="/api/student/equipment/add" method="post" name="joinform">
+    <div class="field-wrap">
+        <label>
+            Equipment Name
+        </label>
+    </div>
+
+    <div class="field-wrap">
+        <label>
+            Equipment Type
+        </label>
+    </div>
+
+    <div class="field-wrap">
+        <label>
+            Quantity
+        </label>
+        <input name="quantity" type="number" min="1" required autocomplete="off"/>
+    </div>
+
+    <button type="submit" class="button button-block"/>
+    ADD EQUIPMENT</button>
+</form>
+</body>
+</html>

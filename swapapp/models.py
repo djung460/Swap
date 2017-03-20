@@ -9,11 +9,24 @@ from __future__ import unicode_literals
 
 from django.db import models, connection
 
+from collections import namedtuple
+
+
+def dictfetchall(cursor):
+    "Return all rows from a cursor as a dict"
+    columns = [col[0] for col in cursor.description]
+    return [
+        dict(zip(columns, row))
+        for row in cursor.fetchall()
+        ]
+
+
 class Class(models.Model):
     faculty = models.CharField(primary_key=True, max_length=4)
     classnum = models.CharField(db_column='classNum', primary_key=True, max_length=4)  # Field name made lowercase.
     term = models.CharField(primary_key=True, max_length=7)
-    instructorusername = models.ForeignKey('Instructor', models.DO_NOTHING, db_column='instructorUsername')  # Field name made lowercase.
+    instructorusername = models.ForeignKey('Instructor', models.DO_NOTHING,
+                                           db_column='instructorUsername')  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -35,10 +48,14 @@ class ClassRequiresEquipment(models.Model):
 
 class ConfirmedTrade(models.Model):
     tradeid = models.IntegerField(db_column='tradeID', primary_key=True)  # Field name made lowercase.
-    requestusername = models.ForeignKey('Student', models.DO_NOTHING, db_column='requestUsername', related_name='%(class)s_requestUsername')  # Field name made lowercase.
-    responseusername = models.ForeignKey('Student', models.DO_NOTHING, db_column='responseUsername', related_name='%(class)s_responseUsername')  # Field name made lowercase.
-    requestequipid = models.ForeignKey('Equipment', models.DO_NOTHING, db_column='requestEquipID', related_name='%(class)s_requestEquipID')  # Field name made lowercase.
-    reponseequipid = models.ForeignKey('Equipment', models.DO_NOTHING, db_column='reponseEquipID', related_name='%(class)s_responseEquipID')  # Field name made lowercase.
+    requestusername = models.ForeignKey('Student', models.DO_NOTHING, db_column='requestUsername',
+                                        related_name='%(class)s_requestUsername')  # Field name made lowercase.
+    responseusername = models.ForeignKey('Student', models.DO_NOTHING, db_column='responseUsername',
+                                         related_name='%(class)s_responseUsername')  # Field name made lowercase.
+    requestequipid = models.ForeignKey('Equipment', models.DO_NOTHING, db_column='requestEquipID',
+                                       related_name='%(class)s_requestEquipID')  # Field name made lowercase.
+    reponseequipid = models.ForeignKey('Equipment', models.DO_NOTHING, db_column='reponseEquipID',
+                                       related_name='%(class)s_responseEquipID')  # Field name made lowercase.
     dateconfirmed = models.DateTimeField(db_column='dateConfirmed')  # Field name made lowercase.
 
     class Meta:
@@ -54,6 +71,13 @@ class Equipment(models.Model):
     class Meta:
         managed = False
         db_table = 'Equipment'
+
+    @staticmethod
+    def getAll():
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM Equipment")
+            return dictfetchall(cursor=cursor)
 
 
 class Instructor(models.Model):
@@ -72,7 +96,7 @@ class Instructor(models.Model):
         with connection.cursor() as cursor:
             cursor.execute(
                 "INSERT INTO Instructor (username, pwhash, faculty, email, name, phonenumber) VALUES (%s,%s,%s,%s,%s,%s)",
-                (self.username,self.pwhash,self.faculty,self.email, self.name, self.phonenumber))
+                (self.username, self.pwhash, self.faculty, self.email, self.name, self.phonenumber))
 
     def update(self):
         with connection.cursor() as cursor:
@@ -84,15 +108,28 @@ class Instructor(models.Model):
         with connection.cursor() as cursor:
             print(username)
             cursor.execute(
-                "SELECT * FROM Instructor WHERE username = %s",[username])
+                "SELECT * FROM Instructor WHERE username = %s", [username])
             row = cursor.fetchone()
-        return row
+        return Instructor(username=row[0], pwhash=row[1], faculty=row[2], email=row[3], name=row[4],
+                          phonenumber=row[5])
 
     def remove(self):
         with connection.cursor() as cursor:
             cursor.execute(
                 "DELETE Student WHERE username = %s AND pwhash = %s",
                 [self.username, self.pwhash])
+
+
+    def addCourse(self, faculty, classnum, term):
+        """
+        Adds a course to the database
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO Course "
+                "(faculty, classnum, term, instructorusername) "
+                "VALUES (%s,%s,%s, %s)",
+                [faculty, classnum, term, self.username])
 
 
 class PendingTrade(models.Model):
@@ -125,7 +162,7 @@ class Student(models.Model):
         with connection.cursor() as cursor:
             cursor.execute(
                 "INSERT INTO Student (username, pwhash, year, faculty, email, name, phonenumber) VALUES (%s,%s,%s,%s,%s,%s,%s)",
-                (self.username,self.pwhash,self.year,self.faculty,self.email, self.name, self.phonenumber))
+                (self.username, self.pwhash, self.year, self.faculty, self.email, self.name, self.phonenumber))
 
     def update(self):
         with connection.cursor() as cursor:
@@ -137,15 +174,52 @@ class Student(models.Model):
         with connection.cursor() as cursor:
             print(username)
             cursor.execute(
-                "SELECT * FROM Student WHERE username = %s",[username])
+                "SELECT * FROM Student WHERE username = %s", [username])
             row = cursor.fetchone()
-        return row
+        return Student(username=row[0], pwhash=row[1], year=row[2], faculty=row[3], email=row[4], name=row[5],
+                       phonenumber=row[6])
+
+    def getOwnedEquipment(self):
+        """
+        Returns a list of dictionary of equipment owned by the student with username
+        [{'equipmentid':1234, 'equipmentname':name, 'equipmenttype':type, 'quantity':quantity}]
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT E.equipmentid, E.equipmentname, E.equipmenttype, SHE.quantity "
+                "FROM Student S, StudentHasEquipment SHE, Equipment E "
+                "WHERE S.username = SHE.username AND S.username = %s AND SHE.equipmentid = E.equipmentid",
+                [self.username])
+            return dictfetchall(cursor=cursor)
+
+    def addOwnEquipment(self, equipmentid, quantity):
+        """
+        Adds an equipment that a student owns
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO StudentHasEquipment "
+                "(username, equipmentid, quantity) "
+                "VALUES (%s,%s,%s)",
+                [self.username, equipmentid, quantity])
+
+    def updateOwnedEquipment(self, equipmentid, quantity):
+        """
+        Updates an equipment that a student owns
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE StudentHasEquipment "
+                "SET (username, equipmentid, quantity) "
+                "VALUES (%s,%s,%s)",
+                [self.username, equipmentid, quantity])
 
     def remove(self):
         with connection.cursor() as cursor:
             cursor.execute(
                 "DELETE Student WHERE username = %s AND pwhash = %s",
                 [self.username, self.pwhash])
+
 
 class StudentHasEquipment(models.Model):
     username = models.ForeignKey(Student, models.DO_NOTHING, db_column='username', primary_key=True)

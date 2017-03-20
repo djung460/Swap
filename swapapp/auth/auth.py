@@ -91,7 +91,7 @@ def login(request):
         if user is not None:
 
             djangologin(request, user)
-            return HttpResponseRedirect('/user/' + res[0])
+            return HttpResponseRedirect('/student/' + res[0])
         else:
             return HttpResponseRedirect('/login')
     else:
@@ -101,6 +101,6 @@ def login(request):
 
         if user is not None:
             djangologin(request, user)
-            return HttpResponseRedirect('/user/' + res[0])
+            return HttpResponseRedirect('/instructor/' + res[0])
         else:
             return HttpResponseRedirect('/login')
