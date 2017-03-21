@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^$',views.index),
     url(r'^login$',views.login),
     url(r'^join$',views.join),
+    url(r'^search$', views.search),
     url(r'^student/(?P<user>[0-9a-zA-Z]+)',views.student),
     url(r'^student/(?P<user>[0-9a-zA-Z]+)/addequipment',views.addStudentEquipment),
     url(r'^instructor/(?P<user>[0-9a-zA-Z]+)',views.instructor),
@@ -37,6 +38,7 @@ urlpatterns = [
 
     url(r'^api/instructor/add$', handlers.instructor),
     url(r'^api/instructor/delete$', handlers.instructor),
-    url(r'^api/instructor/get$', handlers.instructor),
+
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

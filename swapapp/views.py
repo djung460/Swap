@@ -17,6 +17,8 @@ def login(request):
 def join(request):
     return render(request, 'swap/join.html')
 
+def search(request):
+    return render(request, 'swap/search.html')
 
 def student(request, user=''):
     if request.user.is_authenticated:
