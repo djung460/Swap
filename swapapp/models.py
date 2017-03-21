@@ -33,6 +33,19 @@ class Class(models.Model):
         db_table = 'Class'
         unique_together = (('faculty', 'classnum', 'term'),)
 
+    @staticmethod
+    def getAllClasses():
+        """
+        Returns a list of classes
+        [{'faculty':APSC, 'classnum':100, 'term':W2014T1, 'instructorusername':username, 'instructorname':name}]
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT C.faculty, C.classnum, C.term, C.instructorusername, I.instructorname "
+                "FROM Class C, Instructor I "
+                "WHERE C.instructorusername = I.instructorusername")
+            return dictfetchall(cursor=cursor)
+
 
 class ClassRequiresEquipment(models.Model):
     faculty = models.CharField(primary_key=True, max_length=4)

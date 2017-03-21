@@ -35,3 +35,7 @@ def course(request):
 def instructor(request):
     return HttpResponse(status=400)
 
+
+@csrf_exempt
+def addequipment(request):
+    return HttpResponse(status=400)

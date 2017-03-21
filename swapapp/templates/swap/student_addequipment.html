@@ -5,18 +5,13 @@
     <title>Title</title>
 </head>
 <body>
-<form action="/api/student/equipment/add" method="post" name="joinform">
-    <div class="field-wrap">
-        <label>
-            Equipment Name
-        </label>
-    </div>
+<h1>SWAP</h1>
+<h2>ADD TO EQUIPMENT LIST</h2>
 
-    <div class="field-wrap">
-        <label>
-            Equipment Type
-        </label>
-    </div>
+<form action="/api/student/equipment/add" method="post" name="joinform">
+    {% for equip in obj.equiplist %}
+        <input type="radio" name="equipid" value={{ equip.equipmentID }}> {{ equip.equipmentName }} {{ equip.equipmentType }} <br>
+    {% endfor %}
 
     <div class="field-wrap">
         <label>

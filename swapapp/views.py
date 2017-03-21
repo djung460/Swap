@@ -41,6 +41,7 @@ def student(request, user=''):
         return HttpResponseRedirect('/')
 
 def addStudentEquipment(request, user=''):
+    print("Redirect to add student equipment")
     """
     View for adding an equipment to a student's owned equipment list
     """
