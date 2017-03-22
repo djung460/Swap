@@ -31,5 +31,25 @@
 </table>
 <h3>YOUR CLASSES</h3>
 <a href="/enroll">Enroll</a>
+<table>
+    <tr>
+        <th>Faculty</th>
+        <th>Number</th>
+        <th>Term</th>
+    </tr>
+    {% for class in obj.classlist %}
+        <tr>
+            <td>
+                {{ class.faculty }}
+            </td>
+            <td>
+                {{ class.classNum }}
+            </td>
+            <td>
+                {{ class.term }}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
 </body>
 </html>

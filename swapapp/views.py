@@ -25,13 +25,12 @@ def student(request, user=''):
         username = request.user.username[1:]
         stud = Student.get(username)
         equiplist = stud.getOwnedEquipment()
-        print(equiplist[0]['quantity'])
-        print(equiplist[0]['equipmentName'])
-        print(equiplist[0]['equipmentType'])
-        print(equiplist)
+        classlist = stud.getEnrolled()
+        print(classlist)
         obj = {
             'student':stud,
-            'equiplist':equiplist
+            'equiplist':equiplist,
+            'classlist':classlist
         }
         context = RequestContext(request, {
             'obj': obj

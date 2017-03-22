@@ -132,7 +132,6 @@ class Instructor(models.Model):
                 "DELETE Student WHERE username = %s AND pwhash = %s",
                 [self.username, self.pwhash])
 
-
     def addCourse(self, faculty, classnum, term):
         """
         Adds a course to the database
@@ -205,6 +204,19 @@ class Student(models.Model):
                 [self.username])
             return dictfetchall(cursor=cursor)
 
+    def getEnrolled(self):
+        """
+        Returns a list of dictionary of equipment owned by the student with username
+        [{'equipmentid':1234, 'equipmentname':name, 'equipmenttype':type, 'quantity':quantity}]
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT STC.faculty, STC.classnum, STC.term "
+                "FROM Student S, StudentTakesClass STC "
+                "WHERE S.username = STC.username AND S.username = %s",
+                [self.username])
+            return dictfetchall(cursor=cursor)
+
     def addOwnEquipment(self, equipmentid, quantity):
         """
         Adds an equipment that a student owns
@@ -225,7 +237,7 @@ class Student(models.Model):
                 "INSERT INTO StudentTakesClass "
                 "(username, faculty, classnum, term) "
                 "VALUES (%s,%s,%s,%s)",
-                [self.username, faculty, classnum,term])
+                [self.username, faculty, classnum, term])
 
     def updateOwnedEquipment(self, equipmentid, quantity):
         """

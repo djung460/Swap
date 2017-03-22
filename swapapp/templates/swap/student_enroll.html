@@ -10,8 +10,8 @@
 
 <form action="/api/student/class/enroll" method="post" name="enrollform">
     {% for class in obj.classlist %}
-        <input type="radio" name="class" value={{ class.faculty }}{{ class.classnum }}{{ class.term }}>
-        {{ class.faculty }} {{ class.classnum }} {{ class.term }} {{ class.instructorUsername }}
+        <input type="radio" name="class" value={{ class.faculty }}{{ class.classNum }}{{ class.term }}>
+        {{ class.faculty }} {{ class.classNum }} {{ class.term }} {{ class.instructorUsername }}
         {{ class.name }}
         <br>
     {% endfor %}
