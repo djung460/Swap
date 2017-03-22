@@ -5,10 +5,30 @@
     <title>SWAP</title>
 </head>
 <body bgcolor=white>
-      <h1>SWAP</h1>
-      <h2>WELCOME {{ obj.instructor.username }}</h2>
-      <a href="/api/auth/logout">Logout</a>
-      <h3>YOUR CLASSES</h3>
-      <a href="/addcourse">Add a class</a>
-  </body>
+<h1>SWAP</h1>
+<h2>WELCOME {{ obj.instructor.username }}</h2>
+<a href="/api/auth/logout">Logout</a>
+<h3>YOUR CLASSES</h3>
+<a href="/addcourse">Add a class</a>
+<table>
+    <tr>
+        <th>Faculty</th>
+        <th>Number</th>
+        <th>Term</th>
+    </tr>
+    {% for class in obj.classlist %}
+        <tr>
+            <td>
+                {{ class.faculty }}
+            </td>
+            <td>
+                {{ class.classNum }}
+            </td>
+            <td>
+                {{ class.term }}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
 </html>

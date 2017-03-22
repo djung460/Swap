@@ -143,6 +143,18 @@ class Instructor(models.Model):
                 "VALUES (%s,%s,%s, %s)",
                 [faculty, classnum, term, self.username])
 
+    def getClasses(self):
+        """
+        Gets the classes taught by the instructor
+        """
+        with connection.cursor() as cursor:
+            rows = cursor.execute(
+                "SELECT faculty, classnum, term "
+                "FROM Class "
+                "WHERE instructorusername = %s",
+                [self.username])
+            return dictfetchall(rows)
+
 
 class PendingTrade(models.Model):
     tradeid = models.IntegerField(db_column='tradeID', primary_key=True)  # Field name made lowercase.
