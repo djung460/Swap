@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.conf import settings
 from django.conf.urls.static import static
 
-from swapapp.handlers import handlers, studenthandlers
+from swapapp.handlers import handlers, studenthandlers, instructorhandlers
 from swapapp import views
 from swapapp.auth import auth
 
@@ -14,11 +14,15 @@ urlpatterns = [
     url(r'^search$', views.search),
     url(r'^student/(?P<user>[0-9a-zA-Z]+)',views.student),
     url(r'^addequipment', views.addStudentEquipment),
+    url(r'^enroll',views.enroll),
     url(r'^instructor/(?P<user>[0-9a-zA-Z]+)',views.instructor),
+    url(r'^addcourse',views.addClass),
 
     # api stuff gets passed off to the handler
     url(r'^api/student/equipment/add', studenthandlers.addequipment),
-    #url(r'^api/student/equipment/add', handlers.addequipment),
+    url(r'^api/student/class/enroll', studenthandlers.enroll),
+
+    url(r'^api/instructor/class/add', instructorhandlers.addclass),
 
     url(r'^api/auth/login$', auth.login),
     url(r'^api/auth/join$', auth.join),

@@ -1,18 +1,35 @@
 <html>
-  <head>
+<head>
     <title>SWAP</title>
-  </head>
-  <body bgcolor=white>
-      <h1>SWAP</h1>
-      <h2>WELCOME {{ obj.student.username }}</h2>
-      <a href="/api/auth/logout">Logout</a>
-      <h3>PENDING TRADES</h3>
-      <h3>YOUR EQUIPMENT</h3>
-      <a href="/addequipment">Add Equipment</a>
-      {% for equip in obj.equiplist %}
-        <li>{{ equip.equipmentName }}  {{ equip.equipmentType }} {{ equip.quantity }}</li>
-      {% endfor %}
-      <h3>YOUR CLASSES</h3>
-      <a href="/student/{{ obj.student.username }}/enroll">Enroll</a>
-  </body>
+</head>
+<body bgcolor=white>
+<h1>SWAP</h1>
+<h2>WELCOME {{ obj.student.username }}</h2>
+<a href="/api/auth/logout">Logout</a>
+<h3>PENDING TRADES</h3>
+<h3>YOUR EQUIPMENT</h3>
+<a href="/addequipment">Add Equipment</a>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Quantity</th>
+    </tr>
+    {% for equip in obj.equiplist %}
+        <tr>
+            <td>
+                {{ equip.equipmentName }}
+            </td>
+            <td>
+                {{ equip.equipmentType }}
+            </td>
+            <td>
+                {{ equip.quantity }}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+<h3>YOUR CLASSES</h3>
+<a href="/enroll">Enroll</a>
+</body>
 </html>

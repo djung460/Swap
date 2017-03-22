@@ -1,30 +1,31 @@
-from swapapp.models import StudentHasEquipment, Student
+from swapapp.models import StudentHasEquipment, Student, Instructor
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.db.utils import IntegrityError
 
 
 @csrf_exempt
-def addequipment(request):
+def addclass(request):
     """
-    Handles adding an equipment
+    Handles adding a class
     """
     if request.user.is_authenticated:
         username = request.user.username[1:]
-        stud = Student.get(username)
+        inst = Instructor.get(username)
 
         data = request.POST
 
-        equipid = data['equipid']
-        quantity = data['quantity']
+        faculty = data['faculty']
+        classnum = data['classnum']
+        term = data['term']
+
         try:
-            stud.addOwnEquipment(equipmentid=equipid, quantity=quantity)
+            inst.addCourse(faculty, classnum, term)
         except IntegrityError:
-            print("student already has item")
-            return HttpResponseRedirect('/student/' + username)
+            print("Class already exists")
+            return HttpResponseRedirect('/instructor/' + username)
 
-
-        return HttpResponseRedirect('/student/' + username)
+        return HttpResponseRedirect('/instructor/' + username)
     else:
         return HttpResponseRedirect('/')
 

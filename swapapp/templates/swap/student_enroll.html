@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ENROLL</title>
+</head>
+<body>
+<h1>SWAP</h1>
+<h2>ENROLL IN A CLASS</h2>
+
+<form action="/api/student/class/enroll" method="post" name="enrollform">
+    {% for class in obj.classlist %}
+        <input type="radio" name="class" value={{ class.faculty }}{{ class.classnum }}{{ class.term }}>
+        {{ class.faculty }} {{ class.classnum }} {{ class.term }} {{ class.instructorUsername }}
+        {{ class.name }}
+        <br>
+    {% endfor %}
+    <button type="submit" class="button button-block"/>
+    ADD CLASS</button>
+</form>
+</body>
+</html>

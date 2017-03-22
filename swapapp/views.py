@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from .models import Student , Instructor, Equipment
+from .models import Student, Instructor, Equipment, Class
 
 
 # Create your views here
@@ -40,6 +40,35 @@ def student(request, user=''):
     else:
         return HttpResponseRedirect('/')
 
+def addClass(request, user=''):
+    """
+    View for adding a new class
+    """
+    if request.user.is_authenticated:
+        return render_to_response('swap/instructor_addclass.html')
+    else:
+        return HttpResponseRedirect('/')
+
+def enroll(request, user=''):
+    """
+    View for enrolling in a class
+    """
+    if request.user.is_authenticated:
+        classlist = Class.getAll()
+        obj = {
+            'classlist': classlist
+        }
+
+        print(classlist)
+
+        context = RequestContext(request, {
+            'obj': obj
+        })
+        return render_to_response('swap/student_enroll.html', context=context)
+    else:
+        return HttpResponseRedirect('/')
+
+
 def addStudentEquipment(request, user=''):
     print("Redirect to add student equipment")
     """
@@ -61,6 +90,7 @@ def addStudentEquipment(request, user=''):
         return render_to_response('swap/student_addequipment.html', context=context)
     else:
         return HttpResponseRedirect('/')
+
 
 def instructor(request, user=''):
     if request.user.is_authenticated:

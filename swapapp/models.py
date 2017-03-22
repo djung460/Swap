@@ -34,16 +34,16 @@ class Class(models.Model):
         unique_together = (('faculty', 'classnum', 'term'),)
 
     @staticmethod
-    def getAllClasses():
+    def getAll():
         """
         Returns a list of classes
         [{'faculty':APSC, 'classnum':100, 'term':W2014T1, 'instructorusername':username, 'instructorname':name}]
         """
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT C.faculty, C.classnum, C.term, C.instructorusername, I.instructorname "
+                "SELECT C.faculty, C.classnum, C.term, C.instructorusername, I.name "
                 "FROM Class C, Instructor I "
-                "WHERE C.instructorusername = I.instructorusername")
+                "WHERE C.instructorusername = I.username")
             return dictfetchall(cursor=cursor)
 
 
@@ -139,7 +139,7 @@ class Instructor(models.Model):
         """
         with connection.cursor() as cursor:
             cursor.execute(
-                "INSERT INTO Course "
+                "INSERT INTO Class "
                 "(faculty, classnum, term, instructorusername) "
                 "VALUES (%s,%s,%s, %s)",
                 [faculty, classnum, term, self.username])
@@ -215,6 +215,17 @@ class Student(models.Model):
                 "(username, equipmentid, quantity) "
                 "VALUES (%s,%s,%s)",
                 [self.username, equipmentid, quantity])
+
+    def enroll(self, faculty, classnum, term):
+        """
+        Enrolls the student into a class
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO StudentTakesClass "
+                "(username, faculty, classnum, term) "
+                "VALUES (%s,%s,%s,%s)",
+                [self.username, faculty, classnum,term])
 
     def updateOwnedEquipment(self, equipmentid, quantity):
         """
