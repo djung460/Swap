@@ -10,7 +10,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 
 
-@csrf_exempt
 def join(request):
     """
     Create a django user and a user for the database
@@ -61,6 +60,7 @@ def join(request):
 
     return HttpResponseRedirect('/login')
 
+
 def logout(request):
     """
     Handles logging out the user
@@ -69,7 +69,7 @@ def logout(request):
     print('LOGOUT')
     return HttpResponseRedirect('/')
 
-@csrf_exempt
+
 def login(request):
     """
     Handles put requests for logins

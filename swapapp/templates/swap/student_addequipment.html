@@ -8,7 +8,7 @@
 <h1>SWAP</h1>
 <h2>ADD TO EQUIPMENT LIST</h2>
 
-<form action="/api/student/equipment/add" method="post" name="joinform">
+<form action="/api/student/equipment/add" method="post" name="joinform"> {% csrf_token %}
     {% for equip in obj.equiplist %}
         <input type="radio" name="equipid" value={{ equip.equipmentID }}> {{ equip.equipmentName }} {{ equip.equipmentType }} <br>
     {% endfor %}

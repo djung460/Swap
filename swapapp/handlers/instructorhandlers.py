@@ -4,7 +4,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.utils import IntegrityError
 
 
-@csrf_exempt
 def addclass(request):
     """
     Handles adding a class
@@ -30,7 +29,6 @@ def addclass(request):
         return HttpResponseRedirect('/')
 
 
-@csrf_exempt
 def enroll(request):
     """
     Handles enrolling in a class

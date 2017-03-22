@@ -8,7 +8,7 @@
 <h1>SWAP</h1>
 <h2>ENROLL IN A CLASS</h2>
 
-<form action="/api/student/class/enroll" method="post" name="enrollform">
+<form action="/api/student/class/enroll" method="post" name="enrollform"> {% csrf_token %}
     {% for class in obj.classlist %}
         <input type="radio" name="class" value={{ class.faculty }}{{ class.classNum }}{{ class.term }}>
         {{ class.faculty }} {{ class.classNum }} {{ class.term }} {{ class.instructorUsername }}

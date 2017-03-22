@@ -7,7 +7,7 @@
 
 <a href='/'>home</a>
 
-<form action="/api/auth/login" method="post">
+<form action="/api/auth/login" method="post"> {% csrf_token %}
     <div class="field-wrap">
         <label>
             Login as <span class="req">*</span>

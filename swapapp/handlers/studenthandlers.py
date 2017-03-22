@@ -4,7 +4,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.utils import IntegrityError
 
 
-@csrf_exempt
 def addequipment(request):
     """
     Handles adding an equipment
@@ -29,7 +28,6 @@ def addequipment(request):
         return HttpResponseRedirect('/')
 
 
-@csrf_exempt
 def enroll(request):
     """
     Handles enrolling in a class
