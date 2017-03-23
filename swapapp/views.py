@@ -42,7 +42,7 @@ def student(request, user=''):
         return HttpResponseRedirect('/')
 
 
-def addClass(request, user=''):
+def addclass(request, user=''):
     """
     View for adding a new class
     """

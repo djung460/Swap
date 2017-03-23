@@ -16,7 +16,7 @@ urlpatterns = [
     url(r'^addequipment', views.addStudentEquipment),
     url(r'^enroll',views.enroll),
     url(r'^instructor/(?P<user>[0-9a-zA-Z]+)',views.instructor),
-    url(r'^addcourse',views.addClass),
+    url(r'^addclass',views.addclass),
 
     # api stuff gets passed off to the handler
     url(r'^api/student/equipment/add', studenthandlers.addequipment),
