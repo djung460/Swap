@@ -78,8 +78,6 @@ def addStudentEquipment(request, user=''):
     View for adding an equipment to a student's owned equipment list
     """
     if request.user.is_authenticated:
-        username = request.user.username[1:]
-        stud = Student.get(username)
         equiplist = Equipment.getAll()
         obj = {
             'equiplist': equiplist
@@ -101,12 +99,27 @@ def instructor(request, user=''):
         classlist = inst.getClasses()
         obj = {
             'instructor': inst,
-            'classlist':classlist
+            'classlist': classlist
         }
         print(inst.username, classlist)
         context = RequestContext(request, {
             'obj': obj
         })
         return render_to_response('swap/instructor.html', context=context)
+    else:
+        return HttpResponseRedirect('/')
+
+
+def instructor_addequip(request, classid=''):
+    if request.user.is_authenticated:
+        equiplist = Equipment.getAll()
+        obj = {
+            'class': classid,
+            'equiplist': equiplist
+        }
+        context = RequestContext(request, {
+            'obj': obj
+        })
+        return render_to_response('swap/instructor_addequipment.html', context=context)
     else:
         return HttpResponseRedirect('/')

@@ -9,26 +9,27 @@
 <h2>ADD A CLASS</h2>
 
 <form action="/api/instructor/class/add" method="post" name="addclassform"> {% csrf_token %}
-<div class="field-wrap">
+    <div class="field-wrap">
         <label>
             Faculty<span class="req">*</span>
         </label>
         <input name="faculty" type="text" required autocomplete="off"/>
     </div>
-     <div class="field-wrap">
+    <div class="field-wrap">
         <label>
             Course Number<span class="req">*</span>
         </label>
         <input name="classnum" type="text" required autocomplete="off"/>
     </div>
-     <div class="field-wrap">
+    <div class="field-wrap">
         <label>
             Term<span class="req">*</span>
         </label>
         <input name="term" type="text" required autocomplete="off"/>
     </div>
-    <button type="submit" class="button button-block"/>
-    ADD CLASS</button>
+    <button type="submit" class="button button-block">
+        ADD CLASS
+    </button>
 </form>
 </body>
 </html>

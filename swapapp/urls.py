@@ -12,17 +12,19 @@ urlpatterns = [
     url(r'^login$',views.login),
     url(r'^join$',views.join),
     url(r'^search$', views.search),
-    url(r'^student/(?P<user>[0-9a-zA-Z]+)',views.student),
-    url(r'^addequipment', views.addStudentEquipment),
-    url(r'^enroll',views.enroll),
-    url(r'^instructor/(?P<user>[0-9a-zA-Z]+)',views.instructor),
-    url(r'^addclass',views.addclass),
+    url(r'^student/(?P<user>[0-9a-zA-Z]+)$',views.student),
+    url(r'^addequipment$', views.addStudentEquipment),
+    url(r'^enroll$',views.enroll),
+    url(r'^instructor/(?P<user>[0-9a-zA-Z]+)$',views.instructor),
+    url(r'^addclass$',views.addclass),
+    url(r'^addequipment/class/(?P<classid>[0-9a-zA-Z]+)$', views.instructor_addequip),
 
     # api stuff gets passed off to the handler
     url(r'^api/student/equipment/add', studenthandlers.addequipment),
     url(r'^api/student/class/enroll', studenthandlers.enroll),
 
     url(r'^api/instructor/class/add', instructorhandlers.addclass),
+    url(r'^api/instructor/equipment/add', instructorhandlers.addequipment),
 
     url(r'^api/auth/login$', auth.login),
     url(r'^api/auth/join$', auth.join),

@@ -28,30 +28,28 @@ def addclass(request):
     else:
         return HttpResponseRedirect('/')
 
-
-def enroll(request):
+@csrf_exempt
+def addequipment(request):
     """
-    Handles enrolling in a class
+    Handles adding a required equipment to a class
     """
     if request.user.is_authenticated:
         username = request.user.username[1:]
-        stud = Student.get(username)
+        inst = Instructor.get(username)
 
         data = request.POST
 
         faculty = data['class'][0:4]
         classnum = data['class'][4:7]
         term = data['class'][7:14]
-
-        print(faculty, classnum, term)
+        equipid = data['equipid']
 
         try:
-            stud.enroll(faculty=faculty, classnum=classnum, term=term)
+            inst.addEquipToClass(faculty=faculty,classnum=classnum,term=term,equipid=equipid)
         except IntegrityError:
-            print("student already has item")
-            return HttpResponseRedirect('/student/' + username)
+            print("Equipment already added to class")
+            return HttpResponseRedirect('/instructor/' + username)
 
-
-        return HttpResponseRedirect('/student/' + username)
+        return HttpResponseRedirect('/instructor/' + username)
     else:
         return HttpResponseRedirect('/')

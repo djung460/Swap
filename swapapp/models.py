@@ -143,6 +143,17 @@ class Instructor(models.Model):
                 "VALUES (%s,%s,%s, %s)",
                 [faculty, classnum, term, self.username])
 
+    def addEquipToClass(self, faculty, classnum, term, equipid):
+        """
+        Adds a requipred piece of equipment to a class
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO ClassRequiresEquipment "
+                "(faculty, classnum, term, equipmentid) "
+                "VALUES (%s,%s,%s, %s)",
+                [faculty, classnum, term, equipid])
+
     def getClasses(self):
         """
         Gets the classes taught by the instructor

@@ -2,24 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>ADD</title>
+    <title>Title</title>
 </head>
 <body>
-<h1>SWAP</h1>
-<h2>ADD TO EQUIPMENT LIST</h2>
 
-<form action="/api/student/equipment/add" method="post" name="joinform"> {% csrf_token %}
+<form action="/api/instructor/equipment/add" method="post" name="add_req_equip_form">
+    {% csrf_token %}
+    <input type="hidden" name="class" value= {{ obj.class }}/>
+
     {% for equip in obj.equiplist %}
         <input type="radio" name="equipid" value={{ equip.equipmentID }}> {{ equip.equipmentName }}
         {{ equip.equipmentType }} <br>
     {% endfor %}
-
-    <div class="field-wrap">
-        <label>
-            Quantity
-        </label>
-        <input name="quantity" type="number" min="1" required autocomplete="off"/>
-    </div>
 
     <button type="submit" class="button button-block">
         ADD EQUIPMENT
