@@ -1,9 +1,29 @@
 {% extends 'swap/base.html' %}
+{% load staticfiles %}
+
 {% block content %}
-    <ul>
-        <li><a href="/login">LOGIN</a></li>
-        <li><a href="/join">JOIN</a></li>
-        <li><a href="/search">SEARCH</a></li>
-    </ul>
+
+    <span class="main image">
+        <img src="{% static 'swapapp/images/main_banner.jpg' %}"/>
+    </span>
+    <div class="row">
+        <div class="8u 12u$(small)">
+            <div class="12u$">
+                <h3>Welcome to Swap</h3>
+                <p>Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non
+                    faucibus ornare mi ut ante amet placerat aliquet. Volutpat commodo eu sed ante lacinia. Sapien a
+                    lorem
+                    in integer ornare praesent commodo adipiscing arcu in massa commodo lorem accumsan at odio massa ac
+                    ac.
+                    Semper adipiscing varius montes viverra nibh in adipiscing blandit tempus accumsan.</p>
+            </div>
+        </div>
+
+        <div class="4u$ 12u$(small)">
+            <a href="/login" class="button special fit">LOGIN</a>
+            <a href="/join" class="button fit">JOIN</a>
+            <a href="/search" class="button fit">SEARCH</a>
+        </div>
+    </div>
 
 {% endblock %}
