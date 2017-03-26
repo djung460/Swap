@@ -1,38 +1,41 @@
-<html>
-<head>
-    <title>JOIN</title>
-</head>
-<body bgcolor=white>
-<h1>Join Swap</h1>
+{% extends 'swap/base.html' %}
+{% block content %}
 
-<a href='/'>home</a>
+    <form action="/api/auth/login" method="post"> {% csrf_token %}
+        <div class="row uniform">
+            <div class="12u$">
+                <h1>Login!</h1>
+            </div>
 
-<form action="/api/auth/login" method="post"> {% csrf_token %}
-    <div class="field-wrap">
-        <label>
-            Login as <span class="req">*</span>
-        </label> <br>
-        <input type="radio" name="kind" value="student" checked> Student<br>
-        <input type="radio" name="kind" value="instructor"> Instructor<br>
-    </div>
+            <!-- Account details -->
+            <div class="6u$ 12u$(xsmall)">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="John" required autocomplete="off"/>
+            </div>
+            <div class="6u$ 12u$(xsmall)">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="something more secure than 123" required
+                       autocomplete="off"/>
+            </div>
+            <div class="6u$ 12u$(small)">
+                <label for="kind">I am a: </label>
+            </div>
+            <div class="2u 12u$(small)">
+                <input type="radio" id="kind-student" name="kind" value="student" checked>
+                <label for="kind-student">Student</label>
+            </div>
+            <div class="2u$ 12u$(small)">
+                <input type="radio" id="kind-instructor" name="kind" value="instructor">
+                <label for="kind-instructor">Instructor</label>
+            </div>
 
-    <div class="field-wrap">
-        <label>
-            Username<span class="req">*</span>
-        </label>
-        <input name="username" type="text" required autocomplete="off"/>
-    </div>
+            <!-- Login button -->
+            <div class="12u$">
+                <ul class="actions">
+                    <li><input type="submit" value="Login" class="special"/></li>
+                    <li><a href="/join" class="button">Create an account</a></li>
+                </ul>
+            </div>
+    </form>
 
-    <div class="field-wrap">
-        <label>
-            Password<span class="req">*</span>
-        </label>
-        <input name="password" type="password" required autocomplete="off"/>
-    </div>
-
-    <button type="submit" class="button button-block">
-        LOGIN
-    </button>
-</form>
-</body>
-</html>
+{% endblock %}
