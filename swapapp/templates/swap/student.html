@@ -1,55 +1,65 @@
-<html>
-<head>
-    <title>SWAP</title>
-</head>
-<body bgcolor=white>
-<h1>SWAP</h1>
-<h2>WELCOME {{ obj.student.username }}</h2>
-<a href="/api/auth/logout">Logout</a>
-<h3>PENDING TRADES</h3>
-<h3>YOUR EQUIPMENT</h3>
-<a href="/addequipment">Add Equipment</a>
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Quantity</th>
-    </tr>
-    {% for equip in obj.equiplist %}
-        <tr>
-            <td>
-                {{ equip.equipmentName }}
-            </td>
-            <td>
-                {{ equip.equipmentType }}
-            </td>
-            <td>
-                {{ equip.quantity }}
-            </td>
-        </tr>
-    {% endfor %}
-</table>
-<h3>YOUR CLASSES</h3>
-<a href="/enroll">Enroll</a>
-<table>
-    <tr>
-        <th>Faculty</th>
-        <th>Number</th>
-        <th>Term</th>
-    </tr>
-    {% for class in obj.classlist %}
-        <tr>
-            <td>
-                {{ class.faculty }}
-            </td>
-            <td>
-                {{ class.classNum }}
-            </td>
-            <td>
-                {{ class.term }}
-            </td>
-        </tr>
-    {% endfor %}
-</table>
-</body>
-</html>
+{% extends 'swap/base.html' %}
+{% block content %}
+
+    <h2>WELCOME {{ obj.student.username }}</h2>
+    <a href="/api/auth/logout" class="button">Logout</a>
+    <h3>PENDING TRADES</h3>
+
+
+    <h3>YOUR EQUIPMENT</h3>
+    <a href="/addequipment" class="button special">Add Equipment</a>
+    <div class="table-wrapper">
+
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Quantity</th>
+            </tr>
+            {% for equip in obj.equiplist %}
+                <tr>
+                    <td>
+                        {{ equip.equipmentName }}
+                    </td>
+                    <td>
+                        {{ equip.equipmentType }}
+                    </td>
+                    <td>
+                        {{ equip.quantity }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <h3>YOUR CLASSES</h3>
+    <a href="/enroll" class="button special">Enroll in another course</a>
+
+    <div class="table-wrapper">
+        <table>
+            <thread>
+                <tr>
+                    <th>Faculty</th>
+                    <th>Number</th>
+                    <th>Term</th>
+                </tr>
+            </thread>
+            <tbody>
+            {% for class in obj.classlist %}
+                <tr>
+                    <td>
+                        {{ class.faculty }}
+                    </td>
+                    <td>
+                        {{ class.classNum }}
+                    </td>
+                    <td>
+                        {{ class.term }}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
