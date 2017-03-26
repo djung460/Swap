@@ -1,73 +1,73 @@
-<html>
-<head>
-    <title>JOIN</title>
-</head>
-<body bgcolor=white>
-<h1>Join Swap</h1>
+{% extends 'swap/base.html' %}
+{% block content %}
 
-<a href='/'>home</a>
+    <form action="/api/auth/join" method="post" name="joinform"> {% csrf_token %}
+        <div class="row uniform">
+            <div class="12u$">
+                <h1>Join our community!</h1>
+                <p>Students can register below to start viewing their required course equipments and see current
+                    offerings from others.</p>
+            </div>
 
-<form action="/api/auth/join" method="post" name="joinform"> {% csrf_token %}
-    <div class="field-wrap">
-        <label>
-            Join as <span class="req">*</span>
-        </label> <br>
-        <input type="radio" name="kind" value="student" checked> Student<br>
-        <input type="radio" name="kind" value="instructor"> Instructor<br>
-    </div>
+            <!-- Account details -->
+            <div class="12u$">
+                <h2>Account details</h2>
+                <hr>
+            </div>
+            <div class="6u$ 12u$(xsmall)">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="John" required autocomplete="off"/>
+            </div>
+            <div class="6u$ 12u$(xsmall)">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="something more secure than 123" required
+                       autocomplete="off"/>
+            </div>
+            <div class="6u$ 12u$(small)">
+                <label for="kind">I am a: </label>
+            </div>
+            <div class="2u 12u$(small)">
+                <input type="radio" id="kind-student" name="kind" value="student" checked>
+                <label for="kind-student">Student</label>
+            </div>
+            <div class="2u$ 12u$(small)">
+                <input type="radio" id="kind-instructor" name="kind" value="instructor">
+                <label for="kind-instructor">Instructor</label>
+            </div>
 
-    <div class="field-wrap">
-        <label>
-            Username<span class="req">*</span>
-        </label>
-        <input name="username" type="text" required autocomplete="off"/>
-    </div>
+            <!-- Personal details -->
+            <div class="12u$">
+                <h2>Personal details</h2>
+                <hr>
+            </div>
+            <div class="6u$ 12u$(xsmall)">
+                <label>Full name</label>
+                <input type="text" name="name" placeholder="JohnDoe" required autocomplete="off"/>
+            </div>
+            <div class="6u$ 12u$(xsmall)">
+                <label>Email</label>
+                <input type="text" name="email" placeholder="john@doe.com" required autocomplete="off"/>
+            </div>
+            <div class="6u$ 12u$(xsmall)">
+                <label>Phone number</label>
+                <input type="text" name="phonenumber" placeholder="604-123-4567" required autocomplete="off"/>
+            </div>
+            <div class="3u 12u$(xsmall)">
+                <label>Current year</label>
+                <input type="number" name="year" min="1" max="5" required autocomplete="off"/>
+            </div>
+            <div class="3u$ 12u$(xsmall)">
+                <label>Faculty</label>
+                <input type="text" name="faculty" placeholder="CPSC" required autocomplete="off"/>
+            </div>
 
-    <div class="field-wrap">
-        <label>
-            Password<span class="req">*</span>
-        </label>
-        <input name="password" type="password" required autocomplete="off"/>
-    </div>
+            <!-- Submit button -->
+            <div class="12u$">
+                <ul class="actions">
+                    <li><input type="submit" value="Send Message" class="special"/></li>
+                    <li><input type="reset" value="Reset"/></li>
+                </ul>
+            </div>
+        </div>
 
-    <div class="field-wrap">
-        <label>
-            Name<span class="req">*</span>
-        </label>
-        <input name="name" required autocomplete="off"/>
-    </div>
-
-    <div class="field-wrap">
-        <label>
-            Faculty<span class="req">*</span>
-        </label>
-        <input name="faculty" type="text" required autocomplete="off"/>
-    </div>
-
-    <div class="field-wrap">
-        <label>
-            Year (1-4)<span class="req">*</span>
-        </label>
-        <input name="year" type="number" min="1" max="5" required autocomplete="off"/>
-    </div>
-
-    <div class="field-wrap">
-        <label>
-            Phone Number<span class="req">*</span>
-        </label>
-        <input name="phonenumber" type="text" required autocomplete="off"/>
-    </div>
-
-    <div class="field-wrap">
-        <label>
-            Email<span class="req">*</span>
-        </label>
-        <input name="email" type="text" required autocomplete="off"/>
-    </div>
-
-    <button type="submit" class="button button-block">
-        JOIN
-    </button>
-</form>
-</body>
-</html>
+{% endblock %}
