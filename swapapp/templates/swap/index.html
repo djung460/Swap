@@ -1,23 +1,9 @@
-<html>
-  <head>
-    <title>CPSC 304</title>
-  </head>
-  <body bgcolor=white>
-
-    <table border="0" cellpadding="10">
-      <tr>
-        <td>
-        </td>
-        <td>
-          <h1>SWAP - CPSC 304</h1>
-        </td>
-      </tr>
-    </table>
-
+{% extends 'swap/base.html' %}
+{% block content %}
     <ul>
         <li><a href="/login">LOGIN</a></li>
         <li><a href="/join">JOIN</a></li>
         <li><a href="/search">SEARCH</a></li>
     </ul>
-  </body>
-</html>
+
+{% endblock %}

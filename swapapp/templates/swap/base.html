@@ -1,0 +1,48 @@
+{% load staticfiles %}
+
+
+<!DOCTYPE HTML>
+<!--
+	Editorial by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>Swap</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+    <link rel="stylesheet" href="{% static 'swapapp/assets/css/main.css' %}"/>
+</head>
+<body>
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+
+            <!-- Header -->
+            <header id="header">
+                <a href="swap/index.html" class="logo"><strong>Swap</strong> by Group 15</a>
+            </header>
+
+            {% block content %}
+
+            {% endblock %}
+
+        </div>
+    </div>
+
+
+</div>
+
+<!-- Scripts -->
+<script src="{% static 'swapapp/assets/js/jquery.min.js' %}"></script>
+<script src="{% static 'swapapp/assets/js/skel.min.js' %}"></script>
+<script src="{% static 'swapapp/assets/js/util.js' %}"></script>
+<script src="{% static 'swapapp/assets/js/main.js' %}"></script>
+
+</body>
+</html>
