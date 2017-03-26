@@ -1,43 +1,49 @@
 {% extends 'swap/base.html' %}
 {% block content %}
+    <div class="row uniform">
 
-    <h2>WELCOME {{ obj.instructor.username }}</h2>
-    <a href="/api/auth/logout" class="button">Logout</a>
+        <div class="12u$">
+            <h2>WELCOME {{ obj.instructor.username }}</h2>
+            <a href="/api/auth/logout" class="button">Logout</a>
+        </div>
 
-    <h3>YOUR CLASSES</h3>
-    <a href="/addclass" class="button special">Add a class</a>
+        <div class="8u$ 12u$(small)">
+            <h2><span class=" icon fa-graduation-cap"></span> Courses you are teaching</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Faculty</th>
+                        <th>Number</th>
+                        <th>Term</th>
+                        <th>Equipment(s)</th>
 
-    <div class="table-wrapper">
-        <table>
-        <thead>
-            <tr>
-                <th>Faculty</th>
-                <th>Number</th>
-                <th>Term</th>
-                <th>Equipment(s)</th>
-
-            </tr>
-            </thead>
-        <tbody>
-            {% for class in obj.classlist %}
-                <tr>
-                    <td>
-                        {{ class.faculty }}
-                    </td>
-                    <td>
-                        {{ class.classNum }}
-                    </td>
-                    <td>
-                        {{ class.term }}
-                    </td>
-                    <td>
-                        <a href="/addequipment/class/{{ class.faculty }}{{ class.classNum }}{{ class.term }}" class="button special"> Add
-                            Equipment </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-        </table>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for class in obj.classlist %}
+                        <tr>
+                            <td>
+                                {{ class.faculty }}
+                            </td>
+                            <td>
+                                {{ class.classNum }}
+                            </td>
+                            <td>
+                                {{ class.term }}
+                            </td>
+                            <td>
+                                <a href="/addequipment/class/{{ class.faculty }}{{ class.classNum }}{{ class.term }}"
+                                   class="button special"> Add
+                                    Equipment </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <a href="/addclass" class="button special">Add a class</a>
+        </div>
     </div>
 
 {% endblock content %}

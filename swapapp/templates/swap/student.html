@@ -1,65 +1,73 @@
 {% extends 'swap/base.html' %}
 {% block content %}
+    <div class="row uniform">
 
-    <h2>WELCOME {{ obj.student.username }}</h2>
-    <a href="/api/auth/logout" class="button">Logout</a>
-    <h3>PENDING TRADES</h3>
+        <div class="12u$">
+            <h2>WELCOME {{ obj.student.username }}</h2>
+            <a href="/api/auth/logout" class="button">Logout</a>
+        </div>
 
+        <div class="8u$ 12u$(small)">
+            <h2><span class=" icon fa-clock-o"></span> Pending trades</h2>
+        </div>
 
-    <h3>YOUR EQUIPMENT</h3>
-    <a href="/addequipment" class="button special">Add Equipment</a>
-    <div class="table-wrapper">
+        <div class="8u$ 12u$(small)">
+            <h2><span class=" icon fa-flask"></span> Equipments you have</h2>
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Quantity</th>
+                    </tr>
+                    {% for equip in obj.equiplist %}
+                        <tr>
+                            <td>
+                                {{ equip.equipmentName }}
+                            </td>
+                            <td>
+                                {{ equip.equipmentType }}
+                            </td>
+                            <td>
+                                {{ equip.quantity }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <a href="/addequipment" class="button special right">Add Equipment</a>
+        </div>
 
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Quantity</th>
-            </tr>
-            {% for equip in obj.equiplist %}
-                <tr>
-                    <td>
-                        {{ equip.equipmentName }}
-                    </td>
-                    <td>
-                        {{ equip.equipmentType }}
-                    </td>
-                    <td>
-                        {{ equip.quantity }}
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+        <div class="8u$ 12u$(small)">
+            <h2><span class=" icon fa-graduation-cap"></span> Courses you are enrolled in</h2>
+            <div class="table-wrapper">
+                <table>
+                    <thread>
+                        <tr>
+                            <th>Faculty</th>
+                            <th>Number</th>
+                            <th>Term</th>
+                        </tr>
+                    </thread>
+                    <tbody>
+                    {% for class in obj.classlist %}
+                        <tr>
+                            <td>
+                                {{ class.faculty }}
+                            </td>
+                            <td>
+                                {{ class.classNum }}
+                            </td>
+                            <td>
+                                {{ class.term }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <a href="/enroll" class="button special right">Enroll in another course</a>
+        </div>
+
     </div>
-
-    <h3>YOUR CLASSES</h3>
-    <a href="/enroll" class="button special">Enroll in another course</a>
-
-    <div class="table-wrapper">
-        <table>
-            <thread>
-                <tr>
-                    <th>Faculty</th>
-                    <th>Number</th>
-                    <th>Term</th>
-                </tr>
-            </thread>
-            <tbody>
-            {% for class in obj.classlist %}
-                <tr>
-                    <td>
-                        {{ class.faculty }}
-                    </td>
-                    <td>
-                        {{ class.classNum }}
-                    </td>
-                    <td>
-                        {{ class.term }}
-                    </td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
 {% endblock %}
