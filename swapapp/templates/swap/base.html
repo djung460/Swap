@@ -25,7 +25,33 @@
 
             <!-- Header -->
             <header id="header">
-                <h1><a href="/" class="logo"><strong>Swap</strong></a></h1>
+                <h1 class="colored"><a href="/" class="logo"><strong>Swap</strong></a></h1>
+                <ul class="icons">
+                    {% if user.is_authenticated %}
+
+                        {# Check if the authenticated user is a student or an instructor #}
+                        {% if user.get_username|slice:":1" == 's' %}
+
+                            {# Link account page to student/ url #}
+                            <li><a href="/student/{{ user.get_username }}"><span
+                                    class="fa fa-user"></span> {{ user.get_username|slice:"1:" }}</a></li>
+                        {% else %}
+
+                            {# Link account page to instructor/ url #}
+                            <li><a href="/instructor/{{ user.get_username }}"><span
+                                    class="fa fa-user"></span> {{ user.get_username|slice:"1:" }}</a></li>
+                        {% endif %}
+
+                        {# Add a logout button #}
+                        <li><a href="/api/auth/logout">Logout</a></li>
+
+                    {% else %}
+
+                        {# User isn't authenticated so we'll put the login link here instead #}
+                        <li><a href="/login">Login</a></li>
+                    {% endif %}
+
+                </ul>
             </header>
 
             {% block content %}

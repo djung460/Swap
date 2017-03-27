@@ -1,14 +1,22 @@
 {% extends 'swap/base.html' %}
+{% load staticfiles %}
+
 {% block content %}
     <div class="row uniform">
+        <span class="main image">
+            <img src="{% static 'swapapp/images/instructor_banner.jpg' %}"/>
+        </span>
 
+        <!--------------------------------------------------------------------------------------------------------------
+        COURSES YOU ARE TEACHING
+        --------------------------------------------------------------------------------------------------------------->
         <div class="12u$">
-            <h2>WELCOME {{ obj.instructor.username }}</h2>
-            <a href="/api/auth/logout" class="button">Logout</a>
+            <header id="header">
+                <h2 class="colored"><span class=" icon fa-graduation-cap"></span> Courses you are teaching</h2>
+            </header>
         </div>
 
-        <div class="8u$ 12u$(small)">
-            <h2><span class=" icon fa-graduation-cap"></span> Courses you are teaching</h2>
+        <div class="6u 12u$(small)">
             <div class="table-wrapper">
                 <table>
                     <thead>
@@ -17,11 +25,10 @@
                         <th>Number</th>
                         <th>Term</th>
                         <th>Equipment(s)</th>
-
                     </tr>
                     </thead>
                     <tbody>
-                    {% for class in obj.classlist %}
+                    {% for class in classlist %}
                         <tr>
                             <td>
                                 {{ class.faculty }}
@@ -34,14 +41,22 @@
                             </td>
                             <td>
                                 <a href="/addequipment/class/{{ class.faculty }}{{ class.classNum }}{{ class.term }}"
-                                   class="button special"> Add
-                                    Equipment </a>
+                                   class="button special"> Add Equipment </a>
                             </td>
                         </tr>
                     {% endfor %}
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <div class="6u$ 12u$(small)">
+            <p>
+                Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non
+                faucibus ornare mi ut ante amet placerat aliquet. Volutpat commodo eu sed ante lacinia. Sapien a
+                lorem in integer ornare praesent commodo adipiscing arcu in massa commodo lorem accumsan at odio massa
+                ac ac.Semper adipiscing varius montes viverra nibh in adipiscing blandit tempus accumsan.
+            </p>
             <a href="/addclass" class="button special">Add a class</a>
         </div>
     </div>
