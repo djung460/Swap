@@ -9,6 +9,7 @@
 
         <div class="8u$ 12u$(small)">
             <h2><span class=" icon fa-clock-o"></span> Pending trades</h2>
+            <a href="/maketrade" class="button special right">Make a trade</a>
         </div>
 
         <div class="8u$ 12u$(small)">
@@ -19,9 +20,10 @@
                         <th>Name</th>
                         <th>Type</th>
                         <th>Quantity</th>
+                        <th>Action</th>
                     </tr>
                     {% for equip in obj.equiplist %}
-                        <tr>
+                        <tr id="equipment-{{ equip.equipmentID}}">
                             <td>
                                 {{ equip.equipmentName }}
                             </td>
@@ -29,7 +31,21 @@
                                 {{ equip.equipmentType }}
                             </td>
                             <td>
-                                {{ equip.quantity }}
+                                <form method="post" action="/api/student/equipment/update" style="display: inline-block">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{ obj.student.username }}"/>
+                                    <input type="hidden" name="equipmentid" value="{{ equip.equipmentID }}">
+                                    <input type="number" name="quantity" min="1" value="{{ equip.quantity }}">
+                                    <input type="submit" value="Save"/>
+                                </form>
+                            </td>
+                            <td>
+                                <form method="post" action="/api/student/equipment/delete" style="display: inline-block">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{ obj.student.username }}"/>
+                                    <input type="hidden" name="equipmentid" value="{{ equip.equipmentID }}">
+                                    <input type="submit" value="Delete"/>
+                                </form>
                             </td>
                         </tr>
                     {% endfor %}
@@ -47,6 +63,7 @@
                             <th>Faculty</th>
                             <th>Number</th>
                             <th>Term</th>
+                            <th>Action</th>
                         </tr>
                     </thread>
                     <tbody>
@@ -61,6 +78,15 @@
                             <td>
                                 {{ class.term }}
                             </td>
+                            <td>
+                                <form method="post" action="/api/student/class/drop">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="faculty" value="{{ class.faculty }}"/>
+                                    <input type="hidden" name="classnum" value="{{ class.classNum }}"/>
+                                    <input type="hidden" name="term" value="{{ class.term }}"/>
+                                    <input type="submit" value="Remove"/>
+                                </form>
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -68,6 +94,6 @@
             </div>
             <a href="/enroll" class="button special right">Enroll in another course</a>
         </div>
-
     </div>
+
 {% endblock %}

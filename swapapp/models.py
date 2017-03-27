@@ -251,6 +251,16 @@ class Student(models.Model):
                 "VALUES (%s,%s,%s)",
                 [self.username, equipmentid, quantity])
 
+    def removeEquipment(self, equipmentid):
+        """
+        Remove an equipment that a student owns
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM StudentHasEquipment "
+                "WHERE  username = %s AND equipmentid = %s ",
+                [self.username, equipmentid])
+
     def enroll(self, faculty, classnum, term):
         """
         Enrolls the student into a class
@@ -262,6 +272,16 @@ class Student(models.Model):
                 "VALUES (%s,%s,%s,%s)",
                 [self.username, faculty, classnum, term])
 
+    def drop(self, faculty, classnum, term):
+        """
+        Drops the student from a class
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM StudentTakesClass "
+                "WHERE username=%s AND faculty=%s AND classnum=%s AND term=%s ",
+                [self.username, faculty, classnum, term])
+
     def updateOwnedEquipment(self, equipmentid, quantity):
         """
         Updates an equipment that a student owns
@@ -269,9 +289,9 @@ class Student(models.Model):
         with connection.cursor() as cursor:
             cursor.execute(
                 "UPDATE StudentHasEquipment "
-                "SET (username, equipmentid, quantity) "
-                "VALUES (%s,%s,%s)",
-                [self.username, equipmentid, quantity])
+                "SET quantity=%s "
+                "WHERE username=%s AND equipmentid=%s",
+                [quantity,self.username, equipmentid])
 
     def remove(self):
         with connection.cursor() as cursor:

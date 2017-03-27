@@ -1,0 +1,1 @@
+INSERT INTO Equipment (equipmentid, equipmentname, equipmenttype) VALUES (8,'Molecule Kit','KIT');

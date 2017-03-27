@@ -21,7 +21,10 @@ urlpatterns = [
 
     # api stuff gets passed off to the handler
     url(r'^api/student/equipment/add', studenthandlers.addequipment),
+    url(r'^api/student/equipment/delete', studenthandlers.deleteequipment),
+    url(r'^api/student/equipment/update', studenthandlers.updateequipment),
     url(r'^api/student/class/enroll', studenthandlers.enroll),
+    url(r'^api/student/class/drop', studenthandlers.drop),
 
     url(r'^api/instructor/class/add', instructorhandlers.addclass),
     url(r'^api/instructor/equipment/add', instructorhandlers.addequipment),
