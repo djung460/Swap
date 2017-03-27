@@ -1,1 +1,11 @@
 INSERT INTO Equipment (equipmentid, equipmentname, equipmenttype) VALUES (8,'Molecule Kit','KIT');
+
+insert into ClassRequiresEquipment (faculty,classnum,term,equipmentid) values ('ELEC','201','2016WT2',7);
+
+SELECT E1.equipmentid, E1.equipmentname, E1.equipmenttype
+FROM ClassRequiresEquipment CRE, StudentTakesClass STC, Equipment E1
+WHERE STC.username='testuser1'
+AND STC.faculty=CRE.faculty
+AND STC.classnum=CRE.classnum
+AND STC.term=CRE.term
+AND E1.equipmentid=CRE.equipmentid;

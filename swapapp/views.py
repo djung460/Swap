@@ -42,6 +42,24 @@ def student(request, user=''):
         return HttpResponseRedirect('/')
 
 
+def maketrade(request):
+    if request.user.is_authenticated:
+        username = request.user.username[1:]
+        stud = Student.get(username)
+        # Get equipment that we do not have that are required
+        notowned = stud.getRequiredNotOwnedEquip()
+        print(notowned)
+        obj = {
+            'notowned': notowned,
+        }
+        context = RequestContext(request, {
+            'obj': obj
+        })
+        return render_to_response('swap/trade.html', context=context)
+    else:
+        return HttpResponseRedirect('/')
+
+
 def addclass(request, user=''):
     """
     View for adding a new class

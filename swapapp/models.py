@@ -291,7 +291,66 @@ class Student(models.Model):
                 "UPDATE StudentHasEquipment "
                 "SET quantity=%s "
                 "WHERE username=%s AND equipmentid=%s",
-                [quantity,self.username, equipmentid])
+                [quantity, self.username, equipmentid])
+
+    def getRequiredNotOwnedEquip(self):
+        """
+        Finds required equipment that we do not yet own
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT E1.equipmentid, E1.equipmentname, E1.equipmenttype, CRE.faculty, CRE.classnum, CRE.term "
+                "FROM ClassRequiresEquipment CRE, StudentTakesClass STC, Equipment E1 "
+                "WHERE STC.username=%s "
+                "AND STC.faculty=CRE.faculty "
+                "AND STC.classnum=CRE.classnum "
+                "AND STC.term=CRE.term "
+                "AND E1.equipmentid=CRE.equipmentid "
+                "AND CRE.equipmentid NOT IN "
+                "(SELECT E.equipmentid "
+                "FROM Student S, StudentHasEquipment SHE, Equipment E "
+                "WHERE S.username = SHE.username AND S.username = %s AND SHE.equipmentid = E.equipmentid)",
+                [self.username, self.username])
+            return dictfetchall(cursor=cursor)
+
+    def findOtherStudents(self):
+        """
+        Finds other students who have equipment for classes that we do not have
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "CREATE TEMP VIEW StudentNeedsEquipment "
+                "SELECT "
+                "FROM "
+                "AND CRE.equipmentid NOT IN ("
+                "SELECT E.equipmentid "
+                "FROM Student S, StudentHasEquipment SHE, Equipment E "
+                "WHERE S.username = SHE.username AND S.username = %s AND SHE.equipmentid = E.equipmentid)",
+                # "SELECT DISTINCT SHE.username "
+                # "FROM ClassRequiresEquipment CRE, Student S, StudentTakesClass STC, StudentHasEquipment SHE "
+                # "WHERE S.username=STC.username "
+                # "AND STC.faculty=CRE.faculty "
+                # "AND STC.classnum=CRE.classnum "
+                # "AND STC.term=CRE.term "
+                # "AND SHE.equipmentid=CRE.equipmentid "
+                # "AND CRE.equipmentid NOT IN ("
+                # "SELECT E.equipmentid "
+                # "FROM Student S, StudentHasEquipment SHE, Equipment E "
+                # "WHERE S.username = SHE.username AND S.username = %s AND SHE.equipmentid = E.equipmentid)",
+                [self.username])
+            # cursor.execute(
+            #     "SELECT DISTINCT SHE.username "
+            #     "FROM ClassRequiresEquipment CRE, Student S, StudentTakesClass STC, StudentHasEquipment SHE "
+            #     "WHERE S.username=STC.username "
+            #     "AND STC.faculty=CRE.faculty "
+            #     "AND STC.classnum=CRE.classnum "
+            #     "AND STC.term=CRE.term "
+            #     "AND SHE.equipmentid=CRE.equipmentid "
+            #     "AND CRE.equipmentid NOT IN ("
+            #     "SELECT E.equipmentid "
+            #     "FROM Student S, StudentHasEquipment SHE, Equipment E "
+            #     "WHERE S.username = SHE.username AND S.username = %s AND SHE.equipmentid = E.equipmentid)",
+            #     [self.username])
 
     def remove(self):
         with connection.cursor() as cursor:

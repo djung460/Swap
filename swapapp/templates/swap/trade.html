@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="8u$ 12u$(small)">
+    <h2>Equipment you need</h2>
+    <div class="table-wrapper">
+        <table>
+            <tr>
+                <th>Class</th>
+                <th>Name</th>
+                <th>Type</th>
+            </tr>
+            {% for equip in obj.notowned %}
+                <tr id="equipment-{{ equip.equipmentID }}">
+                    <td>
+                        {{ equip.faculty }}-{{ equip.classNum }}-{{ equip.term }}
+                    </td>
+                    <td>
+                        {{ equip.equipmentName }}
+                    </td>
+                    <td>
+                        {{ equip.equipmentType }}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<div class="8u$ 12u$(small)">
+    <h2>Students to Trade With</h2>
+</div>
+</body>
+</html>
