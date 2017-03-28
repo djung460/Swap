@@ -58,6 +58,16 @@ class ClassRequiresEquipment(models.Model):
         db_table = 'ClassRequiresEquipment'
         unique_together = (('faculty', 'classnum', 'term', 'equipmentid'),)
 
+    @staticmethod
+    def get(faculty, classnum, term):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT E.equipmentid, E.equipmentname, E.equipmenttype "
+                "FROM ClassRequiresEquipment CRE, Equipment E "
+                "WHERE CRE.faculty=%s AND CRE.classnum=%s AND CRE.term=%s AND CRE.equipmentid=E.equipmentid ",
+                [faculty, classnum, term])
+            return dictfetchall(cursor=cursor)
+
 
 class ConfirmedTrade(models.Model):
     tradeid = models.IntegerField(db_column='tradeID', primary_key=True)  # Field name made lowercase.
@@ -393,3 +403,13 @@ class StudentTakesClass(models.Model):
         managed = False
         db_table = 'StudentTakesClass'
         unique_together = (('username', 'faculty', 'classnum', 'term'),)
+
+    @staticmethod
+    def getEnrolled(faculty, classnum, term):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT S.username, S.name "
+                "FROM StudentTakesClass STC, Student S "
+                "WHERE STC.faculty=%s AND STC.classnum=%s AND STC.term=%s AND STC.username=S.username",
+                [faculty, classnum, term])
+            return dictfetchall(cursor=cursor)
