@@ -200,7 +200,7 @@ class Instructor(models.Model):
         """
         with connection.cursor() as cursor:
             rows = cursor.execute(
-                "SELECT S.username, S.name "
+                "SELECT * "
                 "FROM Student S "
                 "WHERE NOT EXISTS "
                 "(SELECT CRE.equipmentid "
@@ -408,7 +408,7 @@ class StudentTakesClass(models.Model):
     def getEnrolled(faculty, classnum, term):
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT S.username, S.name "
+                "SELECT * "
                 "FROM StudentTakesClass STC, Student S "
                 "WHERE STC.faculty=%s AND STC.classnum=%s AND STC.term=%s AND STC.username=S.username",
                 [faculty, classnum, term])
