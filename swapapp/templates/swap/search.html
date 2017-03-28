@@ -18,58 +18,58 @@
             </header>
         </div>
 
-        <div class="6u 12u$(small)">
-
-
-
+        <div class="4u 12u$(small)">
             <form action="/api/equipment/search" method="post" name="searchform"> {% csrf_token %}
             <div class="12u$">
                 <h2>Filter your search:</h2>
             </div>
-
-            <div class="6u$ 12u$(xsmall)">
+                <div class="row">
+            <div class="8u$ 12u$(xsmall)">
                 <label>Keyword</label>
                 <input type="text" name="keyword" placeholder="Laptop"/>
                 <br>
             </div>
-            <div class="6u$ 12u$(xsmall)">
+            <div class="8u$ 12u$(xsmall)">
                 <label>Type</label>
                 <input type="text" name="type" placeholder="LAB"/>
                 <br>
             </div>
-                  <div class="6u$ 12u$(xsmall)">
+                  <div class="8u$ 12u$(xsmall)">
                 <label>Faculty</label>
                 <input type="text" name="faculty" placeholder="CPSC"/>
                       <br>
             </div>
-                      <div class="6u$ 12u$(xsmall)">
+                      <div class="8u$ 12u$(xsmall)">
                 <label>Class Number</label>
                 <input type="text" name="classnum" placeholder="304"/>
-                          <br>
             </div>
-            <div class="6u$ 12u$(xsmall)">
+            <div class="4u$ 12u$(xsmall)">
                 <br>
             </div>
+                </div>
                 <button type="submit" class="button button-block">
                     Search
                 </button>
+                <br>
             </form>
+            <br>
         </div>
 
-        <div class="6u$ 12u$(small)">
+        <div class="8u$ 12u$(medium)">
             <div class="table-wrapper">
+            <br>
                 <table>
                     <tr>
                         <th>Name</th>
                         <th>Type</th>
                         <th>Quantity</th>
                         <th>Class</th>
-                        <th></th>
                     </tr>
                     {% for equip in equiplist %}
                         <tr id="equipment-{{ equip.equipmentID }}">
                             <td>
-                                {{ equip.equipmentName }}
+                                <input type="hidden" name="equipmentid" value="{{ equip.equipmentID }}">
+                                <a href="/trade" class="btn-link">{{ equip.equipmentName }}</a>
                             </td>
                             <td>
                                 {{ equip.equipmentType }}
@@ -79,14 +79,6 @@
                             </td>
                              <td>
                                 {{ equip.faculty }}{{ equip.classNum }}
-                            </td>
-                            <td>
-{#                                <form method="post" action="/api/search/equipment/"#}
-{#                                      style="display: inline-block">#}
-{#                                    {% csrf_token %}#}
-{#                                    <input type="hidden" name="equipmentid" value="{{ equip.equipmentID }}">#}
-{#                                    <input type="submit" value="See More"/>#}
-{#                                </form>#}
                             </td>
                         </tr>
                     {% endfor %}
