@@ -104,10 +104,9 @@ class Equipment(models.Model):
             return dictfetchall(cursor=cursor)
 
     def updateSearch(keyword, type, faculty, classnum):
-
         with connection.cursor() as cursor:
             cursor.execute(
-             #   "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(s.quantity,0) as quantity, IFNULL(c.faculty,'') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid WHERE e.equipmentName LIKE '%" + keyword + "%' AND e.equipmentType LIKE '%" + type + "%' AND c.faculty LIKE '%" + faculty + "%' AND c.classNum LIKE '%" + classnum + "%' GROUP BY e.equipmentid")
+                #   "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(s.quantity,0) as quantity, IFNULL(c.faculty,'') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid WHERE e.equipmentName LIKE '%" + keyword + "%' AND e.equipmentType LIKE '%" + type + "%' AND c.faculty LIKE '%" + faculty + "%' AND c.classNum LIKE '%" + classnum + "%' GROUP BY e.equipmentid")
                 "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(s.quantity,0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid WHERE e.equipmentName LIKE '%" + keyword + "%' AND e.equipmentType LIKE '%" + type + "%' GROUP BY e.equipmentid")
             return dictfetchall(cursor=cursor)
 
@@ -183,6 +182,26 @@ class Instructor(models.Model):
                 "FROM Class "
                 "WHERE instructorusername = %s",
                 [self.username])
+            return dictfetchall(rows)
+
+    def getStudentsWithAllEquipment(self, faculty, classnum, term):
+        """
+        Gets a list of students with all required equipment for a class they are enrolled in
+        Used by the instructor to get an overview
+        """
+        with connection.cursor() as cursor:
+            rows = cursor.execute(
+                "SELECT S.username, S.name "
+                "FROM Student S "
+                "WHERE NOT EXISTS "
+                "(SELECT CRE.equipmentid "
+                "FROM ClassRequiresEquipment CRE "
+                "WHERE CRE.faculty=%s AND CRE.classnum=%s AND CRE.term=%s "
+                "EXCEPT "
+                "SELECT SHE.equipmentid "
+                "FROM StudentHasEquipment SHE, StudentTakesClass STC "
+                "WHERE SHE.username = S.username AND STC.faculty=%s AND STC.classnum=%s AND STC.term=%s AND STC.username=S.username)",
+                [faculty, classnum, term, faculty, classnum, term])
             return dictfetchall(rows)
 
 
@@ -376,40 +395,40 @@ class Student(models.Model):
             cursor.execute(
                 "DELETE Student WHERE username = %s AND pwhash = %s",
                 [self.username, self.pwhash])
-				
+
     def findPossibleTrades(self):
         """
         Lists pairs of items that you want and that someone else has, and that the 2nd person wants and you have
         """
         with connection.cursor() as cursor:
             cursor.execute(
-                #TODO get names of items
-				#TODO remove pairs that are already in pendingtable and where requestusername is your username
-				#TODO populate tables to test findPossibleTrades function
-				'''SELECT StudentHasEquipment.equipmentID as ID1, StudentHasEquipment2.equipmentID as ID2
-				FROM
-				StudentHasEquipment,
-				StudentTakesClass,
-				ClassRequiresEquipment,
-				
-				StudentHasEquipment as StudentHasEquipment2,
-				StudentTakesClass as StudentTakesClass2,
-				ClassRequiresEquipment as ClassRequiresEquipment2
+                # TODO get names of items
+                # TODO remove pairs that are already in pendingtable and where requestusername is your username
+                # TODO populate tables to test findPossibleTrades function
+                '''SELECT StudentHasEquipment.equipmentID as ID1, StudentHasEquipment2.equipmentID as ID2
+                FROM
+                StudentHasEquipment,
+                StudentTakesClass,
+                ClassRequiresEquipment,
 
-				WHERE StudentTakesClass.username=%s
-				AND StudentTakesClass.faculty=ClassRequiresEquipment.faculty
-				AND StudentTakesClass.classNum=ClassRequiresEquipment.classNum
-				AND StudentTakesClass.term=ClassRequiresEquipment.term
-				AND ClassRequiresEquipment.equipmentID=StudentHasEquipment2.equipmentID
+                StudentHasEquipment as StudentHasEquipment2,
+                StudentTakesClass as StudentTakesClass2,
+                ClassRequiresEquipment as ClassRequiresEquipment2
 
-				AND StudentTakesClass2.username=StudentHasEquipment2.username
-				AND StudentTakesClass2.faculty=ClassRequiresEquipment2.faculty
-				AND StudentTakesClass2.classNum=ClassRequiresEquipment2.classNum
-				AND StudentTakesClass2.term=ClassRequiresEquipment2.term
-				AND ClassRequiresEquipment2.equipmentID=StudentHasEquipment.equipmentID
+                WHERE StudentTakesClass.username=%s
+                AND StudentTakesClass.faculty=ClassRequiresEquipment.faculty
+                AND StudentTakesClass.classNum=ClassRequiresEquipment.classNum
+                AND StudentTakesClass.term=ClassRequiresEquipment.term
+                AND ClassRequiresEquipment.equipmentID=StudentHasEquipment2.equipmentID
 
-				AND StudentHasEquipment.username=StudentTakesClass.username
-				AND NOT StudentTakesClass2.username=StudentTakesClass.username''',
+                AND StudentTakesClass2.username=StudentHasEquipment2.username
+                AND StudentTakesClass2.faculty=ClassRequiresEquipment2.faculty
+                AND StudentTakesClass2.classNum=ClassRequiresEquipment2.classNum
+                AND StudentTakesClass2.term=ClassRequiresEquipment2.term
+                AND ClassRequiresEquipment2.equipmentID=StudentHasEquipment.equipmentID
+
+                AND StudentHasEquipment.username=StudentTakesClass.username
+                AND NOT StudentTakesClass2.username=StudentTakesClass.username''',
                 [self.username])
 
 

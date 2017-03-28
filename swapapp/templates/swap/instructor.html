@@ -44,11 +44,10 @@
                                 {% for equip in class.equiplist %}
                                    | {{ equip.equipmentName }} {{ equip.equipmentType }}
                                 {% endfor %}
-                            |
                             </td>
                             <td>
-                                <a href="/addequipment/class/{{ class.faculty }}{{ class.classNum }}{{ class.term }}"
-                                   class="button special"> Add Equipment </a>
+                                <a href="/overview/class/{{ class.faculty }}-{{ class.classNum }}-{{ class.term }}"
+                                   class="button special"> Overview </a>
                             </td>
                         </tr>
                     {% endfor %}

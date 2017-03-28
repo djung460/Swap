@@ -1,0 +1,87 @@
+{% extends 'swap/base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+     <div class="12u$">
+            <header id="header">
+                <h2 class="colored">{{ faculty }}-{{ classnum }}-{{ term }} Overview</h2>
+            </header>
+        </div>
+    <!--------------------------------------------------------------------------------------------------------------
+        EQUIPMENT OVERVIEW
+     --------------------------------------------------------------------------------------------------------------->
+    <h3 class="colored">Required Equipment</h3>
+    <div class="row uniform">
+        <div class="6u$ 12u$(small)">
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                    </tr>
+                    {% for equip in equiplist %}
+                        <tr>
+                            <td>
+                                {{ equip.equipmentName }}
+                            </td>
+                            <td>
+                                {{ equip.equipmentType }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+     <a href="/addequipment/class/{{ faculty }}{{ classNum }}{{ term }}"
+                                   class="button special"> Add Equipment </a>
+    <!--------------------------------------------------------------------------------------------------------------
+        STUDENT OVERVIEW
+     --------------------------------------------------------------------------------------------------------------->
+    <h3 class="colored">Enrolled Students</h3>
+    <div class="row uniform">
+        <div class="6u$ 12u$(small)">
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Username</th>
+                        <th>Name</th>
+                    </tr>
+                    {% for student in enrolled %}
+                        <tr>
+                            <td>
+                                {{ student.username }}
+                            </td>
+                            <td>
+                                {{ student.name }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <h3 class="colored">Students With All Required Equipment</h3>
+    <div class="row uniform">
+        <div class="6u$ 12u$(small)">
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Username</th>
+                        <th>Name</th>
+                    </tr>
+                    {% for student in hasallequip %}
+                        <tr>
+                            <td>
+                                {{ student.username }}
+                            </td>
+                            <td>
+                                {{ student.name }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

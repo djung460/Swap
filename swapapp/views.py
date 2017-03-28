@@ -134,6 +134,24 @@ def instructor(request, user=''):
         return HttpResponseRedirect('/')
 
 
+def classoverview(request,faculty='',classnum='',term=''):
+    if request.user.is_authenticated:
+        inst = Instructor.get(request.user.username[1:])
+
+        hasallequip = inst.getStudentsWithAllEquipment(faculty=faculty,classnum=classnum,term=term)
+        equiplist = ClassRequiresEquipment.get(faculty, classnum, term)
+        return render(request, 'swap/classoverview.html', {
+            'hasallequip': hasallequip,
+            'equiplist':equiplist,
+            'faculty': faculty,
+            #q'enrolled': enrolled,
+            'classnum': classnum,
+            'term': term
+        })
+    else:
+        return HttpResponseRedirect('/')
+
+
 def instructor_addequip(request, classid=''):
     if request.user.is_authenticated:
         equiplist = Equipment.getAll()

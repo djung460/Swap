@@ -9,3 +9,6 @@ AND STC.faculty=CRE.faculty
 AND STC.classnum=CRE.classnum
 AND STC.term=CRE.term
 AND E1.equipmentid=CRE.equipmentid;
+
+
+SELECT S.username, S.name FROM Student S WHERE NOT EXISTS (SELECT CRE.equipmentid FROM ClassRequiresEquipment CRE WHERE CRE.faculty='ELEC' AND CRE.classnum='201' AND CRE.term='2016WT2' EXCEPT SELECT SHE.equipmentid FROM StudentHasEquipment SHE, StudentTakesClass STC WHERE SHE.username = S.username AND STC.faculty='ELEC' AND STC.classnum='201' AND STC.term='2016WT2' AND STC.username=S.username);
