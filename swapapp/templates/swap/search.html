@@ -18,15 +18,45 @@
             </header>
         </div>
 
-       <div class="6u 12u$(small)">
-            <p>
-                Filter your search here:
+        <div class="6u 12u$(small)">
 
-            </p>
-            <a href="/addequipment" class="button special right">Search</a>
+
+
+            <form action="/api/equipment/search" method="post" name="searchform"> {% csrf_token %}
+            <div class="12u$">
+                <h2>Filter your search:</h2>
+            </div>
+
+            <div class="6u$ 12u$(xsmall)">
+                <label>Keyword</label>
+                <input type="text" name="keyword" placeholder="Laptop"/>
+                <br>
+            </div>
+            <div class="6u$ 12u$(xsmall)">
+                <label>Type</label>
+                <input type="password" name="type" placeholder="LAB"/>
+                <br>
+            </div>
+                  <div class="6u$ 12u$(xsmall)">
+                <label>Faculty</label>
+                <input type="text" name="faculty" placeholder="CPSC"/>
+                      <br>
+            </div>
+                      <div class="6u$ 12u$(xsmall)">
+                <label>Class Number</label>
+                <input type="password" name="classnum" placeholder="304"/>
+                          <br>
+            </div>
+            <div class="6u$ 12u$(xsmall)">
+                <br>
+            </div>
+                <button type="submit" class="button button-block">
+                    Search
+                </button>
+            </form>
         </div>
 
- <div class="6u$ 12u$(small)">
+        <div class="6u$ 12u$(small)">
             <div class="table-wrapper">
                 <table>
                     <tr>
@@ -47,13 +77,12 @@
                                 {{ equip.quantity }}
                             </td>
                             <td>
-                                <form method="post" action="/api/student/equipment/delete"
-                                      style="display: inline-block">
-                                    {% csrf_token %}
-                                    <input type="hidden" value="{{ obj.student.username }}"/>
-                                    <input type="hidden" name="equipmentid" value="{{ equip.equipmentID }}">
-                                    <input type="submit" value="See More"/>
-                                </form>
+{#                                <form method="post" action="/api/search/equipment/"#}
+{#                                      style="display: inline-block">#}
+{#                                    {% csrf_token %}#}
+{#                                    <input type="hidden" name="equipmentid" value="{{ equip.equipmentID }}">#}
+{#                                    <input type="submit" value="See More"/>#}
+{#                                </form>#}
                             </td>
                         </tr>
                     {% endfor %}

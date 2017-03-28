@@ -18,8 +18,12 @@ def join(request):
     return render(request, 'swap/join.html')
 
 
+
 def search(request):
-    return render(request, 'swap/search.html')
+    equiplist = Equipment.getAll();
+    return render(request, 'swap/search.html', {
+        'equiplist': equiplist,
+    })
 
 
 def student(request, user=''):

@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^api/student/class/enroll', studenthandlers.enroll),
     url(r'^api/student/class/drop', studenthandlers.drop),
 
+
     url(r'^api/instructor/class/add', instructorhandlers.addclass),
     url(r'^api/instructor/equipment/add', instructorhandlers.addequipment),
 
@@ -36,6 +37,7 @@ urlpatterns = [
     url(r'^api/equipment/add$', handlers.equipment),
     url(r'^api/equipment/delete$', handlers.equipment),
     url(r'^api/equipment/get$', handlers.equipment),
+    url(r'^api/equipment/search', handlers.searchequipment),
 
     url(r'^api/trades/add$', handlers.trade),
     url(r'^api/trades/delete$', handlers.trade),
