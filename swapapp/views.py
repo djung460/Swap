@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from .models import Student, Instructor, Equipment, Class
+from .models import Student, Instructor, Equipment, Class, ClassRequiresEquipment
 
 
 # Create your views here
@@ -40,6 +40,24 @@ def student(request, user=''):
             'classlist': classlist
         })
 
+    else:
+        return HttpResponseRedirect('/')
+
+
+def maketrade(request):
+    if request.user.is_authenticated:
+        username = request.user.username[1:]
+        stud = Student.get(username)
+        # Get equipment that we do not have that are required
+        notowned = stud.getRequiredNotOwnedEquip()
+        print(notowned)
+        obj = {
+            'notowned': notowned,
+        }
+        context = RequestContext(request, {
+            'obj': obj
+        })
+        return render_to_response('swap/trade.html', context=context)
     else:
         return HttpResponseRedirect('/')
 
@@ -101,6 +119,12 @@ def instructor(request, user=''):
         classlist = inst.getClasses()
 
         print(inst.username, classlist)
+        # Add on the required equipment for each class
+
+        for item in classlist:
+            item['equiplist'] = ClassRequiresEquipment.get(faculty=item['faculty'], classnum=item['classNum'],
+                                                           term=item['term'])
+            print(item['equiplist'])
 
         return render(request, 'swap/instructor.html', {
             'instructor': inst,

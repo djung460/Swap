@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SELECT A TRADE</title>
+</head>
+<body>
+<h1>SWAP</h1>
+<h2>SELECT A TRADE</h2>
+
+<form action="/api/trades/findtrades" method="post" name="tradelist"> {% csrf_token %}
+    {% for trade in td %}
+        <input type="checkbox" name="tradelist" value={{td.ID1}},{{td.ID2}} > {td.id1,td.id2}
+        <br>
+    {% endfor %}
+
+    <button type="submit" class="button button-block">
+        REQUEST TRADE
+    </button>
+</form>
+</body>
+</html>

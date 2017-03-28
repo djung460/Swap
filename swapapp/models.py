@@ -58,6 +58,16 @@ class ClassRequiresEquipment(models.Model):
         db_table = 'ClassRequiresEquipment'
         unique_together = (('faculty', 'classnum', 'term', 'equipmentid'),)
 
+    @staticmethod
+    def get(faculty, classnum, term):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT E.equipmentid, E.equipmentname, E.equipmenttype "
+                "FROM ClassRequiresEquipment CRE, Equipment E "
+                "WHERE CRE.faculty=%s AND CRE.classnum=%s AND CRE.term=%s AND CRE.equipmentid=E.equipmentid ",
+                [faculty, classnum, term])
+            return dictfetchall(cursor=cursor)
+
 
 class ConfirmedTrade(models.Model):
     tradeid = models.IntegerField(db_column='tradeID', primary_key=True)  # Field name made lowercase.
@@ -315,13 +325,107 @@ class Student(models.Model):
                 "UPDATE StudentHasEquipment "
                 "SET quantity=%s "
                 "WHERE username=%s AND equipmentid=%s",
-                [quantity,self.username, equipmentid])
+                [quantity, self.username, equipmentid])
+
+    def getRequiredNotOwnedEquip(self):
+        """
+        Finds required equipment that we do not yet own
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT E1.equipmentid, E1.equipmentname, E1.equipmenttype, CRE.faculty, CRE.classnum, CRE.term "
+                "FROM ClassRequiresEquipment CRE, StudentTakesClass STC, Equipment E1 "
+                "WHERE STC.username=%s "
+                "AND STC.faculty=CRE.faculty "
+                "AND STC.classnum=CRE.classnum "
+                "AND STC.term=CRE.term "
+                "AND E1.equipmentid=CRE.equipmentid "
+                "AND CRE.equipmentid NOT IN "
+                "(SELECT E.equipmentid "
+                "FROM Student S, StudentHasEquipment SHE, Equipment E "
+                "WHERE S.username = SHE.username AND S.username = %s AND SHE.equipmentid = E.equipmentid)",
+                [self.username, self.username])
+            return dictfetchall(cursor=cursor)
+
+    def findOtherStudents(self):
+        """
+        Finds other students who have equipment for classes that we do not have
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "CREATE TEMP VIEW StudentNeedsEquipment "
+                "SELECT "
+                "FROM "
+                "AND CRE.equipmentid NOT IN ("
+                "SELECT E.equipmentid "
+                "FROM Student S, StudentHasEquipment SHE, Equipment E "
+                "WHERE S.username = SHE.username AND S.username = %s AND SHE.equipmentid = E.equipmentid)",
+                # "SELECT DISTINCT SHE.username "
+                # "FROM ClassRequiresEquipment CRE, Student S, StudentTakesClass STC, StudentHasEquipment SHE "
+                # "WHERE S.username=STC.username "
+                # "AND STC.faculty=CRE.faculty "
+                # "AND STC.classnum=CRE.classnum "
+                # "AND STC.term=CRE.term "
+                # "AND SHE.equipmentid=CRE.equipmentid "
+                # "AND CRE.equipmentid NOT IN ("
+                # "SELECT E.equipmentid "
+                # "FROM Student S, StudentHasEquipment SHE, Equipment E "
+                # "WHERE S.username = SHE.username AND S.username = %s AND SHE.equipmentid = E.equipmentid)",
+                [self.username])
+            # cursor.execute(
+            #     "SELECT DISTINCT SHE.username "
+            #     "FROM ClassRequiresEquipment CRE, Student S, StudentTakesClass STC, StudentHasEquipment SHE "
+            #     "WHERE S.username=STC.username "
+            #     "AND STC.faculty=CRE.faculty "
+            #     "AND STC.classnum=CRE.classnum "
+            #     "AND STC.term=CRE.term "
+            #     "AND SHE.equipmentid=CRE.equipmentid "
+            #     "AND CRE.equipmentid NOT IN ("
+            #     "SELECT E.equipmentid "
+            #     "FROM Student S, StudentHasEquipment SHE, Equipment E "
+            #     "WHERE S.username = SHE.username AND S.username = %s AND SHE.equipmentid = E.equipmentid)",
+            #     [self.username])
 
     def remove(self):
         with connection.cursor() as cursor:
             cursor.execute(
                 "DELETE Student WHERE username = %s AND pwhash = %s",
                 [self.username, self.pwhash])
+				
+    def findPossibleTrades(self):
+        """
+        Lists pairs of items that you want and that someone else has, and that the 2nd person wants and you have
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                #TODO get names of items
+				#TODO remove pairs that are already in pendingtable and where requestusername is your username
+				#TODO populate tables to test findPossibleTrades function
+				'''SELECT StudentHasEquipment.equipmentID as ID1, StudentHasEquipment2.equipmentID as ID2
+				FROM
+				StudentHasEquipment,
+				StudentTakesClass,
+				ClassRequiresEquipment,
+				
+				StudentHasEquipment as StudentHasEquipment2,
+				StudentTakesClass as StudentTakesClass2,
+				ClassRequiresEquipment as ClassRequiresEquipment2
+
+				WHERE StudentTakesClass.username=%s
+				AND StudentTakesClass.faculty=ClassRequiresEquipment.faculty
+				AND StudentTakesClass.classNum=ClassRequiresEquipment.classNum
+				AND StudentTakesClass.term=ClassRequiresEquipment.term
+				AND ClassRequiresEquipment.equipmentID=StudentHasEquipment2.equipmentID
+
+				AND StudentTakesClass2.username=StudentHasEquipment2.username
+				AND StudentTakesClass2.faculty=ClassRequiresEquipment2.faculty
+				AND StudentTakesClass2.classNum=ClassRequiresEquipment2.classNum
+				AND StudentTakesClass2.term=ClassRequiresEquipment2.term
+				AND ClassRequiresEquipment2.equipmentID=StudentHasEquipment.equipmentID
+
+				AND StudentHasEquipment.username=StudentTakesClass.username
+				AND NOT StudentTakesClass2.username=StudentTakesClass.username''',
+                [self.username])
 
 
 class StudentHasEquipment(models.Model):
