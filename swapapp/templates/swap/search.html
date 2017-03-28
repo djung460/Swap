@@ -34,7 +34,7 @@
             </div>
             <div class="6u$ 12u$(xsmall)">
                 <label>Type</label>
-                <input type="password" name="type" placeholder="LAB"/>
+                <input type="text" name="type" placeholder="LAB"/>
                 <br>
             </div>
                   <div class="6u$ 12u$(xsmall)">
@@ -44,7 +44,7 @@
             </div>
                       <div class="6u$ 12u$(xsmall)">
                 <label>Class Number</label>
-                <input type="password" name="classnum" placeholder="304"/>
+                <input type="text" name="classnum" placeholder="304"/>
                           <br>
             </div>
             <div class="6u$ 12u$(xsmall)">
@@ -63,6 +63,7 @@
                         <th>Name</th>
                         <th>Type</th>
                         <th>Quantity</th>
+                        <th>Class</th>
                         <th></th>
                     </tr>
                     {% for equip in equiplist %}
@@ -75,6 +76,9 @@
                             </td>
                             <td>
                                 {{ equip.quantity }}
+                            </td>
+                             <td>
+                                {{ equip.faculty }}{{ equip.classNum }}
                             </td>
                             <td>
 {#                                <form method="post" action="/api/search/equipment/"#}

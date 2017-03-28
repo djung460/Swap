@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^login$',views.login),
     url(r'^join$',views.join),
     url(r'^search$', views.search),
+    url(r'^search/(?P<user>[0-9a-zA-Z]+)$', views.search),
     url(r'^student/(?P<user>[0-9a-zA-Z]+)$',views.student),
     url(r'^addequipment$', views.addStudentEquipment),
     url(r'^enroll$',views.enroll),

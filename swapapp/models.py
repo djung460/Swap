@@ -89,15 +89,16 @@ class Equipment(models.Model):
     def getAll():
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, s.quantity FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid GROUP BY e.equipmentid")
+                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(s.quantity,0) as quantity, IFNULL(c.faculty,'') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid"
+            )
             return dictfetchall(cursor=cursor)
 
     def updateSearch(keyword, type, faculty, classnum):
 
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, s.quantity FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid WHERE e.equipmentName LIKE '%" + keyword + "%' GROUP BY e.equipmentid")
-
+                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(s.quantity,0) as quantity, IFNULL(c.faculty,'') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid WHERE e.equipmentName LIKE '%" + keyword + "%' AND e.equipmentType LIKE '%" + type + "%' AND c.faculty LIKE '%" + faculty + "%' AND c.classNum LIKE '%" + classnum + "%' GROUP BY e.equipmentid")
+            return dictfetchall(cursor=cursor)
 
 
 class Instructor(models.Model):

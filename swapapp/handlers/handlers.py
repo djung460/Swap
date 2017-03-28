@@ -39,11 +39,12 @@ def searchequipment(request):
     classnum = data['classnum']
 
     try:
-        Equipment.updateSearch(keyword=keyword,type=type, faculty=faculty, classnum=classnum)
+        equiplist = Equipment.updateSearch(keyword=keyword,type=type, faculty=faculty, classnum=classnum)
+        return render(request, 'swap/search.html', {
+            'equiplist': equiplist,
+        })
     except IntegrityError:
         return HttpResponseRedirect('/search')
-
-    return HttpResponseRedirect('/search/')
 
 
 @csrf_exempt
