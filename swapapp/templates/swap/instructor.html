@@ -25,7 +25,6 @@
                         <th>Number</th>
                         <th>Term</th>
                         <th>Equipment(s)</th>
-                        <th>Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -39,12 +38,6 @@
                             </td>
                             <td>
                                 {{ class.term }}
-                            </td>
-                            <td>
-                                {% for equip in class.equiplist %}
-                                   | {{ equip.equipmentName }} {{ equip.equipmentType }}
-                                {% endfor %}
-                            |
                             </td>
                             <td>
                                 <a href="/addequipment/class/{{ class.faculty }}{{ class.classNum }}{{ class.term }}"

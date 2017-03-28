@@ -8,9 +8,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.db.utils import IntegrityError
 from swapapp.models import Equipment
-from swapapp.models import Student
-from django.template import RequestContext
-from django.shortcuts import render_to_response
 
 
 class JSONResponse(HttpResponse):
@@ -40,32 +37,16 @@ def searchequipment(request):
     type =  data['type']
     faculty = data['faculty']
     classnum = data['classnum']
+    min = data['minquantity']
 
     try:
-        equiplist = Equipment.updateSearch(keyword=keyword,type=type, faculty=faculty, classnum=classnum)
+        equiplist = Equipment.updateSearch(keyword=keyword,type=type, faculty=faculty, classnum=classnum, min=min)
         return render(request, 'swap/search.html', {
             'equiplist': equiplist,
         })
     except IntegrityError:
         return HttpResponseRedirect('/search')
-		
-@csrf_exempt
-def findtrade(request):
-	if not request.user.is_authenticated:
-		return HttpResponseRedirect('/')
-	if request.method == 'GET':
-		user = Student.get(request.user.username[1:])
-		possibletrades = user.findPossibleTrades()
-		#TODO: remove pendingTable trades from possibletrades
-	
-		context = RequestContext(request, {'pt': possibletrades})
-		return render_to_response('swap/student_findpossibletrades.html', context=context)
-	elif request.method == 'POST':
-	
-		for trade in request.POST.get("trade",[]):
-			trade = trade.split(",")
-			#TODO: insert the pair into the pending trade table
-		HttpResponseRedirect('.')
+
 
 @csrf_exempt
 def trade(request):

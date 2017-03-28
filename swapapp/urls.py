@@ -16,7 +16,6 @@ urlpatterns = [
     url(r'^student/(?P<user>[0-9a-zA-Z]+)$',views.student),
     url(r'^addequipment$', views.addStudentEquipment),
     url(r'^enroll$',views.enroll),
-    url(r'^maketrade',views.maketrade),
     url(r'^instructor/(?P<user>[0-9a-zA-Z]+)$',views.instructor),
     url(r'^addclass$',views.addclass),
     url(r'^addequipment/class/(?P<classid>[0-9a-zA-Z]+)$', views.instructor_addequip),
@@ -40,8 +39,7 @@ urlpatterns = [
     url(r'^api/equipment/delete$', handlers.equipment),
     url(r'^api/equipment/get$', handlers.equipment),
     url(r'^api/equipment/search', handlers.searchequipment),
-	
-	url(r'^api/trades/findtrades$', handlers.findtrade),
+
     url(r'^api/trades/add$', handlers.trade),
     url(r'^api/trades/delete$', handlers.trade),
     url(r'^api/trades/get$', handlers.trade),
