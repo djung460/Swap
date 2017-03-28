@@ -58,6 +58,16 @@ class ClassRequiresEquipment(models.Model):
         db_table = 'ClassRequiresEquipment'
         unique_together = (('faculty', 'classnum', 'term', 'equipmentid'),)
 
+    @staticmethod
+    def get(faculty, classnum, term):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT E.equipmentid, E.equipmentname, E.equipmenttype "
+                "FROM ClassRequiresEquipment CRE, Equipment E "
+                "WHERE CRE.faculty=%s AND CRE.classnum=%s AND CRE.term=%s AND CRE.equipmentid=E.equipmentid ",
+                [faculty, classnum, term])
+            return dictfetchall(cursor=cursor)
+
 
 class ConfirmedTrade(models.Model):
     tradeid = models.IntegerField(db_column='tradeID', primary_key=True)  # Field name made lowercase.

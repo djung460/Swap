@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from .models import Student, Instructor, Equipment, Class
+from .models import Student, Instructor, Equipment, Class, ClassRequiresEquipment
 
 
 # Create your views here
@@ -115,6 +115,11 @@ def instructor(request, user=''):
     if request.user.is_authenticated:
         inst = Instructor.get(request.user.username[1:])
         classlist = inst.getClasses()
+        # Add on the required equipment for each class
+        for item in classlist:
+            item['equiplist'] = ClassRequiresEquipment.get(faculty=item['faculty'], classnum=item['classNum'],
+                                                           term=item['term'])
+            print(item['equiplist'])
         obj = {
             'instructor': inst,
             'classlist': classlist
