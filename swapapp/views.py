@@ -18,8 +18,12 @@ def join(request):
     return render(request, 'swap/join.html')
 
 
+
 def search(request):
-    return render(request, 'swap/search.html')
+    equiplist = Equipment.getAll();
+    return render(request, 'swap/search.html', {
+        'equiplist': equiplist,
+    })
 
 
 def student(request, user=''):
@@ -29,15 +33,13 @@ def student(request, user=''):
         equiplist = stud.getOwnedEquipment()
         classlist = stud.getEnrolled()
         print(classlist)
-        obj = {
+
+        return render(request, 'swap/student.html', {
             'student': stud,
             'equiplist': equiplist,
             'classlist': classlist
-        }
-        context = RequestContext(request, {
-            'obj': obj
         })
-        return render_to_response('swap/student.html', context=context)
+
     else:
         return HttpResponseRedirect('/')
 
@@ -115,15 +117,13 @@ def instructor(request, user=''):
     if request.user.is_authenticated:
         inst = Instructor.get(request.user.username[1:])
         classlist = inst.getClasses()
-        obj = {
+
+        print(inst.username, classlist)
+
+        return render(request, 'swap/instructor.html', {
             'instructor': inst,
             'classlist': classlist
-        }
-        print(inst.username, classlist)
-        context = RequestContext(request, {
-            'obj': obj
         })
-        return render_to_response('swap/instructor.html', context=context)
     else:
         return HttpResponseRedirect('/')
 

@@ -1,19 +1,67 @@
 {% extends 'swap/base.html' %}
+{% load staticfiles %}
+
 {% block content %}
     <div class="row uniform">
-
+        <span class="main image">
+            <img src="{% static 'swapapp/images/student_banner.jpg' %}"/>
+        </span>
+		
+		<!--------------------------------------------------------------------------------------------------------------
+        OFFER A TRADE
+        --------------------------------------------------------------------------------------------------------------->
         <div class="12u$">
-            <h2>WELCOME {{ obj.student.username }}</h2>
-            <a href="/api/auth/logout" class="button">Logout</a>
+            <header id="header">
+                <h2 class="colored"><span class=" icon fa-clock-o"></span> Offer a Trade</h2>
+            </header>
+        </div>
+        <div class="4u$ 12u$(small)">
+            <p>
+                Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non
+                faucibus ornare mi ut ante amet placerat aliquet. Volutpat commodo eu sed ante lacinia. Sapien a
+                lorem in integer ornare praesent commodo adipiscing arcu in massa commodo lorem accumsan at odio massa
+                ac ac.Semper adipiscing varius montes viverra nibh in adipiscing blandit tempus accumsan.
+            </p>
+            <a href="/api/trades/findtrades" class="button special right">Search for Possible Trades</a>
         </div>
 
-        <div class="8u$ 12u$(small)">
-            <h2><span class=" icon fa-clock-o"></span> Pending trades</h2>
+        <!--------------------------------------------------------------------------------------------------------------
+        PENDING TRADES
+        --------------------------------------------------------------------------------------------------------------->
+        <div class="12u$">
+            <header id="header">
+                <h2 class="colored"><span class=" icon fa-clock-o"></span> Pending trades</h2>
+            </header>
+        </div>
+        <div class="4u$ 12u$(small)">
+            <p>
+                Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non
+                faucibus ornare mi ut ante amet placerat aliquet. Volutpat commodo eu sed ante lacinia. Sapien a
+                lorem in integer ornare praesent commodo adipiscing arcu in massa commodo lorem accumsan at odio massa
+                ac ac.Semper adipiscing varius montes viverra nibh in adipiscing blandit tempus accumsan.
+            </p>
             <a href="/maketrade" class="button special right">Make a trade</a>
         </div>
 
-        <div class="8u$ 12u$(small)">
-            <h2><span class=" icon fa-flask"></span> Equipments you have</h2>
+        <!--------------------------------------------------------------------------------------------------------------
+        EQUIPMENTS YOU HAVE
+        --------------------------------------------------------------------------------------------------------------->
+        <div class="12u$">
+            <header id="header">
+                <h2 class="align-right colored"><span class=" icon fa-flask"></span> Equipments you have</h2>
+            </header>
+        </div>
+        <div class="6u 12u$(small)">
+            <p>
+                Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non
+                faucibus ornare mi ut ante amet placerat aliquet. Volutpat commodo eu sed ante lacinia. Sapien a
+                lorem in integer ornare praesent commodo adipiscing arcu in massa commodo lorem accumsan at odio massa
+                ac ac.Semper adipiscing varius montes viverra nibh in adipiscing blandit tempus accumsan.
+            </p>
+            <a href="/addequipment" class="button special right">Add Equipment</a>
+        </div>
+
+        <div class="6u$ 12u$(small)">
             <div class="table-wrapper">
                 <table>
                     <tr>
@@ -22,8 +70,8 @@
                         <th>Quantity</th>
                         <th>Action</th>
                     </tr>
-                    {% for equip in obj.equiplist %}
-                        <tr id="equipment-{{ equip.equipmentID}}">
+                    {% for equip in equiplist %}
+                        <tr id="equipment-{{ equip.equipmentID }}">
                             <td>
                                 {{ equip.equipmentName }}
                             </td>
@@ -31,7 +79,8 @@
                                 {{ equip.equipmentType }}
                             </td>
                             <td>
-                                <form method="post" action="/api/student/equipment/update" style="display: inline-block">
+                                <form method="post" action="/api/student/equipment/update"
+                                      style="display: inline-block">
                                     {% csrf_token %}
                                     <input type="hidden" value="{{ obj.student.username }}"/>
                                     <input type="hidden" name="equipmentid" value="{{ equip.equipmentID }}">
@@ -40,7 +89,8 @@
                                 </form>
                             </td>
                             <td>
-                                <form method="post" action="/api/student/equipment/delete" style="display: inline-block">
+                                <form method="post" action="/api/student/equipment/delete"
+                                      style="display: inline-block">
                                     {% csrf_token %}
                                     <input type="hidden" value="{{ obj.student.username }}"/>
                                     <input type="hidden" name="equipmentid" value="{{ equip.equipmentID }}">
@@ -51,11 +101,18 @@
                     {% endfor %}
                 </table>
             </div>
-            <a href="/addequipment" class="button special right">Add Equipment</a>
         </div>
 
-        <div class="8u$ 12u$(small)">
-            <h2><span class=" icon fa-graduation-cap"></span> Courses you are enrolled in</h2>
+        <!--------------------------------------------------------------------------------------------------------------
+         COURSES ENROLLED IN
+        --------------------------------------------------------------------------------------------------------------->
+        <div class="12u$">
+            <header id="header">
+                <h2 class="colored"><span class=" icon fa-graduation-cap"></span> Courses enrolled in</h2>
+            </header>
+        </div>
+
+        <div class="6u 12u$(small)">
             <div class="table-wrapper">
                 <table>
                     <thread>
@@ -67,7 +124,7 @@
                         </tr>
                     </thread>
                     <tbody>
-                    {% for class in obj.classlist %}
+                    {% for class in classlist %}
                         <tr>
                             <td>
                                 {{ class.faculty }}
@@ -92,8 +149,18 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <div class="6u$ 12u$(small)">
+            <p>
+                Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non
+                faucibus ornare mi ut ante amet placerat aliquet. Volutpat commodo eu sed ante lacinia. Sapien a
+                lorem in integer ornare praesent commodo adipiscing arcu in massa commodo lorem accumsan at odio massa
+                ac ac.Semper adipiscing varius montes viverra nibh in adipiscing blandit tempus accumsan.
+            </p>
             <a href="/enroll" class="button special right">Enroll in another course</a>
         </div>
+
     </div>
 
 {% endblock %}
