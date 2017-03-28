@@ -98,7 +98,22 @@ class Equipment(models.Model):
         with connection.cursor() as cursor:
             cursor.execute(
              #   "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(s.quantity,0) as quantity, IFNULL(c.faculty,'') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid WHERE e.equipmentName LIKE '%" + keyword + "%' AND e.equipmentType LIKE '%" + type + "%' AND c.faculty LIKE '%" + faculty + "%' AND c.classNum LIKE '%" + classnum + "%' GROUP BY e.equipmentid")
-                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(s.quantity,0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid WHERE e.equipmentName LIKE '%" + keyword + "%' AND e.equipmentType LIKE '%" + type + "%' GROUP BY e.equipmentid")
+             "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(s.quantity,0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+             "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid "
+             "WHERE e.equipmentName LIKE '%" + keyword + "%' AND e.equipmentType LIKE '%" + type + "%' GROUP BY e.equipmentid"
+            )
+            if(faculty != ""):
+                cursor.execute(
+                    "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(s.quantity,0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                    "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid "
+                    "WHERE e.equipmentName LIKE '%" + keyword + "%' AND e.equipmentType LIKE '%" + type + "%' AND c.faculty LIKE '%" + faculty + "%'  GROUP BY e.equipmentid"
+                )
+            if (classnum != ""):
+                cursor.execute(
+                    "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(s.quantity,0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                    "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid "
+                    "WHERE e.equipmentName LIKE '%" + keyword + "%' AND e.equipmentType LIKE '%" + type + "%' AND c.faculty LIKE '%" + faculty + "%' AND c.classNum LIKE '%" + classnum + "%'  GROUP BY e.equipmentid"
+                )
             return dictfetchall(cursor=cursor)
 
 
