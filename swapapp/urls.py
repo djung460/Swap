@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^instructor/(?P<user>[0-9a-zA-Z]+)$',views.instructor),
     url(r'^addclass$',views.addclass),
     url(r'^addequipment/class/(?P<classid>[0-9a-zA-Z]+)$', views.instructor_addequip),
+    url(r'^overview/class/(?P<faculty>[0-9a-zA-Z]+)-(?P<classnum>[0-9a-zA-Z]+)-(?P<term>[0-9a-zA-Z]+)$', views.classoverview),
 
     # api stuff gets passed off to the handler
     url(r'^api/student/equipment/add', studenthandlers.addequipment),
@@ -39,8 +40,8 @@ urlpatterns = [
     url(r'^api/equipment/delete$', handlers.equipment),
     url(r'^api/equipment/get$', handlers.equipment),
     url(r'^api/equipment/search', handlers.searchequipment),
-	
-	url(r'^api/trades/findtrades$', handlers.findtrade),
+    
+    url(r'^api/trades/findtrades$', handlers.findtrade),
     url(r'^api/trades/add$', handlers.trade),
     url(r'^api/trades/delete$', handlers.trade),
     url(r'^api/trades/get$', handlers.trade),

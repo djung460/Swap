@@ -40,9 +40,10 @@ def searchequipment(request):
     type =  data['type']
     faculty = data['faculty']
     classnum = data['classnum']
+    min = data['minquantity']
 
     try:
-        equiplist = Equipment.updateSearch(keyword=keyword,type=type, faculty=faculty, classnum=classnum)
+        equiplist = Equipment.updateSearch(keyword=keyword,type=type, faculty=faculty, classnum=classnum, min=min)
         return render(request, 'swap/search.html', {
             'equiplist': equiplist,
         })

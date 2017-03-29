@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from .models import Student, Instructor, Equipment, Class
+from .models import Student, Instructor, Equipment, Class, ClassRequiresEquipment, StudentTakesClass
 
 
 # Create your views here
@@ -102,9 +102,38 @@ def instructor(request, user=''):
 
         print(inst.username, classlist)
 
+        classlist = inst.getClasses()
+
+        print(inst.username, classlist)
+        # Add on the required equipment for each class
+
+        for item in classlist:
+            item['equiplist'] = ClassRequiresEquipment.get(faculty=item['faculty'], classnum=item['classNum'],
+                                                           term=item['term'])
+            print(item['equiplist'])
+
         return render(request, 'swap/instructor.html', {
             'instructor': inst,
             'classlist': classlist
+        })
+    else:
+        return HttpResponseRedirect('/')
+
+
+def classoverview(request,faculty='',classnum='',term=''):
+    if request.user.is_authenticated:
+        inst = Instructor.get(request.user.username[1:])
+
+        hasallequip = inst.getStudentsWithAllEquipment(faculty=faculty,classnum=classnum,term=term)
+        equiplist = ClassRequiresEquipment.get(faculty, classnum, term)
+        enrolled = StudentTakesClass.getEnrolled(faculty, classnum, term)
+        return render(request, 'swap/classoverview.html', {
+            'hasallequip': hasallequip,
+            'equiplist':equiplist,
+            'faculty': faculty,
+            'enrolled': enrolled,
+            'classnum': classnum,
+            'term': term
         })
     else:
         return HttpResponseRedirect('/')

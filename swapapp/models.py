@@ -58,6 +58,16 @@ class ClassRequiresEquipment(models.Model):
         db_table = 'ClassRequiresEquipment'
         unique_together = (('faculty', 'classnum', 'term', 'equipmentid'),)
 
+    @staticmethod
+    def get(faculty, classnum, term):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT E.equipmentid, E.equipmentname, E.equipmenttype "
+                "FROM ClassRequiresEquipment CRE, Equipment E "
+                "WHERE CRE.faculty=%s AND CRE.classnum=%s AND CRE.term=%s AND CRE.equipmentid=E.equipmentid ",
+                [faculty, classnum, term])
+            return dictfetchall(cursor=cursor)
+
 
 class ConfirmedTrade(models.Model):
     tradeid = models.IntegerField(db_column='tradeID', primary_key=True)  # Field name made lowercase.
@@ -81,6 +91,7 @@ class Equipment(models.Model):
     equipmentname = models.CharField(db_column='equipmentName', max_length=128)  # Field name made lowercase.
     equipmenttype = models.CharField(db_column='equipmentType', max_length=3)  # Field name made lowercase.
 
+
     class Meta:
         managed = False
         db_table = 'Equipment'
@@ -89,16 +100,23 @@ class Equipment(models.Model):
     def getAll():
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(s.quantity,0) as quantity, IFNULL(c.faculty,'') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid"
+                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid"
             )
             return dictfetchall(cursor=cursor)
 
-    def updateSearch(keyword, type, faculty, classnum):
 
+    def updateSearch(keyword, type, faculty, classnum, min):
+        baseQuery = "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid WHERE e.equipmentName LIKE '%" + keyword + "%'"
         with connection.cursor() as cursor:
+            if(faculty != ""):
+                baseQuery += " AND c.faculty LIKE '%" + faculty + "%'"
+            if (classnum != ""):
+                baseQuery += " AND c.classNum LIKE '%" + classnum + "%'"
+            if (type != ""):
+                baseQuery += " AND e.equipmentType LIKE '%" + type + "%'"
             cursor.execute(
-             #   "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(s.quantity,0) as quantity, IFNULL(c.faculty,'') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid WHERE e.equipmentName LIKE '%" + keyword + "%' AND e.equipmentType LIKE '%" + type + "%' AND c.faculty LIKE '%" + faculty + "%' AND c.classNum LIKE '%" + classnum + "%' GROUP BY e.equipmentid")
-                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(s.quantity,0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid WHERE e.equipmentName LIKE '%" + keyword + "%' AND e.equipmentType LIKE '%" + type + "%' GROUP BY e.equipmentid")
+                baseQuery + " GROUP BY e.equipmentid;"
+            )
             return dictfetchall(cursor=cursor)
 
 
@@ -173,6 +191,26 @@ class Instructor(models.Model):
                 "FROM Class "
                 "WHERE instructorusername = %s",
                 [self.username])
+            return dictfetchall(rows)
+
+    def getStudentsWithAllEquipment(self, faculty, classnum, term):
+        """
+        Gets a list of students with all required equipment for a class they are enrolled in
+        Used by the instructor to get an overview
+        """
+        with connection.cursor() as cursor:
+            rows = cursor.execute(
+                "SELECT * "
+                "FROM Student S "
+                "WHERE NOT EXISTS "
+                "(SELECT CRE.equipmentid "
+                "FROM ClassRequiresEquipment CRE "
+                "WHERE CRE.faculty=%s AND CRE.classnum=%s AND CRE.term=%s "
+                "EXCEPT "
+                "SELECT SHE.equipmentid "
+                "FROM StudentHasEquipment SHE, StudentTakesClass STC "
+                "WHERE SHE.username = S.username AND STC.faculty=%s AND STC.classnum=%s AND STC.term=%s AND STC.username=S.username)",
+                [faculty, classnum, term, faculty, classnum, term])
             return dictfetchall(rows)
 
 
@@ -308,6 +346,7 @@ class Student(models.Model):
                 "DELETE Student WHERE username = %s AND pwhash = %s",
                 [self.username, self.pwhash])
                 
+
     def findPossibleTrades(self):
         """
         Lists pairs of items that you want and that someone else has, and that the 2nd person wants and you have
@@ -395,3 +434,13 @@ class StudentTakesClass(models.Model):
         managed = False
         db_table = 'StudentTakesClass'
         unique_together = (('username', 'faculty', 'classnum', 'term'),)
+
+    @staticmethod
+    def getEnrolled(faculty, classnum, term):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * "
+                "FROM StudentTakesClass STC, Student S "
+                "WHERE STC.faculty=%s AND STC.classnum=%s AND STC.term=%s AND STC.username=S.username",
+                [faculty, classnum, term])
+            return dictfetchall(cursor=cursor)
