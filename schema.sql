@@ -83,6 +83,8 @@ CREATE TABLE PendingTrade(
     responseUsername VARCHAR(32) NOT NULL,
     requestEquipID INT NOT NULL,
     responseEquipID INT NOT NULL,
+    requestConfirm INT NOT NULL,
+    responseConfirm INT NOT NULL,
     dateRequested DATETIME NOT NULL,
 
     FOREIGN KEY(requestUsername, requestEquipID)

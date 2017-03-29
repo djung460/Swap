@@ -32,6 +32,8 @@ def student(request, user=''):
         stud = Student.get(username)
         equiplist = stud.getOwnedEquipment()
         classlist = stud.getEnrolled()
+        requestlist = stud.getPendingTrades(type='request')
+        responselist = stud.getPendingTrades(type='response')
         print(classlist)
 
         for item in classlist:
@@ -42,7 +44,9 @@ def student(request, user=''):
         return render(request, 'swap/student.html', {
             'student': stud,
             'equiplist': equiplist,
-            'classlist': classlist
+            'classlist': classlist,
+            'requestlist': requestlist,
+            'responselist': responselist
         })
 
     else:

@@ -27,15 +27,105 @@
         --------------------------------------------------------------------------------------------------------------->
         <div class="12u$">
             <header id="header">
-                <h2 class="colored"><span class=" icon fa-clock-o"></span> Pending trades</h2>
+                <h2 class="colored"><span class=" icon fa-clock-o"></span>Pending Trades</h2>
             </header>
         </div>
-        <div class="4u$ 12u$(small)">
+        <div class="12u$ 12u$">
             <p>
                 Here you can view any offers other students have made to your trades, or trades you are awaiting for the
                 owner to accept.
             </p>
-            <a href="/maketrade" class="button special right">Make a trade</a>
+        <h2 class="colored">Trades You've Requested</h2>
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Trading With</th>
+                        <th>Receiving Equip</th>
+                        <th>Giving Equip</th>
+                        <th>Contact Info</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for trade in requestlist %}
+                        <tr id="trade-{{ trade.tradeID }}">
+                            <td>
+                                {{ trade.responseUsername }} | {{ trade.responseName }}
+                            </td>
+                            <td>
+                                {{ trade.responseEquipName }}
+                            </td>
+                            <td>
+                                {{ trade.requestEquipName }}
+                            </td>
+                            <td>
+                                {{ trade.responseEmail }}
+                            </td>
+                            <td>
+                                <form method="post" action="/api/trades/pending/confirm"
+                                      style="display: inline-block">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="tradeid" value="{{ trade.tradeID }}"/>
+                                    <input type="hidden" name="by" value="request"/>
+                                    <input type="hidden" name="equipmentid" value="{{ equip.equipmentID }}"/>
+                                    <input type="submit" value="Completed"/>
+                                </form>
+
+                                <form method="post" action="/api/trades/pending/cancel"
+                                      style="display: inline-block">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="tradeid" value="{{ trade.tradeID }}"/>
+                                    <input type="submit" value="Cancel"/>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <h2 class="colored">Trades You've Recieved</h2>
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Trading With</th>
+                        <th>Receiving Equip</th>
+                        <th>Giving Equip</th>
+                        <th>Contact Info</th>
+                        <th>Action</th>
+                    </tr>
+                    {% for trade in responselist %}
+                        <tr id="trade-{{ trade.tradeID }}">
+                            <td>
+                                {{ trade.responseUsername }} | {{ trade.responseName }}
+                            </td>
+                            <td>
+                                {{ trade.responseEquipName }}
+                            </td>
+                            <td>
+                                {{ trade.requestEquipName }}
+                            </td>
+                            <td>
+                                {{ trade.responseEmail }}
+                            </td>
+                            <td>
+                                <form method="post" action="/api/trades/pending/confirm"
+                                      style="display: inline-block">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="tradeid" value="{{ trade.tradeID }}"/>
+                                    <input type="hidden" name="by" value="response"/>
+                                    <input type="hidden" name="equipmentid" value="{{ equip.equipmentID }}"/>
+                                    <input type="submit" value="Completed"/>
+                                </form>
+
+                                <form method="post" action="/api/trades/pending/cancel"
+                                      style="display: inline-block">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="tradeid" value="{{ trade.tradeID }}"/>
+                                    <input type="submit" value="Cancel"/>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <a href="/maketrade" class="button special right">View History</a>
         </div>
 
         <!--------------------------------------------------------------------------------------------------------------
