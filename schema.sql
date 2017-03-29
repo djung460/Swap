@@ -26,6 +26,7 @@ CREATE TABLE Equipment(
 
     PRIMARY KEY (equipmentID)
 );
+
 CREATE TABLE Class(
     faculty CHAR(4) NOT NULL,
     classNum CHAR(4) NOT NULL,
