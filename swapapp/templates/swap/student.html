@@ -119,6 +119,7 @@
                             <th>Faculty</th>
                             <th>Number</th>
                             <th>Term</th>
+                            <th>Equipment(s)</th>
                             <th>Action</th>
                         </tr>
                     </thread>
@@ -133,6 +134,11 @@
                             </td>
                             <td>
                                 {{ class.term }}
+                            </td>
+                            <td>
+                                {% for equip in class.equiplist %}
+                                   | {{ equip.equipmentName }}
+                                {% endfor %}
                             </td>
                             <td>
                                 <form method="post" action="/api/student/class/drop">
