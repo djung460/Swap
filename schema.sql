@@ -35,16 +35,18 @@ CREATE TABLE Class(
     PRIMARY KEY(faculty, classNum, term),
     FOREIGN KEY(instructorUsername)
         REFERENCES Instructor(username)
+        ON DELETE CASCADE
 );
 CREATE TABLE ClassRequiresEquipment(
     faculty CHAR(4) NOT NULL,
     classNum CHAR(4) NOT NULL,
     term CHAR(7) NOT NULL,
-    equipmentID INT NOT NULL,
+    equipmentID INT NOT NULL
 
     PRIMARY KEY (faculty, classNum, term, equipmentID),
     FOREIGN KEY(faculty, classNum, term)
-        REFERENCES Class (faculty, classNum, term),
+        REFERENCES Class (faculty, classNum, term)
+        ON DELETE CASCADE,
     FOREIGN KEY(equipmentID)
         REFERENCES Equipment(equipmentID)
 );
@@ -55,7 +57,8 @@ CREATE TABLE StudentHasEquipment(
 
     PRIMARY KEY (username, equipmentID),
     FOREIGN KEY(username)
-        REFERENCES Student(username),
+        REFERENCES Student(username)
+        ON DELETE CASCADE,
     FOREIGN KEY(equipmentID)
         REFERENCES Equipment(equipmentID)
 );
@@ -67,9 +70,11 @@ CREATE TABLE StudentTakesClass(
 
     PRIMARY KEY (username,faculty, classNum, term),
     FOREIGN KEY(faculty, classNum, term)
-        REFERENCES Class(faculty, classNum, term),
+        REFERENCES Class(faculty, classNum, term)
+        ON DELETE CASCADE,
     FOREIGN KEY(username)
         REFERENCES Student(username)
+        ON DELETE CASCADE
 );
 CREATE TABLE PendingTrade(
     tradeID INT NOT NULL,

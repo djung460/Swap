@@ -49,7 +49,35 @@ def addequipment(request):
         except IntegrityError:
             print("Equipment already added to class")
             return HttpResponseRedirect('/instructor/' + username)
+        return HttpResponseRedirect('/instructor/' + username)
+    else:
+        return HttpResponseRedirect('/')
 
+
+@csrf_exempt
+def deleteclass(request):
+    """
+    Handles deleting a class, cascades
+    """
+    if request.user.is_authenticated:
+        username = request.user.username[1:]
+        inst = Instructor.get(username)
+
+        data = request.POST
+
+        faculty = data['faculty']
+        classnum = data['classnum']
+        term = data['term']
+
+        print(faculty, classnum, term)
+
+        try:
+            inst.deleteClass(faculty=faculty, classnum=classnum, term=term)
+        except IntegrityError:
+            print("Class already exists")
+            return HttpResponseRedirect('/instructor/' + username)
+
+        print("Class deleted")
         return HttpResponseRedirect('/instructor/' + username)
     else:
         return HttpResponseRedirect('/')

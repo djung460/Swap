@@ -162,7 +162,7 @@ class Instructor(models.Model):
 
     def addCourse(self, faculty, classnum, term):
         """
-        Adds a course to the database
+        Adds a class to the database
         """
         with connection.cursor() as cursor:
             cursor.execute(
@@ -170,6 +170,17 @@ class Instructor(models.Model):
                 "(faculty, classnum, term, instructorusername) "
                 "VALUES (%s,%s,%s, %s)",
                 [faculty, classnum, term, self.username])
+
+
+    def deleteClass(self, faculty, classnum, term):
+        """
+        Deletes a class from the database
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM Class "
+                "WHERE faculty=%s AND classnum=%s AND term=%s",
+                [faculty, classnum, term])
 
     def addEquipToClass(self, faculty, classnum, term, equipid):
         """

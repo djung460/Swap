@@ -2,11 +2,20 @@
 {% load staticfiles %}
 
 {% block content %}
+    <div class="row uniform">
      <div class="12u$">
             <header id="header">
                 <h2 class="colored">{{ faculty }}-{{ classnum }}-{{ term }} Overview</h2>
             </header>
         </div>
+        <form method="post" action="/api/instructor/class/delete">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="faculty" value="{{ faculty }}"/>
+                                    <input type="hidden" name="classnum" value="{{ classnum }}"/>
+                                    <input type="hidden" name="term" value="{{ term }}"/>
+                                    <input type="submit" value="Delete Class"/>
+                                </form>
+    </div>
     <!--------------------------------------------------------------------------------------------------------------
         EQUIPMENT OVERVIEW
      --------------------------------------------------------------------------------------------------------------->
