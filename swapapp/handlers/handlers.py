@@ -47,6 +47,23 @@ def searchequipment(request):
     except IntegrityError:
         return HttpResponseRedirect('/search')
 
+def equipmentmax(request):
+    equiplist = Equipment.getMax()
+    return render(request, 'swap/search.html', {
+        'equiplist': equiplist,
+    })
+
+def equipmentmin(request):
+    equiplist = Equipment.getMin()
+    return render(request, 'swap/search.html', {
+        'equiplist': equiplist,
+    })
+
+def equipmentavg(request):
+    equiplist = Equipment.getAvg()
+    return render(request, 'swap/search.html', {
+        'equiplist': equiplist,
+    })
 
 @csrf_exempt
 def trade(request):

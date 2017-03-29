@@ -114,11 +114,41 @@ class Equipment(models.Model):
                 baseQuery += " AND c.classNum LIKE '%" + classnum + "%'"
             if (type != ""):
                 baseQuery += " AND e.equipmentType LIKE '%" + type + "%'"
+            if (min != ""):
+                baseQuery += " AND quantity >= " + min
             cursor.execute(
                 baseQuery + " GROUP BY e.equipmentid;"
             )
             return dictfetchall(cursor=cursor)
 
+    @staticmethod
+    def getMax():
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                           "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid "
+                           "WHERE quantity = (SELECT MAX(s2.quantity) FROM StudentHasEquipment s2 GROUP BY s2.equipmentid ORDER BY s2.quantity DESC);")
+
+            return dictfetchall(cursor=cursor)
+
+    @staticmethod
+    def getMin():
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid "
+                "WHERE quantity = (SELECT MAX(s2.quantity) FROM StudentHasEquipment s2 GROUP BY s2.equipmentid ORDER BY s2.quantity ASC);")
+
+            return dictfetchall(cursor=cursor)
+
+    @staticmethod
+    def getAvg():
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid "
+                "WHERE quantity = (SELECT MAX(s2.quantity) FROM StudentHasEquipment s2 GROUP BY s2.equipmentid ORDER BY s2.quantity DESC);")
+
+            return dictfetchall(cursor=cursor)
 
 class Instructor(models.Model):
     username = models.CharField(primary_key=True, max_length=32)
