@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.conf import settings
 from django.conf.urls.static import static
 
-from swapapp.handlers import handlers, studenthandlers, instructorhandlers
+from swapapp.handlers import handlers, studenthandlers, instructorhandlers, tradehandlers
 from swapapp import views
 from swapapp.auth import auth
 
@@ -33,6 +33,8 @@ urlpatterns = [
     url(r'^api/instructor/class/delete', instructorhandlers.deleteclass),
     url(r'^api/instructor/equipment/add', instructorhandlers.addequipment),
     url(r'^api/instructor/equipment/delete', instructorhandlers.deleteequipment),
+
+    url(r'^api/trades/pending/add', tradehandlers.addpending),
 
     url(r'^api/auth/login$', auth.login),
     url(r'^api/auth/join$', auth.join),

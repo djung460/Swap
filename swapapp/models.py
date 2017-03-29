@@ -416,7 +416,7 @@ class Student(models.Model):
             return dictfetchall(cursor=cursor)    
         
                 
-    def addPendingTrade(self, responsestudent, requestequipid, responseequipid):
+    def addPendingTrade(self, responseusername, requestequipid, responseequipid):
         """
         Adds the chosen trade to the Pending Trade list
         """
@@ -424,8 +424,8 @@ class Student(models.Model):
             cursor.execute(
                 "INSERT INTO PendingTrade"
                 "(requestUsername, responseUsername, requestEquipID, responseEquipID, dateRequested)"
-                "VALUES (%s, %s, %s, %s, NOW())",
-                [self.username, responsestudent.username, requestequipid, responseequipid])
+                "VALUES (%s, %s, %s, %s, DATETIME())",
+                [self.username, responseusername, requestequipid, responseequipid])
 
     def confirmATrade(pendingTrade):
         """

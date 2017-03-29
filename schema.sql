@@ -77,28 +77,26 @@ CREATE TABLE StudentTakesClass(
         ON DELETE CASCADE
 );
 CREATE TABLE PendingTrade(
-    tradeID INT NOT NULL,
+    tradeID INTEGER PRIMARY KEY AUTOINCREMENT,
     requestUsername VARCHAR(32) NOT NULL,
     responseUsername VARCHAR(32) NOT NULL,
     requestEquipID INT NOT NULL,
     responseEquipID INT NOT NULL,
     dateRequested DATETIME NOT NULL,
-    
-    PRIMARY KEY (tradeID),
+
     FOREIGN KEY(requestUsername, requestEquipID)
         REFERENCES StudentHasEquipment(username, equipmentID),
     FOREIGN KEY(responseUsername, responseEquipID)
         REFERENCES StudentHasEquipment(username, equipmentID)
 );
 CREATE TABLE ConfirmedTrade(
-    tradeID INT NOT NULL,
+    tradeID INTEGER PRIMARY KEY AUTOINCREMENT,
     requestUsername VARCHAR(32) NOT NULL,
     responseUsername VARCHAR(32) NOT NULL,
     requestEquipID INT NOT NULL,
     reponseEquipID INT NOT NULL,
     dateConfirmed DATETIME NOT NULL,
-    
-    PRIMARY KEY (tradeID),
+
     FOREIGN KEY(requestUsername)
         REFERENCES Student(username),
     FOREIGN KEY(requestEquipID)
