@@ -307,42 +307,72 @@ class Student(models.Model):
             cursor.execute(
                 "DELETE Student WHERE username = %s AND pwhash = %s",
                 [self.username, self.pwhash])
-				
+                
     def findPossibleTrades(self):
         """
         Lists pairs of items that you want and that someone else has, and that the 2nd person wants and you have
         """
         with connection.cursor() as cursor:
             cursor.execute(
-                #TODO get names of items
-				#TODO remove pairs that are already in pendingtable and where requestusername is your username
-				#TODO populate tables to test findPossibleTrades function
-				'''SELECT StudentHasEquipment.equipmentID as ID1, StudentHasEquipment2.equipmentID as ID2
-				FROM
-				StudentHasEquipment,
-				StudentTakesClass,
-				ClassRequiresEquipment,
-				
-				StudentHasEquipment as StudentHasEquipment2,
-				StudentTakesClass as StudentTakesClass2,
-				ClassRequiresEquipment as ClassRequiresEquipment2
+                #TODO remove pairs that are already in pendingtable and where requestusername is your username
+                '''SELECT StudentHasEquipment.equipmentID as ID1, Equipment.equipmentName as Name, 
+                StudentHasEquipment2.equipmentID as ID2, Equipment2.equipmentName as Name2, 
+                StudentHasEquipment2.username as OwnerUsername
+                
+                FROM
+                StudentHasEquipment,
+                StudentTakesClass,
+                ClassRequiresEquipment,
+                Equipment,
 
-				WHERE StudentTakesClass.username=%s
-				AND StudentTakesClass.faculty=ClassRequiresEquipment.faculty
-				AND StudentTakesClass.classNum=ClassRequiresEquipment.classNum
-				AND StudentTakesClass.term=ClassRequiresEquipment.term
-				AND ClassRequiresEquipment.equipmentID=StudentHasEquipment2.equipmentID
+                StudentHasEquipment as StudentHasEquipment2,
+                StudentTakesClass as StudentTakesClass2,
+                ClassRequiresEquipment as ClassRequiresEquipment2,
+                Equipment as Equipment2
 
-				AND StudentTakesClass2.username=StudentHasEquipment2.username
-				AND StudentTakesClass2.faculty=ClassRequiresEquipment2.faculty
-				AND StudentTakesClass2.classNum=ClassRequiresEquipment2.classNum
-				AND StudentTakesClass2.term=ClassRequiresEquipment2.term
-				AND ClassRequiresEquipment2.equipmentID=StudentHasEquipment.equipmentID
+                WHERE StudentTakesClass.username=%s
+                AND StudentTakesClass.faculty=ClassRequiresEquipment.faculty
+                AND StudentTakesClass.classNum=ClassRequiresEquipment.classNum
+                AND StudentTakesClass.term=ClassRequiresEquipment.term
+                AND ClassRequiresEquipment.equipmentID=Equipment.equipmentID
+                AND ClassRequiresEquipment.equipmentID=StudentHasEquipment2.equipmentID
 
-				AND StudentHasEquipment.username=StudentTakesClass.username
-				AND NOT StudentTakesClass2.username=StudentTakesClass.username''',
+                AND StudentTakesClass2.username=StudentHasEquipment2.username
+                AND StudentTakesClass2.faculty=ClassRequiresEquipment2.faculty
+                AND StudentTakesClass2.classNum=ClassRequiresEquipment2.classNum
+                AND StudentTakesClass2.term=ClassRequiresEquipment2.term
+                AND ClassRequiresEquipment2.equipmentID=Equipment2.equipmentID
+                AND ClassRequiresEquipment2.equipmentID=StudentHasEquipment.equipmentID
+
+                AND StudentHasEquipment.username=StudentTakesClass.username
+                AND NOT StudentTakesClass2.username=StudentTakesClass.username
+                AND NOT ClassRequiresEquipment.equipmentID=ClassRequiresEquipment2.equipmentID''',
                 [self.username])
+            return dictfetchall(cursor=cursor)    
+        
+                
+    def addPendingTrade(self, responsestudent, requestequipid, responseequipid):
+        """
+        Adds the chosen trade to the Pending Trade list
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO PendingTrade"
+                "(requestUsername, responseUsername, requestEquipID, responseEquipID, dateRequested)"
+                "VALUES (%s, %s, %s, %s, NOW())",
+                [self.username, responsestudent.username, requestequipid, responseequipid])
 
+    def confirmATrade(pendingTrade):
+        """
+        remove the chosen trade from the PendingTrade list, add it to the confirmedTrade list,
+        and switch the username of the two items in userHasEquipment
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO PendingTrade"
+                "(requestUsername, responseUsername, requestEquipID, responseEquipID, dateRequested"
+                "VALUES (%s, %s, %s, %s, NOW())",
+                [self.username, responsestudent.username, requestequipid, responseequipid])    
 
 class StudentHasEquipment(models.Model):
     username = models.ForeignKey(Student, models.DO_NOTHING, db_column='username', primary_key=True)

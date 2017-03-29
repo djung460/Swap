@@ -48,24 +48,25 @@ def searchequipment(request):
         })
     except IntegrityError:
         return HttpResponseRedirect('/search')
-		
+        
 @csrf_exempt
 def findtrade(request):
-	if not request.user.is_authenticated:
-		return HttpResponseRedirect('/')
-	if request.method == 'GET':
-		user = Student.get(request.user.username[1:])
-		possibletrades = user.findPossibleTrades()
-		#TODO: remove pendingTable trades from possibletrades
-	
-		context = RequestContext(request, {'pt': possibletrades})
-		return render_to_response('swap/student_findpossibletrades.html', context=context)
-	elif request.method == 'POST':
-	
-		for trade in request.POST.get("trade",[]):
-			trade = trade.split(",")
-			#TODO: insert the pair into the pending trade table
-		HttpResponseRedirect('.')
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/')
+    username = request.user.username[1:]
+    user = Student.get(username)
+    if request.method == 'GET':
+        possibletrades = user.findPossibleTrades()
+        #TODO: remove pendingTable trades from possibletrades
+    
+        context = RequestContext(request, {'pt': possibletrades})
+        return render_to_response('swap/student_findpossibletrades.html', context=context)
+    elif request.method == 'POST':
+    
+        for trade in request.POST.get("trade",[]):
+            requestequipid, responseequipid, responsestudent = trade.split("|")
+            user.addPendingTrade(responsestudent, requestequipid, responseequipid)
+        return HttpResponseRedirect('/student/' + request.user.username)
 
 @csrf_exempt
 def trade(request):
