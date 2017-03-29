@@ -91,7 +91,6 @@ class Equipment(models.Model):
     equipmentname = models.CharField(db_column='equipmentName', max_length=128)  # Field name made lowercase.
     equipmenttype = models.CharField(db_column='equipmentType', max_length=3)  # Field name made lowercase.
 
-
     class Meta:
         managed = False
         db_table = 'Equipment'
@@ -104,11 +103,10 @@ class Equipment(models.Model):
             )
             return dictfetchall(cursor=cursor)
 
-
     def updateSearch(keyword, type, faculty, classnum, min):
         baseQuery = "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid WHERE e.equipmentName LIKE '%" + keyword + "%'"
         with connection.cursor() as cursor:
-            if(faculty != ""):
+            if (faculty != ""):
                 baseQuery += " AND c.faculty LIKE '%" + faculty + "%'"
             if (classnum != ""):
                 baseQuery += " AND c.classNum LIKE '%" + classnum + "%'"
@@ -150,8 +148,11 @@ class Instructor(models.Model):
             cursor.execute(
                 "SELECT * FROM Instructor WHERE username = %s", [username])
             row = cursor.fetchone()
-        return Instructor(username=row[0], pwhash=row[1], faculty=row[2], email=row[3], name=row[4],
-                          phonenumber=row[5])
+            if row is None:
+                return None
+            else:
+                return Instructor(username=row[0], pwhash=row[1], faculty=row[2], email=row[3], name=row[4],
+                                  phonenumber=row[5])
 
     def remove(self):
         with connection.cursor() as cursor:
@@ -258,8 +259,11 @@ class Student(models.Model):
             cursor.execute(
                 "SELECT * FROM Student WHERE username = %s", [username])
             row = cursor.fetchone()
-        return Student(username=row[0], pwhash=row[1], year=row[2], faculty=row[3], email=row[4], name=row[5],
-                       phonenumber=row[6])
+            if row is None:
+                return None
+            else:
+                return Student(username=row[0], pwhash=row[1], year=row[2], faculty=row[3], email=row[4], name=row[5],
+                               phonenumber=row[6])
 
     def getOwnedEquipment(self):
         """
@@ -338,7 +342,7 @@ class Student(models.Model):
                 "UPDATE StudentHasEquipment "
                 "SET quantity=%s "
                 "WHERE username=%s AND equipmentid=%s",
-                [quantity,self.username, equipmentid])
+                [quantity, self.username, equipmentid])
 
     def remove(self):
         with connection.cursor() as cursor:
