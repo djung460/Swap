@@ -1,22 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>SELECT A TRADE</title>
-</head>
-<body>
-<h1>SWAP</h1>
-<h2>SELECT A TRADE</h2>
+{% extends 'swap/base.html' %}
+{% load staticfiles %}
 
-<form method="post" name="possibletrades"> {% csrf_token %}
-    {% for trade in pt %}
-        <input type="checkbox" name="pt" value="{{trade.ID1}}|{{trade.ID2}}|{{trade.OwnerUsername}}" > {{trade.Name}}|{{trade.Name2}}|{{trade.OwnerUsername}}
-        <br>
-    {% endfor %}
+{% block content %}
+    <div class="12u$">
+        <header id="header">
+            <h2 class="colored">Possible Trades</h2>
+        </header>
+    </div>
+    <br>
+    <form method="post" action="" name="possibletrades"> {% csrf_token %}
+        {% for trade in pt %}
+            <div class="12u$(small)">
+                <input type="radio" id="{{ trade.ID1 }}|{{ trade.ID2 }}|{{ trade.OwnerUsername }}" name="pt" value="{{ trade.ID1 }}|{{ trade.ID2 }}|{{ trade.OwnerUsername }}">
+                <label for="{{ trade.ID1 }}|{{ trade.ID2 }}|{{ trade.OwnerUsername }}"> Student {{ trade.OwnerUsername }} has {{ trade.Name }} and needs your {{ trade.Name2 }}</label>
+            </div>
+            <br>
+        {% endfor %}
 
     <button type="submit" class="button button-block">
         REQUEST TRADE
     </button>
-</form>
-</body>
-</html>
+    </form>
+{% endblock %}
