@@ -193,6 +193,17 @@ class Instructor(models.Model):
                 "VALUES (%s,%s,%s, %s)",
                 [faculty, classnum, term, equipid])
 
+
+    def deleteEquipFromClass(self, faculty, classnum, term, equipid):
+        """
+        Deletes a required piece of equipment from a class
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM ClassRequiresEquipment "
+                "WHERE faculty=%s AND classnum=%s AND term=%s AND equipmentid=%s",
+                [faculty, classnum, term, equipid])
+
     def getClasses(self):
         """
         Gets the classes taught by the instructor

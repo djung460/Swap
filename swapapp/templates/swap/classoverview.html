@@ -36,6 +36,16 @@
                             <td>
                                 {{ equip.equipmentType }}
                             </td>
+                        <td>
+                            <form method="post" action="/api/instructor/equipment/delete">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="faculty" value="{{ faculty }}"/>
+                                    <input type="hidden" name="classnum" value="{{ classnum }}"/>
+                                    <input type="hidden" name="term" value="{{ term }}"/>
+                                    <input type="hidden" name="equipid" value="{{ equip.equipmentID }}"/>
+                                    <input type="submit" value="Remove Equipment"/>
+                                </form>
+                        </td>
                         </tr>
                     {% endfor %}
                 </table>

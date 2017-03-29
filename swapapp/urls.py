@@ -32,6 +32,7 @@ urlpatterns = [
     url(r'^api/instructor/class/add', instructorhandlers.addclass),
     url(r'^api/instructor/class/delete', instructorhandlers.deleteclass),
     url(r'^api/instructor/equipment/add', instructorhandlers.addequipment),
+    url(r'^api/instructor/equipment/delete', instructorhandlers.deleteequipment),
 
     url(r'^api/auth/login$', auth.login),
     url(r'^api/auth/join$', auth.join),

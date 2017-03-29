@@ -56,6 +56,33 @@ def addequipment(request):
 
 
 @csrf_exempt
+def deleteequipment(request):
+    """
+    Handles adding a required equipment to a class
+    """
+    if request.user.is_authenticated:
+        username = request.user.username[1:]
+        inst = Instructor.get(username)
+
+        data = request.POST
+
+        faculty = data['faculty']
+        classnum = data['classnum']
+        term = data['term']
+        equipid = data['equipid']
+
+        try:
+            inst.deleteEquipFromClass(faculty=faculty,classnum=classnum,term=term,equipid=equipid)
+        except IntegrityError:
+            print("Equipment already added to class")
+            HttpResponseRedirect('/overview/class/' + faculty + '-' + classnum + '-' + term)
+        print("Equipment succesfully added")
+        return HttpResponseRedirect('/overview/class/' + faculty + '-' + classnum + '-' + term)
+    else:
+        return HttpResponseRedirect('/')
+
+
+@csrf_exempt
 def deleteclass(request):
     """
     Handles deleting a class, cascades
