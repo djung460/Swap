@@ -139,11 +139,13 @@ def classoverview(request,faculty='',classnum='',term=''):
         return HttpResponseRedirect('/')
 
 
-def instructor_addequip(request, classid=''):
+def instructor_addequip(request, faculty='',classnum='',term=''):
     if request.user.is_authenticated:
         equiplist = Equipment.getAll()
         obj = {
-            'class': classid,
+            'faculty': faculty,
+            'classnum':classnum,
+            'term':term,
             'equiplist': equiplist
         }
         context = RequestContext(request, {

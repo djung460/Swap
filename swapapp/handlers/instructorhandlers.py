@@ -48,8 +48,9 @@ def addequipment(request):
             inst.addEquipToClass(faculty=faculty,classnum=classnum,term=term,equipid=equipid)
         except IntegrityError:
             print("Equipment already added to class")
-            return HttpResponseRedirect('/instructor/' + username)
-        return HttpResponseRedirect('/instructor/' + username)
+            HttpResponseRedirect('/overview/class/' + faculty + '-' + classnum + '-' + term)
+        print("Equipment succesfully added")
+        return HttpResponseRedirect('/overview/class/' + faculty + '-' + classnum + '-' + term)
     else:
         return HttpResponseRedirect('/')
 
