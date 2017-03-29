@@ -6,7 +6,7 @@
         <span class="main image">
             <img src="{% static 'swapapp/images/student_banner.jpg' %}"/>
         </span>
-		<!--------------------------------------------------------------------------------------------------------------
+        <!--------------------------------------------------------------------------------------------------------------
         OFFER A TRADE
         --------------------------------------------------------------------------------------------------------------->
         <div class="12u$">
@@ -16,10 +16,8 @@
         </div>
         <div class="4u$ 12u$(small)">
             <p>
-                Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non
-                faucibus ornare mi ut ante amet placerat aliquet. Volutpat commodo eu sed ante lacinia. Sapien a
-                lorem in integer ornare praesent commodo adipiscing arcu in massa commodo lorem accumsan at odio massa
-                ac ac.Semper adipiscing varius montes viverra nibh in adipiscing blandit tempus accumsan.
+                Swap allows you to interact with other students by trading equipments. You can start trading either by
+                searching for existing trades other students have made, or by starting your own trade offers.
             </p>
             <a href="/api/trades/findtrades" class="button special right">Search for Possible Trades</a>
         </div>
@@ -34,10 +32,8 @@
         </div>
         <div class="4u$ 12u$(small)">
             <p>
-                Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non
-                faucibus ornare mi ut ante amet placerat aliquet. Volutpat commodo eu sed ante lacinia. Sapien a
-                lorem in integer ornare praesent commodo adipiscing arcu in massa commodo lorem accumsan at odio massa
-                ac ac.Semper adipiscing varius montes viverra nibh in adipiscing blandit tempus accumsan.
+                Here you can view any offers other students have made to your trades, or trades you are awaiting for the
+                owner to accept.
             </p>
             <a href="/maketrade" class="button special right">Make a trade</a>
         </div>
@@ -52,10 +48,8 @@
         </div>
         <div class="6u 12u$(small)">
             <p>
-                Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non
-                faucibus ornare mi ut ante amet placerat aliquet. Volutpat commodo eu sed ante lacinia. Sapien a
-                lorem in integer ornare praesent commodo adipiscing arcu in massa commodo lorem accumsan at odio massa
-                ac ac.Semper adipiscing varius montes viverra nibh in adipiscing blandit tempus accumsan.
+                Here are the all of the equipments you have currently registered with our trading system. You can
+                add/remove items, or adjust the quantity of the items you posses.
             </p>
             <a href="/addequipment" class="button special right">Add Equipment</a>
         </div>
@@ -137,7 +131,7 @@
                             </td>
                             <td>
                                 {% for equip in class.equiplist %}
-                                   | {{ equip.equipmentName }}
+                                    | {{ equip.equipmentName }}
                                 {% endfor %}
                             </td>
                             <td>
@@ -158,15 +152,15 @@
 
         <div class="6u$ 12u$(small)">
             <p>
-                Nunc lacinia ante nunc ac lobortis. Interdum adipiscing gravida odio porttitor sem non mi integer non
-                faucibus ornare mi ut ante amet placerat aliquet. Volutpat commodo eu sed ante lacinia. Sapien a
-                lorem in integer ornare praesent commodo adipiscing arcu in massa commodo lorem accumsan at odio massa
-                ac ac.Semper adipiscing varius montes viverra nibh in adipiscing blandit tempus accumsan.
+                Here are all of the courses you are currently enrolled in. You can see what specific equipments you'll
+                need for each course and what you may need to start trading for.
+                <br><br>
+                Note: You do not need to be enrolled in a course to trade a specific item it requires.
             </p>
             <a href="/enroll" class="button special right">Enroll in another course</a>
         </div>
         <br>
-    <br>
+        <br>
     </div>
 
 {% endblock %}
