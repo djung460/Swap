@@ -21,14 +21,16 @@ def join(request):
 
     # hash the password
     pwhash = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
-
-    year = data['year']
     faculty = data['faculty']
     email = data['email']
     name = data['name']
     phonenumber = data['phonenumber']
     print('Join user')
     if data['kind'] == 'student':
+
+        # Only student accounts have a year
+        year = data['year']
+
         student = Student(
             username=username,
             pwhash=pwhash,
