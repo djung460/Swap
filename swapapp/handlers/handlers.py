@@ -8,6 +8,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.db.utils import IntegrityError
 from swapapp.models import Equipment
+from swapapp.models import Student
+from django.template import RequestContext
+from django.shortcuts import render_to_response
 
 
 class JSONResponse(HttpResponse):
@@ -46,7 +49,25 @@ def searchequipment(request):
         })
     except IntegrityError:
         return HttpResponseRedirect('/search')
-
+        
+@csrf_exempt
+def findtrade(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect('/')
+    username = request.user.username[1:]
+    user = Student.get(username)
+    if request.method == 'GET':
+        possibletrades = user.findPossibleTrades()
+        #TODO: remove pendingTable trades from possibletrades
+    
+        context = RequestContext(request, {'pt': possibletrades})
+        return render_to_response('swap/student_findpossibletrades.html', context=context)
+    elif request.method == 'POST':
+    
+        for trade in request.POST.get("trade",[]):
+            requestequipid, responseequipid, responsestudent = trade.split("|")
+            user.addPendingTrade(responsestudent, requestequipid, responseequipid)
+        return HttpResponseRedirect('/student/' + request.user.username)
 
 @csrf_exempt
 def trade(request):

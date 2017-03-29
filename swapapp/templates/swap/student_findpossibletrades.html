@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SELECT A TRADE</title>
+</head>
+<body>
+<h1>SWAP</h1>
+<h2>SELECT A TRADE</h2>
+
+<form method="post" name="possibletrades"> {% csrf_token %}
+    {% for trade in pt %}
+        <input type="checkbox" name="pt" value="{{trade.ID1}}|{{trade.ID2}}|{{trade.OwnerUsername}}" > {{trade.Name}}|{{trade.Name2}}|{{trade.OwnerUsername}}
+        <br>
+    {% endfor %}
+
+    <button type="submit" class="button button-block">
+        REQUEST TRADE
+    </button>
+</form>
+</body>
+</html>

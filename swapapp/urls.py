@@ -41,7 +41,8 @@ urlpatterns = [
     url(r'^api/equipment/delete$', handlers.equipment),
     url(r'^api/equipment/get$', handlers.equipment),
     url(r'^api/equipment/search', handlers.searchequipment),
-
+    
+    url(r'^api/trades/findtrades$', handlers.findtrade),
     url(r'^api/trades/add$', handlers.trade),
     url(r'^api/trades/delete$', handlers.trade),
     url(r'^api/trades/get$', handlers.trade),
