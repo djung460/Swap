@@ -18,7 +18,7 @@ urlpatterns = [
     url(r'^enroll$',views.enroll),
     url(r'^instructor/(?P<user>[0-9a-zA-Z]+)$',views.instructor),
     url(r'^addclass$',views.addclass),
-    url(r'^addequipment/class/(?P<classid>[0-9a-zA-Z]+)$', views.instructor_addequip),
+    url(r'^addequipment/class/(?P<faculty>[0-9a-zA-Z]+)-(?P<classnum>[0-9a-zA-Z]+)-(?P<term>[0-9a-zA-Z]+)$', views.instructor_addequip),
     url(r'^overview/class/(?P<faculty>[0-9a-zA-Z]+)-(?P<classnum>[0-9a-zA-Z]+)-(?P<term>[0-9a-zA-Z]+)$', views.classoverview),
 
     # api stuff gets passed off to the handler
@@ -30,7 +30,9 @@ urlpatterns = [
 
 
     url(r'^api/instructor/class/add', instructorhandlers.addclass),
+    url(r'^api/instructor/class/delete', instructorhandlers.deleteclass),
     url(r'^api/instructor/equipment/add', instructorhandlers.addequipment),
+    url(r'^api/instructor/equipment/delete', instructorhandlers.deleteequipment),
 
     url(r'^api/auth/login$', auth.login),
     url(r'^api/auth/join$', auth.join),
@@ -40,10 +42,11 @@ urlpatterns = [
     url(r'^api/equipment/delete$', handlers.equipment),
     url(r'^api/equipment/get$', handlers.equipment),
     url(r'^api/equipment/search', handlers.searchequipment),
+
     url(r'^api/equipment/low', handlers.equipmentmin),
     url(r'^api/equipment/high', handlers.equipmentmax),
-    url(r'^api/equipment/avg', handlers.equipmentavg),
 
+    url(r'^api/trades/findtrades$', handlers.findtrade),
     url(r'^api/trades/add$', handlers.trade),
     url(r'^api/trades/delete$', handlers.trade),
     url(r'^api/trades/get$', handlers.trade),

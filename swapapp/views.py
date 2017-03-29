@@ -34,6 +34,11 @@ def student(request, user=''):
         classlist = stud.getEnrolled()
         print(classlist)
 
+        for item in classlist:
+            item['equiplist'] = ClassRequiresEquipment.get(faculty=item['faculty'], classnum=item['classNum'],
+                                                           term=item['term'])
+            print(item['equiplist'])
+
         return render(request, 'swap/student.html', {
             'student': stud,
             'equiplist': equiplist,
@@ -139,11 +144,13 @@ def classoverview(request,faculty='',classnum='',term=''):
         return HttpResponseRedirect('/')
 
 
-def instructor_addequip(request, classid=''):
+def instructor_addequip(request, faculty='',classnum='',term=''):
     if request.user.is_authenticated:
         equiplist = Equipment.getAll()
         obj = {
-            'class': classid,
+            'faculty': faculty,
+            'classnum':classnum,
+            'term':term,
             'equiplist': equiplist
         }
         context = RequestContext(request, {

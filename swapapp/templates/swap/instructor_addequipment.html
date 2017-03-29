@@ -8,7 +8,7 @@
 
 <form action="/api/instructor/equipment/add" method="post" name="add_req_equip_form">
     {% csrf_token %}
-    <input type="hidden" name="class" value= {{ obj.class }}/>
+    <input type="hidden" name="class" value= {{ obj.faculty }}{{ obj.classnum }}{{ obj.term }}/>
 
     {% for equip in obj.equiplist %}
         <input type="radio" name="equipid" value={{ equip.equipmentID }}> {{ equip.equipmentName }}

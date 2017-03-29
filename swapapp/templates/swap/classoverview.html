@@ -2,11 +2,20 @@
 {% load staticfiles %}
 
 {% block content %}
+    <div class="row uniform">
      <div class="12u$">
             <header id="header">
                 <h2 class="colored">{{ faculty }}-{{ classnum }}-{{ term }} Overview</h2>
             </header>
         </div>
+        <form method="post" action="/api/instructor/class/delete">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="faculty" value="{{ faculty }}"/>
+                                    <input type="hidden" name="classnum" value="{{ classnum }}"/>
+                                    <input type="hidden" name="term" value="{{ term }}"/>
+                                    <input type="submit" value="Delete Class"/>
+                                </form>
+    </div>
     <!--------------------------------------------------------------------------------------------------------------
         EQUIPMENT OVERVIEW
      --------------------------------------------------------------------------------------------------------------->
@@ -27,13 +36,23 @@
                             <td>
                                 {{ equip.equipmentType }}
                             </td>
+                        <td>
+                            <form method="post" action="/api/instructor/equipment/delete">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="faculty" value="{{ faculty }}"/>
+                                    <input type="hidden" name="classnum" value="{{ classnum }}"/>
+                                    <input type="hidden" name="term" value="{{ term }}"/>
+                                    <input type="hidden" name="equipid" value="{{ equip.equipmentID }}"/>
+                                    <input type="submit" value="Remove Equipment"/>
+                                </form>
+                        </td>
                         </tr>
                     {% endfor %}
                 </table>
             </div>
         </div>
     </div>
-     <a href="/addequipment/class/{{ faculty }}{{ classNum }}{{ term }}"
+     <a href="/addequipment/class/{{ faculty }}-{{ classnum }}-{{ term }}"
                                    class="button special"> Add Equipment </a>
     <!--------------------------------------------------------------------------------------------------------------
         STUDENT OVERVIEW
@@ -46,6 +65,8 @@
                     <tr>
                         <th>Username</th>
                         <th>Name</th>
+                        <th>Faculty</th>
+                        <th>Year</th>
                     </tr>
                     {% for student in enrolled %}
                         <tr>
@@ -54,6 +75,12 @@
                             </td>
                             <td>
                                 {{ student.name }}
+                            </td>
+                            <td>
+                                {{ student.faculty }}
+                            </td>
+                            <td>
+                                {{ student.year }}
                             </td>
                         </tr>
                     {% endfor %}
@@ -69,14 +96,22 @@
                     <tr>
                         <th>Username</th>
                         <th>Name</th>
+                        <th>Faculty</th>
+                        <th>Year</th>
                     </tr>
-                    {% for student in hasallequip %}
+                    {% for student in enrolled %}
                         <tr>
                             <td>
                                 {{ student.username }}
                             </td>
                             <td>
                                 {{ student.name }}
+                            </td>
+                            <td>
+                                {{ student.faculty }}
+                            </td>
+                            <td>
+                                {{ student.year }}
                             </td>
                         </tr>
                     {% endfor %}
