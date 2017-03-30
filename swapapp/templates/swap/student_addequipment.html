@@ -1,18 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>ADD</title>
-</head>
-<body>
-<h1>SWAP</h1>
-<h2>ADD TO EQUIPMENT LIST</h2>
+{% extends 'swap/base.html' %}
+{% load staticfiles %}
 
+{% block content %}
+
+  <div class="row uniform">
+        <span class="main image">
+            <img src="{% static 'swapapp/images/student_banner.jpg' %}"/>
+        </span>
+  </div>
+    <div class="row">
+ <div class="12u$">
+            <header id="header">
+                <h2 class="colored align-left"><span class=" icon fa-flask"></span> Add Equipment</h2>
+            </header>
+        </div>
+    </div>
+
+
+    <br>
+    <br>
 <form action="/api/student/equipment/add" method="post" name="joinform"> {% csrf_token %}
+<div class="row">
+    <div class="8u 12u$ (small)">
     {% for equip in obj.equiplist %}
-        <input type="radio" name="equipid" value={{ equip.equipmentID }}> {{ equip.equipmentName }}
-        {{ equip.equipmentType }} <br>
+          <div class="2u 12u$(small)">
+       <input type="radio" id="kind-{{ equip.equipmentID }}" name="kind" value={{ equip.equipmentID }}>
+        <label for="kind-{{ equip.equipmentID }}">{{ equip.equipmentName }}</label>
+          </div>
     {% endfor %}
+    </div>
+    <div class="4u 12u$ (small)">
 
     <div class="field-wrap">
         <label>
@@ -20,10 +37,12 @@
         </label>
         <input name="quantity" type="number" min="1" required autocomplete="off"/>
     </div>
-
+    <br>
     <button type="submit" class="button button-block">
         ADD EQUIPMENT
     </button>
+</div>
+    </div>
 </form>
-</body>
-</html>
+
+{% endblock %}

@@ -42,7 +42,7 @@ def addequipment(request):
         faculty = data['class'][0:4]
         classnum = data['class'][4:7]
         term = data['class'][7:14]
-        equipid = data['equipid']
+        equipid = data['kind']
 
         try:
             inst.addEquipToClass(faculty=faculty,classnum=classnum,term=term,equipid=equipid)

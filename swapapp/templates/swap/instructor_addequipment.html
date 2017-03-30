@@ -1,23 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'swap/base.html' %}
+{% load staticfiles %}
 
+{% block content %}
+
+  <div class="row uniform">
+        <span class="main image">
+            <img src="{% static 'swapapp/images/student_banner.jpg' %}"/>
+        </span>
+  </div>
+    <div class="row">
+ <div class="12u$">
+            <header id="header">
+                <h2 class="colored align-left"><span class=" icon fa-flask"></span> Add Equipment</h2>
+            </header>
+        </div>
+    </div>
+
+
+    <br>
+    <br>
 <form action="/api/instructor/equipment/add" method="post" name="add_req_equip_form">
     {% csrf_token %}
     <input type="hidden" name="class" value= {{ obj.faculty }}{{ obj.classnum }}{{ obj.term }}/>
 
-    {% for equip in obj.equiplist %}
-        <input type="radio" name="equipid" value={{ equip.equipmentID }}> {{ equip.equipmentName }}
-        {{ equip.equipmentType }} <br>
+     {% for equip in obj.equiplist %}
+          <div class="2u 12u$(small)">
+       <input type="radio" id="kind-{{ equip.equipmentID }}" name="kind" value={{ equip.equipmentID }}>
+        <label for="kind-{{ equip.equipmentID }}">{{ equip.equipmentName }} ({{ equip.equipmentType }})</label>
+          </div>
     {% endfor %}
 
     <button type="submit" class="button button-block">
         ADD EQUIPMENT
     </button>
 </form>
-</body>
-</html>
+
+
+{% endblock %}
