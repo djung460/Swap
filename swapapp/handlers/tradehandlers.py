@@ -21,6 +21,11 @@ def addpending(request):
         responseequipid = trade[1]
         responseusername = trade[2]
 
+        # Check for existing trades between same users with same equipment
+        doesExist = PendingTrade.checkExisting(responseusername=responseusername, )
+        if doesExist:
+            error="Pending trade already exists"
+            return render()
         try:
             stud.addPendingTrade(responseusername=responseusername, requestequipid=requestequipid,
                                  responseequipid=responseequipid)
