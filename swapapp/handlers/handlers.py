@@ -71,9 +71,8 @@ def findtrade(request):
     if request.method == 'GET':
         possibletrades = user.findPossibleTrades()
         #TODO: remove pendingTable trades from possibletrades
-    
-        context = RequestContext(request, {'pt': possibletrades})
-        return render_to_response('swap/student_findpossibletrades.html', context=context)
+
+        return render(request=request,template_name='swap/student_findpossibletrades.html', context={'pt': possibletrades})
     elif request.method == 'POST':
     
         for trade in request.POST.get("trade",[]):

@@ -26,6 +26,8 @@ def search(request):
     })
 
 
+
+
 def student(request, user=''):
     if request.user.is_authenticated:
         username = request.user.username[1:]
