@@ -2,7 +2,7 @@ from django.conf.urls import url
 from django.conf import settings
 from django.conf.urls.static import static
 
-from swapapp.handlers import handlers, studenthandlers, instructorhandlers
+from swapapp.handlers import handlers, studenthandlers, instructorhandlers, tradehandlers
 from swapapp import views
 from swapapp.auth import auth
 
@@ -16,6 +16,7 @@ urlpatterns = [
     url(r'^student/(?P<user>[0-9a-zA-Z]+)$',views.student),
     url(r'^addequipment$', views.addStudentEquipment),
     url(r'^enroll$',views.enroll),
+    url(r'^student/(?P<user>[0-9a-zA-Z]+)/tradehistory$',views.tradehistory),
     url(r'^instructor/(?P<user>[0-9a-zA-Z]+)$',views.instructor),
     url(r'^addclass$',views.addclass),
     url(r'^addequipment/class/(?P<faculty>[0-9a-zA-Z]+)-(?P<classnum>[0-9a-zA-Z]+)-(?P<term>[0-9a-zA-Z]+)$', views.instructor_addequip),
@@ -33,6 +34,10 @@ urlpatterns = [
     url(r'^api/instructor/class/delete', instructorhandlers.deleteclass),
     url(r'^api/instructor/equipment/add', instructorhandlers.addequipment),
     url(r'^api/instructor/equipment/delete', instructorhandlers.deleteequipment),
+
+    url(r'^api/trades/pending/add', tradehandlers.addpending),
+    url(r'^api/trades/pending/confirm', tradehandlers.confirm),
+    url(r'^api/trades/pending/cancel', tradehandlers.cancel),
 
     url(r'^api/auth/login$', auth.login),
     url(r'^api/auth/join$', auth.join),

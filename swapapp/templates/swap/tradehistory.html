@@ -1,0 +1,74 @@
+{% extends 'swap/base.html' %}
+{% load staticfiles %}a
+
+{% block content %}
+    <div class="row uniform">
+        <!--------------------------------------------------------------------------------------------------------------
+        COMPLETED TRADES
+        --------------------------------------------------------------------------------------------------------------->
+         <div class="12u$">
+            <header id="header">
+                <h2 class="colored">Completed Trades</h2>
+            </header>
+        </div>
+        <div class="12u$ 12u$">
+            <h2 class="colored">Completed Trades You've Initiated</h2>
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                         <th>Traded With</th>
+                        <th>Received Equip</th>
+                        <th>Gave Equip</th>
+                        <th>Contact Info</th>
+                    </tr>
+                    {% for trade in requestlist %}
+                        <tr id="trade-{{ trade.tradeID }}">
+                            <td>
+                                {{ trade.responseUsername }} | {{ trade.responseName }}
+                            </td>
+                            <td>
+                                {{ trade.responseEquipName }}
+                            </td>
+                            <td>
+                                {{ trade.requestEquipName }}
+                            </td>
+                            <td>
+                                {{ trade.responseEmail }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <h2 class="colored">Completed Trades You've Responded To</h2>
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Traded With</th>
+                        <th>Received Equip</th>
+                        <th>Gave Equip</th>
+                        <th>Contact Info</th>
+                    </tr>
+                    {% for trade in responselist %}
+                        <tr id="trade-{{ trade.tradeID }}">
+                            <td>
+                                {{ trade.responseUsername }} | {{ trade.responseName }}
+                            </td>
+                            <td>
+                                {{ trade.responseEquipName }}
+                            </td>
+                            <td>
+                                {{ trade.requestEquipName }}
+                            </td>
+                            <td>
+                                {{ trade.responseEmail }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <br>
+            <br>
+        </div>
+    </div>
+
+{% endblock %}

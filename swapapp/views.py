@@ -26,12 +26,16 @@ def search(request):
     })
 
 
+
+
 def student(request, user=''):
     if request.user.is_authenticated:
         username = request.user.username[1:]
         stud = Student.get(username)
         equiplist = stud.getOwnedEquipment()
         classlist = stud.getEnrolled()
+        requestlist = stud.getPendingTrades(type='request')
+        responselist = stud.getPendingTrades(type='response')
         print(classlist)
 
         for item in classlist:
@@ -42,7 +46,9 @@ def student(request, user=''):
         return render(request, 'swap/student.html', {
             'student': stud,
             'equiplist': equiplist,
-            'classlist': classlist
+            'classlist': classlist,
+            'requestlist': requestlist,
+            'responselist': responselist
         })
 
     else:
@@ -55,6 +61,22 @@ def addclass(request, user=''):
     """
     if request.user.is_authenticated:
         return render_to_response('swap/instructor_addclass.html')
+    else:
+        return HttpResponseRedirect('/')
+
+
+def tradehistory(request,user=''):
+    if request.user.is_authenticated:
+        username = request.user.username[1:]
+        stud = Student.get(username)
+        requestlist = stud.getConfirmedTrades(type='request')
+        responselist = stud.getConfirmedTrades(type='response')
+        return render(request, 'swap/tradehistory.html', {
+            'student': stud,
+            'requestlist': requestlist,
+            'responselist': responselist
+        })
+
     else:
         return HttpResponseRedirect('/')
 
