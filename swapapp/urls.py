@@ -35,6 +35,8 @@ urlpatterns = [
     url(r'^api/instructor/equipment/delete', instructorhandlers.deleteequipment),
 
     url(r'^api/trades/pending/add', tradehandlers.addpending),
+    url(r'^api/trades/pending/confirm', tradehandlers.confirm),
+    url(r'^api/trades/pending/cancel', tradehandlers.cancel),
 
     url(r'^api/auth/login$', auth.login),
     url(r'^api/auth/join$', auth.join),

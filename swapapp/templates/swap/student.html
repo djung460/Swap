@@ -63,10 +63,11 @@
                                 <form method="post" action="/api/trades/pending/confirm"
                                       style="display: inline-block">
                                     {% csrf_token %}
-                                    <input type="hidden" name="tradeid" value="{{ trade.tradeID }}"/>
+                                     <input type="hidden" name="tradeid" value="{{ trade.tradeID }}"/>
                                     <input type="hidden" name="by" value="request"/>
-                                    <input type="hidden" name="equipmentid" value="{{ equip.equipmentID }}"/>
-                                    <input type="submit" value="Completed"/>
+                                    <input type="hidden" name="responseequipid" value="{{ trade.responseEquipID }}"/>
+                                    <input type="hidden" name="requestequipid" value="{{ trade.requestEquipID }}"/>
+                                    <input type="submit" class="green" value="Completed"/>
                                 </form>
 
                                 <form method="post" action="/api/trades/pending/cancel"
@@ -110,7 +111,8 @@
                                     {% csrf_token %}
                                     <input type="hidden" name="tradeid" value="{{ trade.tradeID }}"/>
                                     <input type="hidden" name="by" value="response"/>
-                                    <input type="hidden" name="equipmentid" value="{{ equip.equipmentID }}"/>
+                                    <input type="hidden" name="responseequipid" value="{{ trade.responseEquipID }}"/>
+                                    <input type="hidden" name="requestequipid" value="{{ trade.requestEquipID }}"/>
                                     <input type="submit" value="Completed"/>
                                 </form>
 

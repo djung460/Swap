@@ -97,7 +97,7 @@ CREATE TABLE ConfirmedTrade(
     requestUsername VARCHAR(32) NOT NULL,
     responseUsername VARCHAR(32) NOT NULL,
     requestEquipID INT NOT NULL,
-    reponseEquipID INT NOT NULL,
+    responseEquipID INT NOT NULL,
     dateConfirmed DATETIME NOT NULL,
 
     FOREIGN KEY(requestUsername)
@@ -106,7 +106,7 @@ CREATE TABLE ConfirmedTrade(
         REFERENCES Equipment(equipmentID),
     FOREIGN KEY(responseUsername)
         REFERENCES Student(username),
-    FOREIGN KEY(reponseEquipID)
+    FOREIGN KEY(responseEquipID)
         REFERENCES Equipment(equipmentID)
 );
 

@@ -68,7 +68,6 @@ class ClassRequiresEquipment(models.Model):
                 [faculty, classnum, term])
             return dictfetchall(cursor=cursor)
 
-
 class ConfirmedTrade(models.Model):
     tradeid = models.IntegerField(db_column='tradeID', primary_key=True)  # Field name made lowercase.
     requestusername = models.ForeignKey('Student', models.DO_NOTHING, db_column='requestUsername',
@@ -77,13 +76,23 @@ class ConfirmedTrade(models.Model):
                                          related_name='%(class)s_responseUsername')  # Field name made lowercase.
     requestequipid = models.ForeignKey('Equipment', models.DO_NOTHING, db_column='requestEquipID',
                                        related_name='%(class)s_requestEquipID')  # Field name made lowercase.
-    reponseequipid = models.ForeignKey('Equipment', models.DO_NOTHING, db_column='reponseEquipID',
+    responseequipid = models.ForeignKey('Equipment', models.DO_NOTHING, db_column='responseEquipID',
                                        related_name='%(class)s_responseEquipID')  # Field name made lowercase.
     dateconfirmed = models.DateTimeField(db_column='dateConfirmed')  # Field name made lowercase.
 
     class Meta:
         managed = False
         db_table = 'ConfirmedTrade'
+
+    @staticmethod
+    def add(pendingtradeid, requestusername, responseusername, requestequipid, responseequipid):
+        with connection.cursor() as cursor:
+            cursor.execute(
+            "INSERT INTO ConfirmedTrade "
+            "(tradeid, requestusername, responseusername, requestequipid, responseequipid, dateconfirmed) "
+            "VALUES (%s,%s,%s,%s,%s,DATETIME())",
+            [pendingtradeid, requestusername, responseusername, requestequipid, responseequipid])
+
 
 
 class Equipment(models.Model):
@@ -281,6 +290,14 @@ class PendingTrade(models.Model):
         managed = False
         db_table = 'PendingTrade'
 
+    @staticmethod
+    def remove(pendingtradeid):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM PendingTrade "
+                "WHERE tradeid=%s",
+                [pendingtradeid])
+
 
 class Student(models.Model):
     username = models.CharField(primary_key=True, max_length=32)
@@ -462,12 +479,14 @@ class Student(models.Model):
         Gets pending trades for this user
         """
         with connection.cursor() as cursor:
-            if type=='request':
+            if type == 'request':
                 cursor.execute(
                     "SELECT PT.tradeID AS tradeID, "
                     "PT.responseusername AS responseUsername, "
                     "S.name AS responseName, "
                     "S.email AS responseEmail, "
+                    "PT.requestequipid AS requestEquipID, "
+                    "PT.responseequipid AS responseEquipID, "
                     "E1.equipmentname AS responseEquipName, "
                     "E2.equipmentname AS requestEquipName "
                     "FROM PendingTrade PT, Student S, Equipment E1, Equipment E2 "
@@ -482,6 +501,8 @@ class Student(models.Model):
                     "PT.responseusername AS responseUsername, "
                     "S.name AS responseName, "
                     "S.email AS responseEmail, "
+                    "PT.requestequipid AS requestEquipID, "
+                    "PT.responseequipid AS responseEquipID, "
                     "E1.equipmentname AS responseEquipName, "
                     "E2.equipmentname AS requestEquipName "
                     "FROM PendingTrade PT, Student S, Equipment E1, Equipment E2 "
@@ -491,6 +512,43 @@ class Student(models.Model):
                     "AND E2.equipmentid = PT.responseequipid",
                     [self.username])
             return dictfetchall(cursor)
+
+    def updatePendingTrade(self, tradeid, requestconfirm=None, responseconfirm=None):
+        """
+        updates a pending trade the chosen trade from the PendingTrade list, add it to the confirmedTrade list,
+        and switch the username of the two items in userHasEquipment
+        """
+        with connection.cursor() as cursor:
+            if requestconfirm != None:
+                cursor.execute(
+                    "UPDATE PendingTrade "
+                    "SET requestconfirm=%s "
+                    "WHERE tradeid=%s",
+                    [requestconfirm, tradeid])
+            elif responseconfirm != None:
+                cursor.execute(
+                    "UPDATE PendingTrade "
+                    "SET responseconfirm=%s "
+                    "WHERE tradeid=%s",
+                    [responseconfirm, tradeid])
+
+            # Return the updated row
+            cursor.execute(
+                "SELECT * "
+                "FROM PendingTrade "
+                "WHERE tradeid=%s",
+                [tradeid])
+            return dictfetchall(cursor)
+
+
+    @staticmethod
+    def remove(pendingtradeid):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE FROM PendingTrade "
+                "WHERE tradeid=%s",
+                [pendingtradeid])
+
 
     def confirmATrade(pendingTrade):
         """
@@ -514,6 +572,32 @@ class StudentHasEquipment(models.Model):
         managed = False
         db_table = 'StudentHasEquipment'
         unique_together = (('username', 'equipmentid'),)
+
+    @staticmethod
+    def decrementQuantity(username, equipid):
+        with connection.cursor() as cursor:
+            # decrement the quantity
+            cursor.execute(
+                "UPDATE StudentHasEquipment "
+                "SET quantity= quantity - 1 "
+                "WHERE username=%s AND equipmentid=%s",
+                [username, equipid])
+            # return the new quantity
+            cursor.execute(
+                "SELECT quantity "
+                "FROM StudentHasEquipment "
+                "WHERE username=%s AND equipmentid=%s",
+                [username, equipid])
+            return dictfetchall(cursor=cursor)
+
+    @staticmethod
+    def remove(username, equipid):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "DELETE "
+                "FROM StudentHasEquipment "
+                "WHERE username=%s AND equipmentid=%s",
+                [username, equipid])
 
 
 class StudentTakesClass(models.Model):
