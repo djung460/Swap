@@ -23,7 +23,7 @@
     {% csrf_token %}
     <input type="hidden" name="class" value= {{ obj.faculty }}{{ obj.classnum }}{{ obj.term }}/>
 
-     {% for equip in obj.equiplist %}
+     {% for equip in equiplist %}
           <div class="2u 12u$(small)">
        <input type="radio" id="kind-{{ equip.equipmentID }}" name="kind" value={{ equip.equipmentID }}>
         <label for="kind-{{ equip.equipmentID }}">{{ equip.equipmentName }} ({{ equip.equipmentType }})</label>
