@@ -65,6 +65,22 @@ def addclass(request, user=''):
         return HttpResponseRedirect('/')
 
 
+def tradehistory(request,user=''):
+    if request.user.is_authenticated:
+        username = request.user.username[1:]
+        stud = Student.get(username)
+        requestlist = stud.getConfirmedTrades(type='request')
+        responselist = stud.getConfirmedTrades(type='response')
+        return render(request, 'swap/tradehistory.html', {
+            'student': stud,
+            'requestlist': requestlist,
+            'responselist': responselist
+        })
+
+    else:
+        return HttpResponseRedirect('/')
+
+
 def enroll(request, user=''):
     """
     View for enrolling in a class

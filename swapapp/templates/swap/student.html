@@ -1,5 +1,5 @@
 {% extends 'swap/base.html' %}
-{% load staticfiles %}
+{% load staticfiles %}a
 
 {% block content %}
     <div class="row uniform">
@@ -135,7 +135,7 @@
                     {% endfor %}
                 </table>
             </div>
-            <a href="/maketrade" class="button special right">View History</a>
+            <a href="/student/{{ student.username }}/tradehistory" class="button special right">View History</a>
         </div>
 
         <!--------------------------------------------------------------------------------------------------------------

@@ -517,6 +517,46 @@ class Student(models.Model):
                     [self.username])
             return dictfetchall(cursor)
 
+    def getConfirmedTrades(self, type):
+        """
+        Gets confirmed trades for this user
+        """
+        with connection.cursor() as cursor:
+            if type == 'request':
+                cursor.execute(
+                    "SELECT CT.tradeID AS tradeID, "
+                    "CT.requestusername AS responseUsername, "
+                    "S.name AS responseName, "
+                    "S.email AS responseEmail, "
+                    "CT.requestequipid AS requestEquipID, "
+                    "CT.responseequipid AS responseEquipID, "
+                    "E1.equipmentname AS responseEquipName, "
+                    "E2.equipmentname AS requestEquipName "
+                    "FROM ConfirmedTrade CT, Student S, Equipment E1, Equipment E2 "
+                    "WHERE requestusername=%s "
+                    "AND responseusername=S.username "
+                    "AND E1.equipmentid = CT.responseequipid "
+                    "AND E2.equipmentid = CT.requestequipid",
+                    [self.username])
+            else:
+                cursor.execute(
+                    "SELECT CT.tradeID AS tradeID, "
+                    "CT.responseusername AS responseUsername, "
+                    "S.name AS responseName, "
+                    "S.email AS responseEmail, "
+                    "CT.requestequipid AS requestEquipID, "
+                    "CT.responseequipid AS responseEquipID, "
+                    "E1.equipmentname AS responseEquipName, "
+                    "E2.equipmentname AS requestEquipName "
+                    "FROM ConfirmedTrade CT, Student S, Equipment E1, Equipment E2 "
+                    "WHERE responseusername=%s "
+                    "AND requestusername=S.username "
+                    "AND E1.equipmentid = CT.requestequipid "
+                    "AND E2.equipmentid = CT.responseequipid",
+                    [self.username])
+            return dictfetchall(cursor)
+
+
     def updatePendingTrade(self, tradeid, requestconfirm=None, responseconfirm=None):
         """
         updates a pending trade the chosen trade from the PendingTrade list, add it to the confirmedTrade list,
@@ -552,19 +592,6 @@ class Student(models.Model):
                 "DELETE FROM PendingTrade "
                 "WHERE tradeid=%s",
                 [pendingtradeid])
-
-
-    def confirmATrade(pendingTrade):
-        """
-        remove the chosen trade from the PendingTrade list, add it to the confirmedTrade list,
-        and switch the username of the two items in userHasEquipment
-        """
-        with connection.cursor() as cursor:
-            cursor.execute(
-                "INSERT INTO PendingTrade"
-                "(requestUsername, responseUsername, requestEquipID, responseEquipID, dateRequested"
-                "VALUES (%s, %s, %s, %s, NOW())",
-                [self.username, responsestudent.username, requestequipid, responseequipid])
 
 
 class StudentHasEquipment(models.Model):
