@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from .models import Student, Instructor, Equipment, Class, ClassRequiresEquipment, StudentTakesClass
+from .models_ubc_courses import COURSES
 
 
 # Create your views here
@@ -15,7 +16,9 @@ def login(request):
 
 
 def join(request):
-    return render(request, 'swap/join.html')
+    return render(request, 'swap/join.html', {
+        'coursecodelist': COURSES
+    })
 
 
 
@@ -59,10 +62,9 @@ def addclass(request, user=''):
     """
     View for adding a new class
     """
-    if request.user.is_authenticated:
-        return render_to_response('swap/instructor_addclass.html')
-    else:
-        return HttpResponseRedirect('/')
+    return render(request, 'swap/instructor_addclass.html', {
+        'coursecodelist': COURSES
+    })
 
 
 def tradehistory(request,user=''):
