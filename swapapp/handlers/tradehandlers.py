@@ -8,33 +8,9 @@ from swapapp.models import Student, ConfirmedTrade, PendingTrade, StudentHasEqui
 @csrf_exempt
 def addpending(request):
     """
-    Handles adding a pending trade request to the users
+    Moved to handler.py
     """
-    if request.user.is_authenticated:
-        username = request.user.username[1:]
-        stud = Student.get(username)
-
-        data = request.POST
-        trade = data['trade'].split('-')
-        print(trade)
-        requestequipid = trade[0]
-        responseequipid = trade[1]
-        responseusername = trade[2]
-
-        # Check for existing trades between same users with same equipment
-        doesExist = PendingTrade.checkExisting(responseusername=responseusername, )
-        if doesExist:
-            error="Pending trade already exists"
-            return render()
-        try:
-            stud.addPendingTrade(responseusername=responseusername, requestequipid=requestequipid,
-                                 responseequipid=responseequipid)
-        except IntegrityError:
-            return HttpResponseRedirect('/student/' + username)
-
-        return HttpResponseRedirect('/student/' + username)
-    else:
-        return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/')
 
 
 @csrf_exempt
@@ -86,7 +62,7 @@ def confirm(request):
             if int(res['responseConfirm']) + int(res['requestConfirm']) == 2:
                 # Add to confirmed trades once both confirmed
                 ConfirmedTrade.add(pendingtradeid=tradeid, requestusername=res['requestUsername'],
-                                   responseusername=res['requestUsername'], requestequipid=res['requestEquipID'],
+                                   responseusername=res['responseUsername'], requestequipid=res['requestEquipID'],
                                    responseequipid=res['responseEquipID'])
                 # Remove from pending trades
                 PendingTrade.remove(pendingtradeid=tradeid)

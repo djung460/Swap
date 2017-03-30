@@ -624,9 +624,11 @@ class Student(models.Model):
         """
         with connection.cursor() as cursor:
             if type == 'request':
+                #Confirmed trades that you've requested
                 cursor.execute(
-                    "SELECT CT.tradeID AS tradeID, "
-                    "CT.requestusername AS responseUsername, "
+                    "SELECT  CT.tradeID AS tradeID, "
+                    "CT.requestusername AS requestusername, "
+                    "S.username AS responseUsername, "
                     "S.name AS responseName, "
                     "S.email AS responseEmail, "
                     "CT.requestequipid AS requestEquipID, "
@@ -640,10 +642,11 @@ class Student(models.Model):
                     "AND E2.equipmentid = CT.requestequipid",
                     [self.username])
             else:
+                #Confirmed trades that you've responded to
                 cursor.execute(
                     "SELECT CT.tradeID AS tradeID, "
-                    "CT.responseusername AS responseUsername, "
-                    "S.name AS responseName, "
+                    "CT.requestUsername AS requestUsername, "
+                    "S.name AS requestName, "
                     "S.email AS responseEmail, "
                     "CT.requestequipid AS requestEquipID, "
                     "CT.responseequipid AS responseEquipID, "
