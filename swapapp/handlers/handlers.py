@@ -7,10 +7,7 @@ import random
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from django.db.utils import IntegrityError
-from swapapp.models import Equipment
-from swapapp.models import Student
-from django.template import RequestContext
-from django.shortcuts import render_to_response
+from swapapp.models import *
 
 
 class JSONResponse(HttpResponse):
@@ -41,25 +38,62 @@ def searchequipment(request):
     faculty = data['faculty']
     classnum = data['classnum']
     min = data['minquantity']
+    maxTrades = ConfirmedTrade.getMax()
+    maxTradesUser = ConfirmedTrade.getMaxByUser()
+    avgTradesUser = ConfirmedTrade.getAvg()
+    numUsers = Student.getNum()
+    numEquipment = StudentHasEquipment.getNum()
+    maxEquipment = StudentHasEquipment.getMaxNum()
 
     try:
         equiplist = Equipment.updateSearch(keyword=keyword,type=type, faculty=faculty, classnum=classnum, min=min)
+        maxTrades = ConfirmedTrade.getMax()
         return render(request, 'swap/search.html', {
-            'equiplist': equiplist,
+        'equiplist': equiplist,
+        'maxTrades': maxTrades,
+        'maxTradesUser': maxTradesUser,
+        'avgTradesUser': avgTradesUser,
+        'numUsers': numUsers,
+        'numEquipment': numEquipment,
+        'maxEquipment': maxEquipment
         })
     except IntegrityError:
         return HttpResponseRedirect('/search')
 
 def equipmentmax(request):
     equiplist = Equipment.getMax()
+    maxTrades = ConfirmedTrade.getMax()
+    maxTradesUser = ConfirmedTrade.getMaxByUser()
+    avgTradesUser = ConfirmedTrade.getAvg()
+    numUsers = Student.getNum()
+    numEquipment = StudentHasEquipment.getNum()
+    maxEquipment = StudentHasEquipment.getMaxNum()
     return render(request, 'swap/search.html', {
         'equiplist': equiplist,
+        'maxTrades': maxTrades,
+        'maxTradesUser': maxTradesUser,
+        'avgTradesUser': avgTradesUser,
+        'numUsers': numUsers,
+        'numEquipment': numEquipment,
+        'maxEquipment': maxEquipment
     })
 
 def equipmentmin(request):
     equiplist = Equipment.getMin()
+    maxTrades = ConfirmedTrade.getMax()
+    maxTradesUser = ConfirmedTrade.getMaxByUser()
+    avgTradesUser = ConfirmedTrade.getAvg()
+    numUsers = Student.getNum()
+    numEquipment = StudentHasEquipment.getNum()
+    maxEquipment = StudentHasEquipment.getMaxNum()
     return render(request, 'swap/search.html', {
         'equiplist': equiplist,
+        'maxTrades': maxTrades,
+        'maxTradesUser': maxTradesUser,
+        'avgTradesUser': avgTradesUser,
+        'numUsers': numUsers,
+        'numEquipment': numEquipment,
+        'maxEquipment': maxEquipment
     })
 
 @csrf_exempt

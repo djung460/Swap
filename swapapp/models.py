@@ -20,7 +20,6 @@ def dictfetchall(cursor):
         for row in cursor.fetchall()
         ]
 
-
 class Class(models.Model):
     faculty = models.CharField(primary_key=True, max_length=4)
     classnum = models.CharField(db_column='classNum', primary_key=True, max_length=4)  # Field name made lowercase.
@@ -93,6 +92,39 @@ class ConfirmedTrade(models.Model):
             "VALUES (%s,%s,%s,%s,%s,DATETIME())",
             [pendingtradeid, requestusername, responseusername, requestequipid, responseequipid])
 
+    @staticmethod
+    def getMax():
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT COUNT(*) FROM ConfirmedTrade" )
+            row = cursor.fetchone()
+            return row[0]
+
+    @staticmethod
+    def getMaxByUser():
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT COUNT(*) "
+                "FROM ConfirmedTrade "
+                "GROUP BY requestUsername "
+                "HAVING COUNT(*) >= "
+                    "(SELECT COUNT(*) FROM ConfirmedTrade c2 GROUP BY c2.requestUsername);"
+            )
+            row = cursor.fetchone()
+            return row[0]
+
+    @staticmethod
+    def getAvg():
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT AVG(trades) "
+                "FROM( "
+                    "SELECT COUNT(*) as trades "
+                    "FROM ConfirmedTrade "
+                    "GROUP BY requestUsername);"
+            )
+            row = cursor.fetchone()
+            return row[0]
 
 
 class Equipment(models.Model):
@@ -593,6 +625,13 @@ class Student(models.Model):
                 "WHERE tradeid=%s",
                 [pendingtradeid])
 
+    @staticmethod
+    def getNum():
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT COUNT(*) FROM Student")
+            return cursor.fetchone()[0]
+
 
 class StudentHasEquipment(models.Model):
     username = models.ForeignKey(Student, models.DO_NOTHING, db_column='username', primary_key=True)
@@ -603,6 +642,24 @@ class StudentHasEquipment(models.Model):
         managed = False
         db_table = 'StudentHasEquipment'
         unique_together = (('username', 'equipmentid'),)
+
+    @staticmethod
+    def getNum():
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT sum(quantity)"
+                "FROM StudentHasEquipment;")
+            return cursor.fetchone()[0]
+
+    @staticmethod
+    def getMaxNum():
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT sum(quantity)"
+                "FROM StudentHasEquipment "
+                "GROUP BY username "
+                "ORDER BY sum(quantity) DESC;")
+            return cursor.fetchone()[0]
 
     @staticmethod
     def decrementQuantity(username, equipid):

@@ -1,9 +1,18 @@
 {% extends 'swap/base.html' %}
+{% load staticfiles %}
+
 {% block content %}
 
-    <div class="12u$">
-        <h2>Add course</h2>
-        <p>Let's begin by adding a course you will be teaching to our system.</p>
+    <div class="row uniform">
+        <span class="main image">
+            <img src="{% static 'swapapp/images/student_banner.jpg' %}"/>
+        </span>
+    </div>
+    <div class="row">
+        <div class="12u$">
+                <h2 class="colored align-left"><span class=" icon fa-calendar"></span> Add a Class</h2>
+                <p>Let's begin by adding a course you will be teaching to our system.</p>
+        </div>
     </div>
 
     <form action="/api/instructor/class/add" method="post" name="addclassform"> {% csrf_token %}

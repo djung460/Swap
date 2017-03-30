@@ -25,18 +25,14 @@
                 <br>
                 <table>
                            <th>Most Trades Made: </th>
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <th>Most Trades Made In Single Day: </th>
-                        <th></th>
-                    </tr>
+                        <th>{{ maxTrades }}</th>
+                    </tr></tr>
                        <tr>
                         <th>Most Trades Made By Single User:  </th>
-                           <th></th>
+                           <th>{{ maxTradesUser }}</th>
                        </tr>
-                    <th>Average Number of Trades Per Day:  </th>
-                           <th></th>
+                    <th>Average Number of Trades Per User:  </th>
+                           <th>{{ avgTradesUser }}</th>
                        </tr>
                 </table>
             </div>
@@ -47,13 +43,13 @@
                 <br>
                 <table>
                     <th>Number of Users:  </th>
-                           <th></th>
+                           <th>{{ numUsers }}</th>
                        </tr>
                     <th>Total Quantity of Equipment Held By Users:  </th>
-                           <th></th>
+                           <th>{{ numEquipment }}</th>
                        </tr>
                     <th>Highest Quantity of Equipment Held By Single User:  </th>
-                           <th></th>
+                           <th>{{ maxEquipment }}</th>
                        </tr>
                 </table>
             </div>

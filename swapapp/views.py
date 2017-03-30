@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from .models import Student, Instructor, Equipment, Class, ClassRequiresEquipment, StudentTakesClass
 from .models_ubc_courses import COURSES
+from .models import *
 
 
 # Create your views here
@@ -21,14 +21,24 @@ def join(request):
     })
 
 
-
 def search(request):
-    equiplist = Equipment.getAll();
+    equiplist = Equipment.getAll()
+    maxTrades = ConfirmedTrade.getMax()
+    maxTradesUser = ConfirmedTrade.getMaxByUser()
+    avgTradesUser = ConfirmedTrade.getAvg()
+    numUsers = Student.getNum()
+    numEquipment = StudentHasEquipment.getNum()
+    maxEquipment = StudentHasEquipment.getMaxNum()
+
     return render(request, 'swap/search.html', {
         'equiplist': equiplist,
+        'maxTrades': maxTrades,
+        'maxTradesUser': maxTradesUser,
+        'avgTradesUser': avgTradesUser,
+        'numUsers': numUsers,
+        'numEquipment': numEquipment,
+        'maxEquipment': maxEquipment
     })
-
-
 
 
 def student(request, user=''):
@@ -67,7 +77,7 @@ def addclass(request, user=''):
     })
 
 
-def tradehistory(request,user=''):
+def tradehistory(request, user=''):
     if request.user.is_authenticated:
         username = request.user.username[1:]
         stud = Student.get(username)
@@ -149,16 +159,16 @@ def instructor(request, user=''):
         return HttpResponseRedirect('/')
 
 
-def classoverview(request,faculty='',classnum='',term=''):
+def classoverview(request, faculty='', classnum='', term=''):
     if request.user.is_authenticated:
         inst = Instructor.get(request.user.username[1:])
 
-        hasallequip = inst.getStudentsWithAllEquipment(faculty=faculty,classnum=classnum,term=term)
+        hasallequip = inst.getStudentsWithAllEquipment(faculty=faculty, classnum=classnum, term=term)
         equiplist = ClassRequiresEquipment.get(faculty, classnum, term)
         enrolled = StudentTakesClass.getEnrolled(faculty, classnum, term)
         return render(request, 'swap/classoverview.html', {
             'hasallequip': hasallequip,
-            'equiplist':equiplist,
+            'equiplist': equiplist,
             'faculty': faculty,
             'enrolled': enrolled,
             'classnum': classnum,
@@ -168,13 +178,13 @@ def classoverview(request,faculty='',classnum='',term=''):
         return HttpResponseRedirect('/')
 
 
-def instructor_addequip(request, faculty='',classnum='',term=''):
+def instructor_addequip(request, faculty='', classnum='', term=''):
     if request.user.is_authenticated:
         equiplist = Equipment.getAll()
         obj = {
             'faculty': faculty,
-            'classnum':classnum,
-            'term':term,
+            'classnum': classnum,
+            'term': term,
             'equiplist': equiplist
         }
         context = RequestContext(request, {
