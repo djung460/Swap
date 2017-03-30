@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from .models import Student, Instructor, Equipment, Class, ClassRequiresEquipment, StudentTakesClass
+from .models import *
 
 
 # Create your views here
@@ -20,9 +20,22 @@ def join(request):
 
 
 def search(request):
-    equiplist = Equipment.getAll();
+    equiplist = Equipment.getAll()
+    maxTrades = ConfirmedTrade.getMax()
+    maxTradesUser = ConfirmedTrade.getMaxByUser()
+    avgTradesUser = ConfirmedTrade.getAvg()
+    numUsers = Student.getNum()
+    numEquipment = StudentHasEquipment.getNum()
+    maxEquipment = StudentHasEquipment.getMaxNum()
+
     return render(request, 'swap/search.html', {
         'equiplist': equiplist,
+        'maxTrades': maxTrades,
+        'maxTradesUser': maxTradesUser,
+        'avgTradesUser': avgTradesUser,
+        'numUsers': numUsers,
+        'numEquipment': numEquipment,
+        'maxEquipment': maxEquipment
     })
 
 
