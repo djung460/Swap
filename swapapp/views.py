@@ -83,6 +83,7 @@ def tradehistory(request, user=''):
         stud = Student.get(username)
         requestlist = stud.getConfirmedTrades(type='request')
         responselist = stud.getConfirmedTrades(type='response')
+
         return render(request, 'swap/tradehistory.html', {
             'student': stud,
             'requestlist': requestlist,
@@ -99,16 +100,10 @@ def enroll(request, user=''):
     """
     if request.user.is_authenticated:
         classlist = Class.getAll()
-        obj = {
+
+        return render(request, 'swap/student_enroll.html', {
             'classlist': classlist
-        }
-
-        print(classlist)
-
-        context = RequestContext(request, {
-            'obj': obj
         })
-        return render_to_response('swap/student_enroll.html', context=context)
     else:
         return HttpResponseRedirect('/')
 
@@ -120,16 +115,10 @@ def addStudentEquipment(request, user=''):
     """
     if request.user.is_authenticated:
         equiplist = Equipment.getAll()
-        obj = {
+
+        return render(request,'swap/student_addequipment.html', {
             'equiplist': equiplist
-        }
-
-        print(equiplist)
-
-        context = RequestContext(request, {
-            'obj': obj
         })
-        return render_to_response('swap/student_addequipment.html', context=context)
     else:
         return HttpResponseRedirect('/')
 
@@ -181,15 +170,12 @@ def classoverview(request, faculty='', classnum='', term=''):
 def instructor_addequip(request, faculty='', classnum='', term=''):
     if request.user.is_authenticated:
         equiplist = Equipment.getAll()
-        obj = {
+
+        return render(request,'swap/instructor_addequipment.html',{
             'faculty': faculty,
             'classnum': classnum,
             'term': term,
             'equiplist': equiplist
-        }
-        context = RequestContext(request, {
-            'obj': obj
         })
-        return render_to_response('swap/instructor_addequipment.html', context=context)
     else:
         return HttpResponseRedirect('/')
