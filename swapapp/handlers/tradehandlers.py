@@ -85,24 +85,29 @@ def confirm(request):
                                    responseequipid=res['responseEquipID'])
                 # Remove from pending trades
                 PendingTrade.remove(pendingtradeid=tradeid)
-                # Decrement count from respective users, delete if no more
-                res2 = StudentHasEquipment.decrementQuantity(username=res['requestUsername'],
+
+                # Decrement quantity from students, delete if no more
+                quant = StudentHasEquipment.decrementQuantity(username=res['requestUsername'],
                                                              equipid=res['requestEquipID'])
-                res2=res2[0]
-                print("requesting quantity", res2)
-                if res2['quantity'] == 0:
+                quant=quant[0]
+                print("requesting quantity", quant)
+
+                if quant['quantity'] == 0:
                     print("deleting requesting user's items")
                     StudentHasEquipment.remove(username=res['requestUsername'], equipid=res['requestEquipID'])
 
-                res2 = StudentHasEquipment.decrementQuantity(username=res['responseUsername'],
+                quant = StudentHasEquipment.decrementQuantity(username=res['responseUsername'],
                                                              equipid=res['responseEquipID'])
+                quant = quant[0]
 
-                res2 = res2[0]
-
-                print("responding quantity", res2)
-                if res2['quantity'] == 0:
+                print("responding quantity", quant)
+                if quant['quantity'] == 0:
                     print("deleting requesting user's items")
                     StudentHasEquipment.remove(username=res['responseUsername'], equipid=res['responseEquipID'])
+
+                # Increment quantity of traded item from students, add if it doesn't exist
+                StudentHasEquipment.addOrIncrement(username=res['requestUsername'], equipid=res['responseEquipID'])
+                StudentHasEquipment.addOrIncrement(username=res['responseUsername'], equipid=res['requestEquipID'])
 
         except IntegrityError:
             return HttpResponseRedirect('/student/' + username)

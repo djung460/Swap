@@ -603,6 +603,33 @@ class StudentHasEquipment(models.Model):
                 "WHERE username=%s AND equipmentid=%s",
                 [username, equipid])
 
+    @staticmethod
+    def addOrIncrement(username, equipid):
+        """
+        Gives the student a new piece of equipment or increments the quantity if already owned
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT * "
+                "FROM StudentHasEquipment "
+                "WHERE username=%s AND equipmentid=%s",
+                [username, equipid])
+            rows = dictfetchall(cursor)
+            if len(rows) != 0:
+                cursor.execute(
+                    "UPDATE StudentHasEquipment "
+                    "SET quantity = quantity+1 "
+                    "WHERE username=%s AND equipmentid=%s",
+                    [username, equipid])
+            else:
+                cursor.execute(
+                    "INSERT INTO StudentHasEquipment "
+                    "(username, equipmentid, quantity) "
+                    "VALUES(%s,%s,1)",
+                    [username, equipid])
+
+
+
 
 class StudentTakesClass(models.Model):
     username = models.ForeignKey(Student, models.DO_NOTHING, db_column='username', primary_key=True)
