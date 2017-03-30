@@ -5,17 +5,21 @@
     <div class="row uniform">
      <div class="12u$">
             <header id="header">
-                <h2 class="colored">{{ faculty }}-{{ classnum }}-{{ term }} Overview</h2>
-            </header>
-        </div>
-        <form method="post" action="/api/instructor/class/delete">
+                <h2 class="colored"><span class=" icon fa-calendar"></span>  {{ faculty }}-{{ classnum }}-{{ term }} Overview</h2>
+
+                <form method="post" action="/api/instructor/class/delete">
                                     {% csrf_token %}
                                     <input type="hidden" name="faculty" value="{{ faculty }}"/>
                                     <input type="hidden" name="classnum" value="{{ classnum }}"/>
                                     <input type="hidden" name="term" value="{{ term }}"/>
                                     <input type="submit" value="Delete Class"/>
                                 </form>
+            </header>
+
+        </div>
+
     </div>
+    <br>
     <!--------------------------------------------------------------------------------------------------------------
         EQUIPMENT OVERVIEW
      --------------------------------------------------------------------------------------------------------------->
@@ -58,7 +62,7 @@
         STUDENT OVERVIEW
      --------------------------------------------------------------------------------------------------------------->
     <h3 class="colored">Enrolled Students</h3>
-    <div class="row uniform">
+    <div class="row">
         <div class="6u$ 12u$(small)">
             <div class="table-wrapper">
                 <table>
@@ -87,10 +91,9 @@
                 </table>
             </div>
         </div>
-    </div>
-    <h3 class="colored">Students With All Required Equipment</h3>
-    <div class="row uniform">
+
         <div class="6u$ 12u$(small)">
+            <h3 class="colored">Students With All Required Equipment</h3>
             <div class="table-wrapper">
                 <table>
                     <tr>
