@@ -79,12 +79,22 @@
                     </div>
                     <div class="8u$ 12u$(xsmall)">
                         <label>Type</label>
-                        <input type="text" name="type" placeholder="LAB"/>
+                        <select name="type">
+                            <option value=""></option>
+                            {% for t in type %}
+                                <option value="{{ t.equipmentType }}">{{ t.equipmentType }}</option>
+                            {% endfor %}
+                        </select>
                         <br>
                     </div>
                     <div class="8u$ 12u$(xsmall)">
                         <label>Faculty</label>
-                        <input type="text" name="faculty" placeholder="CPSC"/>
+                        <select name="faculty">
+                            <option value=""></option>
+                            {% for f in faculty %}
+                                <option value="{{ f.faculty }}">{{ f.faculty }}</option>
+                            {% endfor %}
+                        </select>
                         <br>
                     </div>
                     <div class="8u$ 12u$(xsmall)">

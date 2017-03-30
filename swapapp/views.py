@@ -29,6 +29,8 @@ def search(request):
     numUsers = Student.getNum()
     numEquipment = StudentHasEquipment.getNum()
     maxEquipment = StudentHasEquipment.getMaxNum()
+    type = Equipment.getTypes()
+    faculty = Class.getFaculties()
 
     for item in equiplist:
         item['classlist'] = ClassRequiresEquipment.getClasses(str(item['equipmentID']))
@@ -40,7 +42,9 @@ def search(request):
         'avgTradesUser': avgTradesUser,
         'numUsers': numUsers,
         'numEquipment': numEquipment,
-        'maxEquipment': maxEquipment
+        'maxEquipment': maxEquipment,
+        'type': type,
+        'faculty': faculty
     })
 
 

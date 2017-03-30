@@ -48,6 +48,13 @@ class Class(models.Model):
                 "WHERE C.instructorusername = I.username")
             return dictfetchall(cursor=cursor)
 
+    @staticmethod
+    def getFaculties():
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT DISTINCT faculty "
+                "FROM Class;")
+            return dictfetchall(cursor=cursor)
 
 #-------------------------------------------------------------------------------------------------------------------
 # CLASSREQUIRESEQUIPMENT
@@ -181,6 +188,13 @@ class Equipment(models.Model):
             cursor.execute(
                 baseQuery + " GROUP BY e.equipmentid;"
             )
+            return dictfetchall(cursor=cursor)
+
+    @staticmethod
+    def getTypes():
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT DISTINCT equipmentType FROM Equipment;")
             return dictfetchall(cursor=cursor)
 
     @staticmethod
