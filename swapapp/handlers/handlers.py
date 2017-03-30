@@ -14,18 +14,22 @@ class JSONResponse(HttpResponse):
     """
     HttpResponse that renders its content to JSON
     """
+
     def __init__(self, data, **kwargs):
         content = JSONRenderer().render(data)
         kwargs['content_type'] = 'application/json'
         super(JSONResponse, self).__init__(content, **kwargs)
 
+
 @csrf_exempt
 def user(request):
     return HttpResponse(status=400)
 
+
 @csrf_exempt
 def equipment(request):
     return HttpResponse(status=400)
+
 
 @csrf_exempt
 def searchequipment(request):
@@ -34,7 +38,7 @@ def searchequipment(request):
     """
     data = request.POST
     keyword = data['keyword']
-    type =  data['type']
+    type = data['type']
     faculty = data['faculty']
     classnum = data['classnum']
     min = data['minquantity']
@@ -45,22 +49,22 @@ def searchequipment(request):
     numEquipment = StudentHasEquipment.getNum()
     maxEquipment = StudentHasEquipment.getMaxNum()
 
-
     try:
-        equiplist = Equipment.updateSearch(keyword=keyword,type=type, faculty=faculty, classnum=classnum, min=min)
+        equiplist = Equipment.updateSearch(keyword=keyword, type=type, faculty=faculty, classnum=classnum, min=min)
         for item in equiplist:
             item['classlist'] = ClassRequiresEquipment.getClasses(str(item['equipmentID']))
         return render(request, 'swap/search.html', {
-        'equiplist': equiplist,
-        'maxTrades': maxTrades,
-        'maxTradesUser': maxTradesUser,
-        'avgTradesUser': avgTradesUser,
-        'numUsers': numUsers,
-        'numEquipment': numEquipment,
-        'maxEquipment': maxEquipment
+            'equiplist': equiplist,
+            'maxTrades': maxTrades,
+            'maxTradesUser': maxTradesUser,
+            'avgTradesUser': avgTradesUser,
+            'numUsers': numUsers,
+            'numEquipment': numEquipment,
+            'maxEquipment': maxEquipment
         })
     except IntegrityError:
         return HttpResponseRedirect('/search')
+
 
 def equipmentmax(request):
     equiplist = Equipment.getMax()
@@ -83,6 +87,7 @@ def equipmentmax(request):
         'maxEquipment': maxEquipment
     })
 
+
 def equipmentmin(request):
     equiplist = Equipment.getMin()
     maxTrades = ConfirmedTrade.getMax()
@@ -104,6 +109,7 @@ def equipmentmin(request):
         'maxEquipment': maxEquipment
     })
 
+
 @csrf_exempt
 def findtrade(request):
     if not request.user.is_authenticated:
@@ -112,23 +118,53 @@ def findtrade(request):
     user = Student.get(username)
     if request.method == 'GET':
         possibletrades = user.findPossibleTrades()
-        #TODO: remove pendingTable trades from possibletrades
+        # TODO: remove pendingTable trades from possibletrades
 
-        return render(request=request,template_name='swap/student_findpossibletrades.html', context={'pt': possibletrades})
+        return render(request=request, template_name='swap/student_findpossibletrades.html',
+                      context={'pt': possibletrades})
     elif request.method == 'POST':
-    
-        for trade in request.POST.get("trade",[]):
-            requestequipid, responseequipid, responsestudent = trade.split("|")
-            user.addPendingTrade(responsestudent, requestequipid, responseequipid)
-        return HttpResponseRedirect('/student/' + request.user.username)
+        """
+        Handles adding a pending trade request to the users
+        """
+        if request.user.is_authenticated:
+            username = request.user.username[1:]
+            stud = Student.get(username)
+            data = request.POST
+            trade = data['trade'].split('-')
+            print(trade)
+            requestequipid = trade[0]
+            responseequipid = trade[1]
+            responseusername = trade[2]
+
+            possibletrades = user.findPossibleTrades()
+
+            # Check for existing trades between same users with same equipment
+            doesExist = PendingTrade.checkExisting(requestusername=username, responseusername=responseusername,
+                                                   requestequipid=requestequipid, responseequipid=responseequipid)
+            if doesExist:
+                error = "Pending trade already exists select another"
+                return render(request=request, template_name='swap/student_findpossibletrades.html',
+                              context={'pt': possibletrades, 'error': error})
+            try:
+                stud.addPendingTrade(responseusername=responseusername, requestequipid=requestequipid,
+                                     responseequipid=responseequipid)
+            except IntegrityError:
+                return HttpResponseRedirect('/student/' + username)
+
+            return HttpResponseRedirect('/student/' + username)
+        else:
+            return HttpResponseRedirect('/')
+
 
 @csrf_exempt
 def trade(request):
     return HttpResponse(status=400)
 
+
 @csrf_exempt
 def course(request):
     return HttpResponse(status=400)
+
 
 @csrf_exempt
 def instructor(request):

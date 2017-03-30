@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
+
+from swapapp.auth import auth
 from .models_ubc_courses import COURSES
 from .models import *
 
@@ -12,7 +14,10 @@ def index(request):
 
 
 def login(request):
-    return render(request, 'swap/login.html')
+    if request.method == 'GET':
+        return render(request, 'swap/login.html')
+    else:
+        return auth.login(request)
 
 
 def join(request):

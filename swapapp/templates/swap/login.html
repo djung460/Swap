@@ -1,7 +1,7 @@
 {% extends 'swap/base.html' %}
 {% block content %}
 
-    <form action="/api/auth/login" method="post"> {% csrf_token %}
+    <form action="/login" method="post"> {% csrf_token %}
         <div class="row uniform">
             <div class="12u$">
                 <h2>Login!</h2>
@@ -28,6 +28,8 @@
                 <input type="radio" id="kind-instructor" name="kind" value="instructor">
                 <label for="kind-instructor">Instructor</label>
             </div>
+
+            <p style="color:red"> {{ error }}</p>
 
             <!-- Login button -->
             <div class="12u$">

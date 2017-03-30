@@ -1,6 +1,8 @@
 import bcrypt
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db import connection
+from django.shortcuts import render, redirect
+
 from swapapp.models import Student, Instructor
 from rest_framework.parsers import JSONParser
 from django.contrib.auth import authenticate
@@ -95,7 +97,8 @@ def login(request):
             djangologin(request, user)
             return HttpResponseRedirect('/student/' + res.username)
         else:
-            return HttpResponseRedirect('/login')
+            error = "Invalid username or password"
+            return render(request, 'swap/login.html', {'error':error})
     else:
         res = Instructor.get(username)
 
@@ -105,4 +108,5 @@ def login(request):
             djangologin(request, user)
             return HttpResponseRedirect('/instructor/' + res.username)
         else:
-            return HttpResponseRedirect('/login')
+            error = "Invalid username or password"
+            return render(request, 'swap/login.html',{'error':error})

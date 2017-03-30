@@ -8,7 +8,7 @@
         </header>
     </div>
     <br>
-    <form method="post" action="/api/trades/pending/add" name="possibletrades"> {% csrf_token %}
+    <form method="post" action="/api/trades/findtrades" name="possibletrades"> {% csrf_token %}
         {% for trade in pt %}
             <div class="12u$(small)">
                 <input type="radio" id="{{ trade.ID1 }}-{{ trade.ID2 }}-{{ trade.OwnerUsername }}" name="trade" value="{{ trade.ID1 }}-{{ trade.ID2 }}-{{ trade.OwnerUsername }}">
@@ -16,7 +16,7 @@
             </div>
             <br>
         {% endfor %}
-
+     <p style="color:red"> {{ error }}</p>
     <button type="submit" class="button button-block">
         REQUEST TRADE
     </button>

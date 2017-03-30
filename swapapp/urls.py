@@ -9,7 +9,7 @@ from swapapp.auth import auth
 urlpatterns = [
     # view stuff displays pages
     url(r'^$',views.index),
-    url(r'^login$',views.login),
+    url(r'^login',views.login),
     url(r'^join$',views.join),
     url(r'^search$', views.search),
     url(r'^search/(?P<user>[0-9a-zA-Z]+)$', views.search),
@@ -39,7 +39,6 @@ urlpatterns = [
     url(r'^api/trades/pending/confirm', tradehandlers.confirm),
     url(r'^api/trades/pending/cancel', tradehandlers.cancel),
 
-    url(r'^api/auth/login$', auth.login),
     url(r'^api/auth/join$', auth.join),
     url(r'^api/auth/logout', auth.logout),
 

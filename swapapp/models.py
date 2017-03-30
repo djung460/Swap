@@ -20,9 +20,10 @@ def dictfetchall(cursor):
         for row in cursor.fetchall()
         ]
 
-#-------------------------------------------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------------------------------------------
 # CLASSES
-#-------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
 class Class(models.Model):
     faculty = models.CharField(primary_key=True, max_length=4)
     classnum = models.CharField(db_column='classNum', primary_key=True, max_length=4)  # Field name made lowercase.
@@ -56,9 +57,10 @@ class Class(models.Model):
                 "FROM Class;")
             return dictfetchall(cursor=cursor)
 
-#-------------------------------------------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------------------------------------------
 # CLASSREQUIRESEQUIPMENT
-#-------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
 class ClassRequiresEquipment(models.Model):
     faculty = models.CharField(primary_key=True, max_length=4)
     classnum = models.CharField(db_column='classNum', primary_key=True, max_length=4)  # Field name made lowercase.
@@ -90,9 +92,10 @@ class ClassRequiresEquipment(models.Model):
             )
             return dictfetchall(cursor=cursor)
 
-#-------------------------------------------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------------------------------------------
 # CONFIRMEDTRADES
-#-------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
 class ConfirmedTrade(models.Model):
     tradeid = models.IntegerField(db_column='tradeID', primary_key=True)  # Field name made lowercase.
     requestusername = models.ForeignKey('Student', models.DO_NOTHING, db_column='requestUsername',
@@ -102,7 +105,7 @@ class ConfirmedTrade(models.Model):
     requestequipid = models.ForeignKey('Equipment', models.DO_NOTHING, db_column='requestEquipID',
                                        related_name='%(class)s_requestEquipID')  # Field name made lowercase.
     responseequipid = models.ForeignKey('Equipment', models.DO_NOTHING, db_column='responseEquipID',
-                                       related_name='%(class)s_responseEquipID')  # Field name made lowercase.
+                                        related_name='%(class)s_responseEquipID')  # Field name made lowercase.
     dateconfirmed = models.DateTimeField(db_column='dateConfirmed')  # Field name made lowercase.
 
     class Meta:
@@ -113,16 +116,16 @@ class ConfirmedTrade(models.Model):
     def add(pendingtradeid, requestusername, responseusername, requestequipid, responseequipid):
         with connection.cursor() as cursor:
             cursor.execute(
-            "INSERT INTO ConfirmedTrade "
-            "(tradeid, requestusername, responseusername, requestequipid, responseequipid, dateconfirmed) "
-            "VALUES (%s,%s,%s,%s,%s,DATETIME())",
-            [pendingtradeid, requestusername, responseusername, requestequipid, responseequipid])
+                "INSERT INTO ConfirmedTrade "
+                "(tradeid, requestusername, responseusername, requestequipid, responseequipid, dateconfirmed) "
+                "VALUES (%s,%s,%s,%s,%s,DATETIME())",
+                [pendingtradeid, requestusername, responseusername, requestequipid, responseequipid])
 
     @staticmethod
     def getMax():
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT COUNT(*) FROM ConfirmedTrade" )
+                "SELECT COUNT(*) FROM ConfirmedTrade")
             row = cursor.fetchone()
             return row[0]
 
@@ -134,7 +137,7 @@ class ConfirmedTrade(models.Model):
                 "FROM ConfirmedTrade "
                 "GROUP BY requestUsername "
                 "HAVING COUNT(*) >= "
-                    "(SELECT COUNT(*) FROM ConfirmedTrade c2 GROUP BY c2.requestUsername);"
+                "(SELECT COUNT(*) FROM ConfirmedTrade c2 GROUP BY c2.requestUsername);"
             )
             row = cursor.fetchone()
             return row[0]
@@ -145,16 +148,17 @@ class ConfirmedTrade(models.Model):
             cursor.execute(
                 "SELECT AVG(trades) "
                 "FROM( "
-                    "SELECT COUNT(*) as trades "
-                    "FROM ConfirmedTrade "
-                    "GROUP BY requestUsername);"
+                "SELECT COUNT(*) as trades "
+                "FROM ConfirmedTrade "
+                "GROUP BY requestUsername);"
             )
             row = cursor.fetchone()
             return row[0]
 
-#-------------------------------------------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------------------------------------------
 # EQUIPMENT
-#-------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
 class Equipment(models.Model):
     equipmentid = models.IntegerField(db_column='equipmentID', primary_key=True)  # Field name made lowercase.
     equipmentname = models.CharField(db_column='equipmentName', max_length=128)  # Field name made lowercase.
@@ -228,9 +232,10 @@ class Equipment(models.Model):
 
             return dictfetchall(cursor=cursor)
 
-#-------------------------------------------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------------------------------------------
 # INSTRUCTOR
-#-------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
 class Instructor(models.Model):
     username = models.CharField(primary_key=True, max_length=32)
     pwhash = models.TextField()  # This field type is a guess.
@@ -347,9 +352,10 @@ class Instructor(models.Model):
                 [faculty, classnum, term, faculty, classnum, term])
             return dictfetchall(rows)
 
-#-------------------------------------------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------------------------------------------
 # PENDINGTRADES
-#-------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
 class PendingTrade(models.Model):
     tradeid = models.IntegerField(db_column='tradeID', primary_key=True)  # Field name made lowercase.
     requestusername = models.CharField(db_column='requestUsername', max_length=32)  # Field name made lowercase.
@@ -372,9 +378,28 @@ class PendingTrade(models.Model):
                 "WHERE tradeid=%s",
                 [pendingtradeid])
 
-#-------------------------------------------------------------------------------------------------------------------
+    @staticmethod
+    def checkExisting(requestusername, responseusername, requestequipid, responseequipid):
+        """
+        :return: True if existing False otherwise
+        """
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT tradeID "
+                "FROM PendingTrade "
+                "WHERE (requestusername=%s OR responseusername=%s) "
+                "AND (requestusername=%s OR responseusername=%s) "
+                "AND (requestequipid=%s OR responseequipid=%s) "
+                "AND (requestequipid=%s OR responseequipid=%s)",
+                [requestusername, requestusername, responseusername, responseusername, requestequipid, requestequipid,
+                 responseequipid, responseequipid])
+            rows = dictfetchall(cursor)
+            return len(rows) != 0
+
+
+# -------------------------------------------------------------------------------------------------------------------
 # STUDENT
-#-------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
 class Student(models.Model):
     username = models.CharField(primary_key=True, max_length=32)
     pwhash = models.TextField()  # This field type is a guess.
@@ -504,7 +529,7 @@ class Student(models.Model):
         with connection.cursor() as cursor:
             cursor.execute(
                 # TODO remove pairs that are already in pendingtable and where requestusername is your username
-                '''SELECT StudentHasEquipment.equipmentID as ID1, Equipment.equipmentName as Name, 
+                '''SELECT DISTINCT StudentHasEquipment.equipmentID as ID1, Equipment.equipmentName as Name,
                 StudentHasEquipment2.equipmentID as ID2, Equipment2.equipmentName as Name2, 
                 StudentHasEquipment2.username as OwnerUsername
                 
@@ -599,9 +624,11 @@ class Student(models.Model):
         """
         with connection.cursor() as cursor:
             if type == 'request':
+                #Confirmed trades that you've requested
                 cursor.execute(
-                    "SELECT CT.tradeID AS tradeID, "
-                    "CT.requestusername AS responseUsername, "
+                    "SELECT  CT.tradeID AS tradeID, "
+                    "CT.requestusername AS requestusername, "
+                    "S.username AS responseUsername, "
                     "S.name AS responseName, "
                     "S.email AS responseEmail, "
                     "CT.requestequipid AS requestEquipID, "
@@ -615,10 +642,11 @@ class Student(models.Model):
                     "AND E2.equipmentid = CT.requestequipid",
                     [self.username])
             else:
+                #Confirmed trades that you've responded to
                 cursor.execute(
                     "SELECT CT.tradeID AS tradeID, "
-                    "CT.responseusername AS responseUsername, "
-                    "S.name AS responseName, "
+                    "CT.requestUsername AS requestUsername, "
+                    "S.name AS requestName, "
                     "S.email AS responseEmail, "
                     "CT.requestequipid AS requestEquipID, "
                     "CT.responseequipid AS responseEquipID, "
@@ -631,7 +659,6 @@ class Student(models.Model):
                     "AND E2.equipmentid = CT.responseequipid",
                     [self.username])
             return dictfetchall(cursor)
-
 
     def updatePendingTrade(self, tradeid, requestconfirm=None, responseconfirm=None):
         """
@@ -659,7 +686,6 @@ class Student(models.Model):
                 "WHERE tradeid=%s",
                 [tradeid])
             return dictfetchall(cursor)
-
 
     @staticmethod
     def remove(pendingtradeid):
@@ -760,9 +786,10 @@ class StudentHasEquipment(models.Model):
                     "VALUES(%s,%s,1)",
                     [username, equipid])
 
-#-------------------------------------------------------------------------------------------------------------------
+
+# -------------------------------------------------------------------------------------------------------------------
 # STUDENTTAKESCLASS
-#-------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
 class StudentTakesClass(models.Model):
     username = models.ForeignKey(Student, models.DO_NOTHING, db_column='username', primary_key=True)
     faculty = models.CharField(primary_key=True, max_length=4)
