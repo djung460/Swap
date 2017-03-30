@@ -482,6 +482,8 @@ class Student(models.Model):
             if type == 'request':
                 cursor.execute(
                     "SELECT PT.tradeID AS tradeID, "
+                    "PT.responseConfirm AS responseConfirm, "
+                    "PT.requestConfirm AS requestConfirm, "
                     "PT.responseusername AS responseUsername, "
                     "S.name AS responseName, "
                     "S.email AS responseEmail, "
@@ -498,6 +500,8 @@ class Student(models.Model):
             else:
                 cursor.execute(
                     "SELECT PT.tradeID AS tradeID, "
+                    "PT.responseConfirm AS responseConfirm, "
+                    "PT.requestConfirm AS requestConfirm, "
                     "PT.responseusername AS responseUsername, "
                     "S.name AS responseName, "
                     "S.email AS responseEmail, "

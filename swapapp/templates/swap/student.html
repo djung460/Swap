@@ -67,7 +67,11 @@
                                     <input type="hidden" name="by" value="request"/>
                                     <input type="hidden" name="responseequipid" value="{{ trade.responseEquipID }}"/>
                                     <input type="hidden" name="requestequipid" value="{{ trade.requestEquipID }}"/>
-                                    <input type="submit" class="green" value="Completed"/>
+                                    {% if trade.requestConfirm == 0 %}
+                                        <input type="submit" class="green" value="Confirm"/>
+                                    {% else %}
+                                        <input type="submit" disabled value="Waiting"/>
+                                    {% endif %}
                                 </form>
 
                                 <form method="post" action="/api/trades/pending/cancel"
@@ -113,7 +117,11 @@
                                     <input type="hidden" name="by" value="response"/>
                                     <input type="hidden" name="responseequipid" value="{{ trade.responseEquipID }}"/>
                                     <input type="hidden" name="requestequipid" value="{{ trade.requestEquipID }}"/>
-                                    <input type="submit" value="Completed"/>
+                                    {% if trade.responseConfirm == 0 %}
+                                        <input type="submit" class="green" value="Confirm"/>
+                                    {% else %}
+                                        <input type="submit" disabled value="Waiting"/>
+                                    {% endif %}
                                 </form>
 
                                 <form method="post" action="/api/trades/pending/cancel"
