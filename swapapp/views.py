@@ -30,6 +30,9 @@ def search(request):
     numEquipment = StudentHasEquipment.getNum()
     maxEquipment = StudentHasEquipment.getMaxNum()
 
+    for item in equiplist:
+        item['classlist'] = ClassRequiresEquipment.getClasses(str(item['equipmentID']))
+
     return render(request, 'swap/search.html', {
         'equiplist': equiplist,
         'maxTrades': maxTrades,
@@ -66,6 +69,7 @@ def student(request, user=''):
 
     else:
         return HttpResponseRedirect('/')
+
 
 
 def addclass(request, user=''):

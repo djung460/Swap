@@ -45,9 +45,11 @@ def searchequipment(request):
     numEquipment = StudentHasEquipment.getNum()
     maxEquipment = StudentHasEquipment.getMaxNum()
 
+
     try:
         equiplist = Equipment.updateSearch(keyword=keyword,type=type, faculty=faculty, classnum=classnum, min=min)
-        maxTrades = ConfirmedTrade.getMax()
+        for item in equiplist:
+            item['classlist'] = ClassRequiresEquipment.getClasses(str(item['equipmentID']))
         return render(request, 'swap/search.html', {
         'equiplist': equiplist,
         'maxTrades': maxTrades,
@@ -68,6 +70,9 @@ def equipmentmax(request):
     numUsers = Student.getNum()
     numEquipment = StudentHasEquipment.getNum()
     maxEquipment = StudentHasEquipment.getMaxNum()
+    for item in equiplist:
+        item['classlist'] = ClassRequiresEquipment.getClasses(str(item['equipmentID']))
+
     return render(request, 'swap/search.html', {
         'equiplist': equiplist,
         'maxTrades': maxTrades,
@@ -86,6 +91,9 @@ def equipmentmin(request):
     numUsers = Student.getNum()
     numEquipment = StudentHasEquipment.getNum()
     maxEquipment = StudentHasEquipment.getMaxNum()
+    for item in equiplist:
+        item['classlist'] = ClassRequiresEquipment.getClasses(str(item['equipmentID']))
+
     return render(request, 'swap/search.html', {
         'equiplist': equiplist,
         'maxTrades': maxTrades,

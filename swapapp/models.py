@@ -20,6 +20,9 @@ def dictfetchall(cursor):
         for row in cursor.fetchall()
         ]
 
+#-------------------------------------------------------------------------------------------------------------------
+# CLASSES
+#-------------------------------------------------------------------------------------------------------------------
 class Class(models.Model):
     faculty = models.CharField(primary_key=True, max_length=4)
     classnum = models.CharField(db_column='classNum', primary_key=True, max_length=4)  # Field name made lowercase.
@@ -46,6 +49,9 @@ class Class(models.Model):
             return dictfetchall(cursor=cursor)
 
 
+#-------------------------------------------------------------------------------------------------------------------
+# CLASSREQUIRESEQUIPMENT
+#-------------------------------------------------------------------------------------------------------------------
 class ClassRequiresEquipment(models.Model):
     faculty = models.CharField(primary_key=True, max_length=4)
     classnum = models.CharField(db_column='classNum', primary_key=True, max_length=4)  # Field name made lowercase.
@@ -67,6 +73,19 @@ class ClassRequiresEquipment(models.Model):
                 [faculty, classnum, term])
             return dictfetchall(cursor=cursor)
 
+    @staticmethod
+    def getClasses(equipmentid):
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "SELECT IFNULL(faculty, 'General') as faculty, classnum "
+                "FROM ClassRequiresEquipment "
+                "WHERE equipmentid = " + equipmentid + ";"
+            )
+            return dictfetchall(cursor=cursor)
+
+#-------------------------------------------------------------------------------------------------------------------
+# CONFIRMEDTRADES
+#-------------------------------------------------------------------------------------------------------------------
 class ConfirmedTrade(models.Model):
     tradeid = models.IntegerField(db_column='tradeID', primary_key=True)  # Field name made lowercase.
     requestusername = models.ForeignKey('Student', models.DO_NOTHING, db_column='requestUsername',
@@ -126,7 +145,9 @@ class ConfirmedTrade(models.Model):
             row = cursor.fetchone()
             return row[0]
 
-
+#-------------------------------------------------------------------------------------------------------------------
+# EQUIPMENT
+#-------------------------------------------------------------------------------------------------------------------
 class Equipment(models.Model):
     equipmentid = models.IntegerField(db_column='equipmentID', primary_key=True)  # Field name made lowercase.
     equipmentname = models.CharField(db_column='equipmentName', max_length=128)  # Field name made lowercase.
@@ -154,7 +175,9 @@ class Equipment(models.Model):
             if (type != ""):
                 baseQuery += " AND e.equipmentType LIKE '%" + type + "%'"
             if (min != ""):
-                baseQuery += " AND quantity >= " + min
+                baseQuery = "SELECT * FROM (" + baseQuery + " GROUP BY e.equipmentid) WHERE quantity >=" + min + ";"
+                cursor.execute(baseQuery)
+                return dictfetchall(cursor=cursor)
             cursor.execute(
                 baseQuery + " GROUP BY e.equipmentid;"
             )
@@ -164,9 +187,9 @@ class Equipment(models.Model):
     def getMax():
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
-                "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid "
-                "WHERE quantity = (SELECT MAX(s2.quantity) FROM StudentHasEquipment s2 GROUP BY s2.equipmentid ORDER BY s2.quantity DESC);")
+                "SELECT * FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid)"
+                "WHERE quantity >= (SELECT SUM(s2.quantity) FROM StudentHasEquipment s2 GROUP BY s2.equipmentid);")
 
             return dictfetchall(cursor=cursor)
 
@@ -174,9 +197,10 @@ class Equipment(models.Model):
     def getMin():
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
-                "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid "
-                "WHERE quantity = (SELECT MAX(s2.quantity) FROM StudentHasEquipment s2 GROUP BY s2.equipmentid ORDER BY s2.quantity ASC);")
+                "SELECT * FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid)"
+                "WHERE quantity = (SELECT MIN(quantity) FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid));")
 
             return dictfetchall(cursor=cursor)
 
@@ -190,7 +214,9 @@ class Equipment(models.Model):
 
             return dictfetchall(cursor=cursor)
 
-
+#-------------------------------------------------------------------------------------------------------------------
+# INSTRUCTOR
+#-------------------------------------------------------------------------------------------------------------------
 class Instructor(models.Model):
     username = models.CharField(primary_key=True, max_length=32)
     pwhash = models.TextField()  # This field type is a guess.
@@ -307,7 +333,9 @@ class Instructor(models.Model):
                 [faculty, classnum, term, faculty, classnum, term])
             return dictfetchall(rows)
 
-
+#-------------------------------------------------------------------------------------------------------------------
+# PENDINGTRADES
+#-------------------------------------------------------------------------------------------------------------------
 class PendingTrade(models.Model):
     tradeid = models.IntegerField(db_column='tradeID', primary_key=True)  # Field name made lowercase.
     requestusername = models.CharField(db_column='requestUsername', max_length=32)  # Field name made lowercase.
@@ -330,7 +358,9 @@ class PendingTrade(models.Model):
                 "WHERE tradeid=%s",
                 [pendingtradeid])
 
-
+#-------------------------------------------------------------------------------------------------------------------
+# STUDENT
+#-------------------------------------------------------------------------------------------------------------------
 class Student(models.Model):
     username = models.CharField(primary_key=True, max_length=32)
     pwhash = models.TextField()  # This field type is a guess.
@@ -712,9 +742,9 @@ class StudentHasEquipment(models.Model):
                     "VALUES(%s,%s,1)",
                     [username, equipid])
 
-
-
-
+#-------------------------------------------------------------------------------------------------------------------
+# STUDENTTAKESCLASS
+#-------------------------------------------------------------------------------------------------------------------
 class StudentTakesClass(models.Model):
     username = models.ForeignKey(Student, models.DO_NOTHING, db_column='username', primary_key=True)
     faculty = models.CharField(primary_key=True, max_length=4)

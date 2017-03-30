@@ -19,7 +19,7 @@
             </header>
         </div>
 
-        <div class="4u 12u$(small)">
+        <div class="6u 12u$(small)">
             <div class="table-wrapper">
                 Trade Stats:
                 <br>
@@ -37,7 +37,7 @@
                 </table>
             </div>
         </div>
-    <div class="4u 12u$(small)">
+    <div class="6u 12u$(small)">
             <div class="table-wrapper">
                 User Stats:
                 <br>
@@ -53,12 +53,6 @@
                        </tr>
                 </table>
             </div>
-        </div>
-
-        <div class="4u$ 12u$(small)">
-            <p class="align-right">
-                Here are the some statistics for all the Swap.
-            </p>
         </div>
 
         <!--------------------------------------------------------------------------------------------------------------
@@ -117,8 +111,8 @@
         </div>
 
         <div class="8u$ 12u$(medium)">
-            <a href="/api/equipment/low" class="button fit">Find Item with Lowest Quantity</a>
             <a href="/api/equipment/high" class="button fit">Find Item with Highest Quantity</a>
+            <a href="/api/equipment/low" class="button fit">Find Item with Lowest Quantity</a>
             <div class="table-wrapper">
                 <br>
                 <table>
@@ -141,7 +135,10 @@
                                 {{ equip.quantity }}
                             </td>
                             <td>
-                                {{ equip.faculty }}{{ equip.classNum }}
+                                 {% for class in equip.classlist %}
+                                 || {{ class.faculty }}{{ class.classNum }}
+                                 {% endfor %}
+                                 ||
                             </td>
                         </tr>
                     {% endfor %}
