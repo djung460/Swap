@@ -7,6 +7,64 @@
             <img src="{% static 'swapapp/images/student_banner.jpg' %}"/>
         </span>
 
+
+        <!--------------------------------------------------------------------------------------------------------------
+      TRADE STATS
+      --------------------------------------------------------------------------------------------------------------->
+
+
+        <div class="12u$">
+            <header id="header">
+                <h2 class="colored align-right"><span class=" icon fa-database"></span>  Swap Statistics</h2>
+            </header>
+        </div>
+
+        <div class="4u 12u$(small)">
+            <div class="table-wrapper">
+                Trade Stats:
+                <br>
+                <table>
+                           <th>Most Trades Made: </th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th>Most Trades Made In Single Day: </th>
+                        <th></th>
+                    </tr>
+                       <tr>
+                        <th>Most Trades Made By Single User:  </th>
+                           <th></th>
+                       </tr>
+                    <th>Average Number of Trades Per Day:  </th>
+                           <th></th>
+                       </tr>
+                </table>
+            </div>
+        </div>
+    <div class="4u 12u$(small)">
+            <div class="table-wrapper">
+                User Stats:
+                <br>
+                <table>
+                    <th>Number of Users:  </th>
+                           <th></th>
+                       </tr>
+                    <th>Total Quantity of Equipment Held By Users:  </th>
+                           <th></th>
+                       </tr>
+                    <th>Highest Quantity of Equipment Held By Single User:  </th>
+                           <th></th>
+                       </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="4u$ 12u$(small)">
+            <p class="align-right">
+                Here are the some statistics for all the Swap.
+            </p>
+        </div>
+
         <!--------------------------------------------------------------------------------------------------------------
         SEARCH ITEMS
         --------------------------------------------------------------------------------------------------------------->
@@ -20,43 +78,43 @@
 
         <div class="4u 12u$(small)">
             <form action="/api/equipment/search" method="post" name="searchform"> {% csrf_token %}
-            <div class="12u$">
-                <h2>Filter your search:</h2>
-            </div>
+                <div class="12u$">
+                    <h2>Filter your search:</h2>
+                </div>
                 <div class="row">
-            <div class="8u$ 12u$(xsmall)">
-                <label>Keyword</label>
-                <input type="text" name="keyword" placeholder="Laptop"/>
-                <br>
-            </div>
-            <div class="8u$ 12u$(xsmall)">
-                <label>Type</label>
-                <input type="text" name="type" placeholder="LAB"/>
-                <br>
-            </div>
-                  <div class="8u$ 12u$(xsmall)">
-                <label>Faculty</label>
-                <input type="text" name="faculty" placeholder="CPSC"/>
-                      <br>
-            </div>
-                      <div class="8u$ 12u$(xsmall)">
-                <label>Class Number</label>
-                <input type="text" name="classnum" placeholder="304"/>
-            </div>
-            <div class="8u$ 12u$(xsmall)">
-                <br>
-                 <div class="8u$ 12u$(xsmall)">
-                <label>Minimum Quantity</label>
-                <input type="text" name="minquantity" placeholder="4"/>
-                     <br>
-                 </div>
-            </div>
+                    <div class="8u$ 12u$(xsmall)">
+                        <label>Keyword</label>
+                        <input type="text" name="keyword" placeholder="Laptop"/>
+                        <br>
+                    </div>
+                    <div class="8u$ 12u$(xsmall)">
+                        <label>Type</label>
+                        <input type="text" name="type" placeholder="LAB"/>
+                        <br>
+                    </div>
+                    <div class="8u$ 12u$(xsmall)">
+                        <label>Faculty</label>
+                        <input type="text" name="faculty" placeholder="CPSC"/>
+                        <br>
+                    </div>
+                    <div class="8u$ 12u$(xsmall)">
+                        <label>Class Number</label>
+                        <input type="text" name="classnum" placeholder="304"/>
+                    </div>
+                    <div class="8u$ 12u$(xsmall)">
+                        <br>
+                        <div class="8u$ 12u$(xsmall)">
+                            <label>Minimum Quantity</label>
+                            <input type="text" name="minquantity" placeholder="4"/>
+                            <br>
+                        </div>
+                    </div>
                 </div>
                 <div class="8u$ 12u$(xsmall)">
-                <button type="submit" class="button button-block">
-                    Search
-                </button>
-                <br>
+                    <button type="submit" class="button button-block">
+                        Search
+                    </button>
+                    <br>
                 </div>
             </form>
             <br>
@@ -66,7 +124,7 @@
             <a href="/api/equipment/low" class="button fit">Find Item with Lowest Quantity</a>
             <a href="/api/equipment/high" class="button fit">Find Item with Highest Quantity</a>
             <div class="table-wrapper">
-            <br>
+                <br>
                 <table>
                     <tr>
                         <th>Name</th>
@@ -86,15 +144,14 @@
                             <td>
                                 {{ equip.quantity }}
                             </td>
-                             <td>
+                            <td>
                                 {{ equip.faculty }}{{ equip.classNum }}
                             </td>
                         </tr>
                     {% endfor %}
                 </table>
             </div>
-
         </div>
-
-
+        </div>
+    </div>
 {% endblock %}
