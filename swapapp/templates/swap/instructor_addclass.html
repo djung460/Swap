@@ -1,35 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>ENROLL</title>
-</head>
-<body>
-<h1>SWAP</h1>
-<h2>ADD A CLASS</h2>
+{% extends 'swap/base.html' %}
+{% block content %}
 
-<form action="/api/instructor/class/add" method="post" name="addclassform"> {% csrf_token %}
-    <div class="field-wrap">
-        <label>
-            Faculty<span class="req">*</span>
-        </label>
-        <input name="faculty" type="text" required autocomplete="off"/>
+    <div class="12u$">
+        <h2>Add course</h2>
+        <p>Let's begin by adding a course you will be teaching to our system.</p>
     </div>
-    <div class="field-wrap">
-        <label>
-            Course Number<span class="req">*</span>
-        </label>
-        <input name="classnum" type="text" required autocomplete="off"/>
-    </div>
-    <div class="field-wrap">
-        <label>
-            Term<span class="req">*</span>
-        </label>
-        <input name="term" type="text" required autocomplete="off"/>
-    </div>
-    <button type="submit" class="button button-block">
-        ADD CLASS
-    </button>
-</form>
-</body>
-</html>
+
+    <form action="/api/instructor/class/add" method="post" name="addclassform"> {% csrf_token %}
+        <div class="row uniform">
+
+            <div class="6u$">
+                <label>Faculty/Program</label>
+                <select name="faculty">
+                    {% for code, name in coursecodelist %}
+                        <option value="{{ code }}">{{ code }} - {{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="3u 12u$(xsmall)">
+                <label>Course Number</label>
+                <input name="classnum" type="text" required autocomplete="off"/>
+            </div>
+            <div class="3u$ 12u$(xsmall)">
+                <label>Term</label>
+                <input name="term" type="text" required autocomplete="off"/>
+            </div>
+            <div class="6u$ 12u$(xsmall)">
+                <ul class="actions">
+                    <li><input type="submit" value="Add Course" class="special fit"/></li>
+                </ul>
+            </div>
+        </div>
+    </form>
+{% endblock %}
