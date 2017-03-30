@@ -677,6 +677,10 @@ class Student(models.Model):
             return cursor.fetchone()[0]
 
 
+#-------------------------------------------------------------------------------------------------------------------
+# STUDENTHASEQUIPMENT
+#-------------------------------------------------------------------------------------------------------------------
+
 class StudentHasEquipment(models.Model):
     username = models.ForeignKey(Student, models.DO_NOTHING, db_column='username', primary_key=True)
     equipmentid = models.IntegerField(db_column='equipmentID', primary_key=True)  # Field name made lowercase.
