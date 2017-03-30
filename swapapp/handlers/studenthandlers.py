@@ -14,7 +14,7 @@ def addequipment(request):
 
         data = request.POST
 
-        equipid = data['equipid']
+        equipid = data['kind']
         quantity = data['quantity']
         try:
             stud.addOwnEquipment(equipmentid=equipid, quantity=quantity)
