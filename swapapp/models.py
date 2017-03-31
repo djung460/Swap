@@ -205,9 +205,10 @@ class Equipment(models.Model):
     def getMax():
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT * FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                 "SELECT * FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
                 "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid)"
-                "WHERE quantity >= (SELECT SUM(s2.quantity) FROM StudentHasEquipment s2 GROUP BY s2.equipmentid);")
+                "WHERE quantity = (SELECT MAX(quantity) FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid));")
 
             return dictfetchall(cursor=cursor)
 
@@ -708,6 +709,10 @@ class Student(models.Model):
                 "SELECT COUNT(*) FROM Student")
             return cursor.fetchone()[0]
 
+
+#-------------------------------------------------------------------------------------------------------------------
+# STUDENTHASEQUIPMENT
+#-------------------------------------------------------------------------------------------------------------------
 
 class StudentHasEquipment(models.Model):
     username = models.ForeignKey(Student, models.DO_NOTHING, db_column='username', primary_key=True)
