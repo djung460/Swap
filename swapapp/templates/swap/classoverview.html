@@ -3,17 +3,18 @@
 
 {% block content %}
     <div class="row uniform">
-     <div class="12u$">
+        <div class="12u$">
             <header id="header">
-                <h2 class="colored"><span class=" icon fa-calendar"></span>  {{ faculty }}-{{ classnum }}-{{ term }} Overview</h2>
+                <h2 class="colored"><span class=" icon fa-calendar"></span> {{ faculty }}-{{ classnum }}-{{ term }}
+                    Overview</h2>
 
                 <form method="post" action="/api/instructor/class/delete">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="faculty" value="{{ faculty }}"/>
-                                    <input type="hidden" name="classnum" value="{{ classnum }}"/>
-                                    <input type="hidden" name="term" value="{{ term }}"/>
-                                    <input type="submit" value="Delete Class"/>
-                                </form>
+                    {% csrf_token %}
+                    <input type="hidden" name="faculty" value="{{ faculty }}"/>
+                    <input type="hidden" name="classnum" value="{{ classnum }}"/>
+                    <input type="hidden" name="term" value="{{ term }}"/>
+                    <input type="submit" value="Delete Class"/>
+                </form>
             </header>
 
         </div>
@@ -40,8 +41,8 @@
                             <td>
                                 {{ equip.equipmentType }}
                             </td>
-                        <td>
-                            <form method="post" action="/api/instructor/equipment/delete">
+                            <td>
+                                <form method="post" action="/api/instructor/equipment/delete">
                                     {% csrf_token %}
                                     <input type="hidden" name="faculty" value="{{ faculty }}"/>
                                     <input type="hidden" name="classnum" value="{{ classnum }}"/>
@@ -49,15 +50,16 @@
                                     <input type="hidden" name="equipid" value="{{ equip.equipmentID }}"/>
                                     <input type="submit" value="Remove Equipment"/>
                                 </form>
-                        </td>
+                            </td>
                         </tr>
                     {% endfor %}
                 </table>
             </div>
         </div>
     </div>
-     <a href="/addequipment/class/{{ faculty }}-{{ classnum }}-{{ term }}"
-                                   class="button special"> Add Equipment </a>
+    <a href="/addequipment/class/{{ faculty }}-{{ classnum }}-{{ term }}"
+       class="button special"> Add Equipment </a>
+    <br><br><br><br>
     <!--------------------------------------------------------------------------------------------------------------
         STUDENT OVERVIEW
      --------------------------------------------------------------------------------------------------------------->
