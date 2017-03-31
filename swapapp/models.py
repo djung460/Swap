@@ -335,6 +335,7 @@ class Instructor(models.Model):
                 [self.username])
             return dictfetchall(rows)
 
+
     def getStudentsWithAllEquipment(self, faculty, classnum, term):
         """
         Gets a list of students with all required equipment for a class they are enrolled in
