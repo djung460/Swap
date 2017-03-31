@@ -353,10 +353,13 @@ def instructor_addequip(request, faculty='', classnum='', term=''):
 
             data = request.POST
 
-            faculty = data['class'][0:4]
-            classnum = data['class'][4:7]
-            term = data['class'][7:14]
-            equipid = data['kind']
+            classinfo = data['class'].split('-')
+            print(classinfo)
+            faculty = classinfo[0]
+            classnum = classinfo[1]
+            term = classinfo[2]
+
+            equipid = data['equipid']
 
             try:
                 inst.addEquipToClass(faculty=faculty, classnum=classnum, term=term, equipid=equipid)

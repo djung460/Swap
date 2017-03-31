@@ -20,11 +20,11 @@
     <br>
     <form action="/addequipment/class/{{ faculty }}-{{ classnum }}-{{ term }}" method="post" name="add_req_equip_form">
         {% csrf_token %}
-        <input type="hidden" name="class" value= {{ faculty }}{{ classnum }}{{ term }}/>
+        <input type="hidden" name="class" value= "{{ faculty }}-{{ classnum }}-{{ term }}">
 
         {% for equip in equiplist %}
             <div class="2u 12u$(small)">
-                <input type="radio" id="kind-{{ equip.equipmentID }}" name="kind" value={{ equip.equipmentID }}>
+                <input type="radio" id="kind-{{ equip.equipmentID }}" name="equipid" value={{ equip.equipmentID }}>
                 <label for="kind-{{ equip.equipmentID }}">{{ equip.equipmentName }} ({{ equip.equipmentType }})</label>
             </div>
         {% endfor %}

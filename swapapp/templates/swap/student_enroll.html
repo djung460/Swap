@@ -18,7 +18,7 @@
 
 <form action="/api/student/class/enroll" method="post" name="enrollform"> {% csrf_token %}
     {% for class in classlist %}
-       <input type="radio" id="kind-{{ class.faculty }}{{ class.classNum }}{{ class.term }}" name="kind" value={{ class.faculty }}{{ class.classNum }}{{ class.term }}>
+       <input type="radio" id="kind-{{ class.faculty }}{{ class.classNum }}{{ class.term }}" name="class" value={{ class.faculty }}-{{ class.classNum }}-{{ class.term }}>
         <label for="kind-{{ class.faculty }}{{ class.classNum }}{{ class.term }}">
             {{ class.faculty }} {{ class.classNum }}, {{ class.term }} {{ class.instructorUsername }}
         {{ class.name }}</label>

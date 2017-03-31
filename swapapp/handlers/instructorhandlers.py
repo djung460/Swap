@@ -39,9 +39,12 @@ def addequipment(request):
 
         data = request.POST
 
-        faculty = data['class'][0:4]
-        classnum = data['class'][4:7]
-        term = data['class'][7:14]
+        classinfo = data['class'].split('-')
+        print(classinfo)
+        faculty = classinfo[0]
+        classnum = classinfo[1]
+        term = classinfo[2]
+
         equipid = data['kind']
 
         try:

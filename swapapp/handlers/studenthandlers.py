@@ -99,13 +99,11 @@ def enroll(request):
 
         data = request.POST
 
-        faculty = data['kind'][0:4]
-        print(faculty)
-        classnum = data['kind'][4:7]
-        print(classnum)
-        print(data['kind'])
-        term = data['kind'][7:14]
-        print(term)
+        classinfo = data['class'].split('-')
+        print(classinfo)
+        faculty = classinfo[0]
+        classnum = classinfo[1]
+        term = classinfo[2]
 
         print(faculty, classnum, term)
 
