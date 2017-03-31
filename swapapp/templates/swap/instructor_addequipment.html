@@ -3,37 +3,40 @@
 
 {% block content %}
 
-  <div class="row uniform">
+    <div class="row uniform">
         <span class="main image">
             <img src="{% static 'swapapp/images/student_banner.jpg' %}"/>
         </span>
-  </div>
+    </div>
     <div class="row">
- <div class="12u$">
+        <div class="12u$">
             <header id="header">
                 <h2 class="colored align-left"><span class=" icon fa-flask"></span> Add Equipment</h2>
             </header>
         </div>
     </div>
 
-
     <br>
     <br>
-<form action="/api/instructor/equipment/add" method="post" name="add_req_equip_form">
-    {% csrf_token %}
-    <input type="hidden" name="class" value= {{ faculty }}{{ classnum }}{{ term }}/>
+    <form action="/addequipment/class/{{ faculty }}-{{ classnum }}-{{ term }}" method="post" name="add_req_equip_form">
+        {% csrf_token %}
+        <input type="hidden" name="class" value= {{ faculty }}{{ classnum }}{{ term }}/>
 
-     {% for equip in equiplist %}
-          <div class="2u 12u$(small)">
-       <input type="radio" id="kind-{{ equip.equipmentID }}" name="kind" value={{ equip.equipmentID }}>
-        <label for="kind-{{ equip.equipmentID }}">{{ equip.equipmentName }} ({{ equip.equipmentType }})</label>
-          </div>
-    {% endfor %}
+        {% for equip in equiplist %}
+            <div class="2u 12u$(small)">
+                <input type="radio" id="kind-{{ equip.equipmentID }}" name="kind" value={{ equip.equipmentID }}>
+                <label for="kind-{{ equip.equipmentID }}">{{ equip.equipmentName }} ({{ equip.equipmentType }})</label>
+            </div>
+        {% endfor %}
+        <p style="color:red"> {{ error }}</p>
+        <p style="color:green"> {{ success }}</p>
+        <button type="submit" class="button button-block">
+            ADD EQUIPMENT
+        </button>
+    </form>
 
-    <button type="submit" class="button button-block">
-        ADD EQUIPMENT
-    </button>
-</form>
+        <a href="/overview/class/{{ faculty }}-{{ classnum }}-{{ term }}"
+       class="button special"> Back To Class </a>
 
 
 {% endblock %}

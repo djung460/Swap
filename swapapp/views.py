@@ -119,7 +119,7 @@ def addclass(request, user=''):
                 return render(request, 'swap/instructor_addclass.html', {
                     'coursecodelist': COURSES,
                     'terms': TERMS,
-                    'message': success
+                    'success': success
                 })
             else:
                 return HttpResponseRedirect('/')
@@ -250,11 +250,45 @@ def instructor_addequip(request, faculty='', classnum='', term=''):
     if request.user.is_authenticated:
         equiplist = Equipment.getAll()
 
-        return render(request, 'swap/instructor_addequipment.html', {
-            'faculty': faculty,
-            'classnum': classnum,
-            'term': term,
-            'equiplist': equiplist
-        })
+        if request.method == 'GET':
+            return render(request, 'swap/instructor_addequipment.html', {
+                'faculty': faculty,
+                'classnum': classnum,
+                'term': term,
+                'equiplist': equiplist
+            })
+        elif request.method =='POST':
+            username = request.user.username[1:]
+            inst = Instructor.get(username)
+
+            data = request.POST
+
+            faculty = data['class'][0:4]
+            classnum = data['class'][4:7]
+            term = data['class'][7:14]
+            equipid = data['kind']
+
+            try:
+                inst.addEquipToClass(faculty=faculty, classnum=classnum, term=term, equipid=equipid)
+            except Exception:
+                print("Equipment already added to class")
+                error="Equipment already added to class!"
+                return render(request, 'swap/instructor_addequipment.html', {
+                    'faculty': faculty,
+                    'classnum': classnum,
+                    'term': term,
+                    'equiplist': equiplist,
+                    'error': error
+                })
+            print("Equipment succesfully added")
+            success = "Equipment succesfully added"
+            return render(request, 'swap/instructor_addequipment.html', {
+                'faculty': faculty,
+                'classnum': classnum,
+                'term': term,
+                'equiplist': equiplist,
+                'success': success
+            })
+
     else:
         return HttpResponseRedirect('/')

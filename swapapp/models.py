@@ -340,12 +340,16 @@ class Instructor(models.Model):
         """
         Gets a list of students with all required equipment for a class they are enrolled in
         Used by the instructor to get an overview
+
+        Returns all students if the table is empty
         """
         with connection.cursor() as cursor:
             rows = cursor.execute(
                 "SELECT * "
                 "FROM Student S "
-                "WHERE NOT EXISTS "
+                "WHERE "
+                "EXISTS (SELECT * FROM ClassRequiresEquipment CRE WHERE CRE.faculty=%s AND CRE.classnum=%s AND CRE.term=%s) "
+                "AND NOT EXISTS "
                 "(SELECT CRE.equipmentid "
                 "FROM ClassRequiresEquipment CRE "
                 "WHERE CRE.faculty=%s AND CRE.classnum=%s AND CRE.term=%s "
@@ -353,7 +357,7 @@ class Instructor(models.Model):
                 "SELECT SHE.equipmentid "
                 "FROM StudentHasEquipment SHE, StudentTakesClass STC "
                 "WHERE SHE.username = S.username AND STC.faculty=%s AND STC.classnum=%s AND STC.term=%s AND STC.username=S.username)",
-                [faculty, classnum, term, faculty, classnum, term])
+                [faculty, classnum, term, faculty, classnum, term, faculty, classnum, term])
             return dictfetchall(rows)
 
 
