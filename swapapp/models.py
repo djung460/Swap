@@ -718,6 +718,7 @@ class StudentHasEquipment(models.Model):
     username = models.ForeignKey(Student, models.DO_NOTHING, db_column='username', primary_key=True)
     equipmentid = models.IntegerField(db_column='equipmentID', primary_key=True)  # Field name made lowercase.
     quantity = models.IntegerField()
+    tradeable = models.IntegerField(db_column='tradeable')  # Field name made lowercase.
 
     class Meta:
         managed = False
