@@ -144,13 +144,19 @@ def findtrade(request):
             username = request.user.username[1:]
             stud = Student.get(username)
             data = request.POST
+            possibletrades = user.findPossibleTrades()
+
+            # nothing selected
+            if 'trade' not in data:
+                error = "No items selected"
+                return render(request=request, template_name='swap/student_findpossibletrades.html',
+                              context={'pt': possibletrades, 'error': error})
+
             trade = data['trade'].split('-')
             print(trade)
             requestequipid = trade[0]
             responseequipid = trade[1]
             responseusername = trade[2]
-
-            possibletrades = user.findPossibleTrades()
 
             # Check for existing trades between same users with same equipment
             doesExist = PendingTrade.checkExisting(requestusername=username, responseusername=responseusername,

@@ -24,7 +24,7 @@
             <div class="8u 12u$ (small)">
                 {% for equip in equiplist %}
                     <div class="2u 12u$(small)">
-                        <input type="radio" id="kind-{{ equip.equipmentID }}" name="kind" value={{ equip.equipmentID }}>
+                        <input required type="radio" id="kind-{{ equip.equipmentID }}" name="kind" value={{ equip.equipmentID }}>
                         <label for="kind-{{ equip.equipmentID }}">{{ equip.equipmentName }}</label>
                     </div>
                 {% endfor %}

@@ -1,5 +1,8 @@
 from sqlite3 import IntegrityError
 
+import bcrypt
+import re
+from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
@@ -24,9 +27,96 @@ def login(request):
 
 
 def join(request):
-    return render(request, 'swap/join.html', {
-        'coursecodelist': COURSES
-    })
+    if request.method == 'GET':
+        return render(request, 'swap/join.html', {
+            'coursecodelist': COURSES
+        })
+    else:
+        """
+        Create a django user and a user for the database
+        Handles post requests for joins
+        """
+        data = request.POST
+
+        username = data['username']
+
+        # hash the password
+        pwhash = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt())
+        faculty = data['faculty']
+        email = data['email']
+
+        haserror = False
+        phonenumbererror = ''
+        usernameerror = ''
+        emailerror = ''
+
+
+        if '@' not in str(email):
+            haserror = True
+            emailerror = "Invalid email"
+
+        name = data['name']
+        phonenumber = data['phonenumber']
+
+        phonePattern = re.compile(r'^(\d{3})-(\d{3})-(\d{4})$')
+
+        if not phonePattern.match(phonenumber):
+            haserror = True
+            phonenumbererror = "Invalid phone number"
+
+        print('Join user')
+
+        if data['kind'] == 'student' and not haserror:
+
+            # Only student accounts have a year
+            year = data['year']
+
+            student = Student(
+                username=username,
+                pwhash=pwhash,
+                year=year,
+                faculty=faculty,
+                email=email,
+                name=name,
+                phonenumber=phonenumber
+            )
+            try:
+                student.insert()
+                # Create a django user
+                user = User.objects.create_user('s' + username, email, data['password'])
+                user.save()
+                print(student)
+            except Exception:
+                haserror = True
+                usernameerror = "Student username taken!"
+        elif data['kind'] != 'student' and not haserror:
+            instructor = Instructor(
+                username=username,
+                pwhash=pwhash,
+                faculty=faculty,
+                email=email,
+                name=name,
+                phonenumber=phonenumber
+            )
+            try:
+                instructor.insert()
+                # Create a django user
+                user = User.objects.create_user('i' + username, email, data['password'])
+                user.save()
+                print(instructor)
+            except Exception:
+                haserror = True
+                usernameerror = "Instructor username taken!"
+
+        if haserror:
+            return render(request, 'swap/join.html', {
+                'coursecodelist': COURSES,
+                'error_username': usernameerror,
+                'error_phonenumber': phonenumbererror,
+                'error_email': emailerror
+            })
+        else:
+            return HttpResponseRedirect('/login')
 
 
 def search(request):
@@ -93,7 +183,7 @@ def addclass(request, user=''):
                 'coursecodelist': COURSES,
                 'terms': TERMS
             })
-        elif request.method=='POST':
+        elif request.method == 'POST':
             if request.user.is_authenticated:
                 username = request.user.username[1:]
                 inst = Instructor.get(username)
@@ -108,11 +198,11 @@ def addclass(request, user=''):
                     inst.addCourse(faculty, classnum, term)
                 except Exception:
                     print("Class already exists")
-                    error="Class already exists!"
+                    error = "Class already exists!"
                     return render(request, 'swap/instructor_addclass.html', {
                         'coursecodelist': COURSES,
                         'terms': TERMS,
-                        'error':error
+                        'error': error
                     })
 
                 success = "Class added succesfully!"
@@ -257,7 +347,7 @@ def instructor_addequip(request, faculty='', classnum='', term=''):
                 'term': term,
                 'equiplist': equiplist
             })
-        elif request.method =='POST':
+        elif request.method == 'POST':
             username = request.user.username[1:]
             inst = Instructor.get(username)
 
@@ -272,7 +362,7 @@ def instructor_addequip(request, faculty='', classnum='', term=''):
                 inst.addEquipToClass(faculty=faculty, classnum=classnum, term=term, equipid=equipid)
             except Exception:
                 print("Equipment already added to class")
-                error="Equipment already added to class!"
+                error = "Equipment already added to class!"
                 return render(request, 'swap/instructor_addequipment.html', {
                     'faculty': faculty,
                     'classnum': classnum,
