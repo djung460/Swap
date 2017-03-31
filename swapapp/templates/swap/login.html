@@ -1,10 +1,16 @@
 {% extends 'swap/base.html' %}
-{% block content %}
+{% load staticfiles %}
 
+{% block content %}
+    <div class="main image">
+        <img src="{% static 'swapapp/images/student_banner.jpg' %}"/>
+    </div>
     <form action="/login" method="post"> {% csrf_token %}
         <div class="row uniform">
             <div class="12u$">
-                <h2>Login!</h2>
+                <header id="header">
+                    <h2 class="colored"><span class=" icon fa-user"></span> Login</h2>
+                </header>
             </div>
 
             <!-- Account details -->

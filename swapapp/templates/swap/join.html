@@ -1,18 +1,23 @@
 {% extends 'swap/base.html' %}
-{% block content %}
+{% load staticfiles %}
 
+{% block content %}
+    <div class="main image">
+        <img src="{% static 'swapapp/images/student_banner.jpg' %}"/>
+    </div>
     <form action="/api/auth/join" method="post" name="joinform"> {% csrf_token %}
         <div class="row uniform">
             <div class="12u$">
                 <h2>Join our community!</h2>
-                <p>Students can register below to start viewing their required course equipments and see current
-                    offerings from others.</p>
+                <p>Register below to start viewing required course equipments and see current
+                    offerings from other students.</p>
             </div>
 
             <!-- Account details -->
             <div class="12u$">
-                <h2>Account details</h2>
-                <hr>
+                <header id="header">
+                    <h2 class="colored"><span class=" icon fa-user"></span> Account details</h2>
+                </header>
             </div>
             <div class="6u$ 12u$(xsmall)">
                 <label>Username</label>
@@ -37,8 +42,9 @@
 
             <!-- Personal details -->
             <div class="12u$">
-                <h2>Personal details</h2>
-                <hr>
+                <header id="header">
+                    <h2 class="colored"><span class=" icon fa-eye"></span> Personal details</h2>
+                </header>
             </div>
             <div class="6u$ 12u$(xsmall)">
                 <label>Full name</label>
@@ -50,7 +56,8 @@
             </div>
             <div class="6u$ 12u$(xsmall)">
                 <label>Phone number</label>
-                <input type="text" name="phonenumber" maxlength="12" placeholder="604-123-4567" required autocomplete="off"/>
+                <input type="text" name="phonenumber" maxlength="12" placeholder="604-123-4567" required
+                       autocomplete="off"/>
             </div>
             <div class="3u 12u$(xsmall)">
                 <label>Current year</label>
@@ -74,18 +81,18 @@
             </div>
         </div>
     </form>
-<script>
-    var rad = document.joinform.kind;
-    var yearinput = document.joinform.year
-    for(var i = 0; i < rad.length; i++) {
-        rad[i].onclick = function() {
-            if(this.value == "instructor") {
-                yearinput.value = null;
-                yearinput.disabled = true;
-            } else {
-                yearinput.disabled = false;
-            }
-        };
-    }
-</script>
+    <script>
+        var rad = document.joinform.kind;
+        var yearinput = document.joinform.year
+        for (var i = 0; i < rad.length; i++) {
+            rad[i].onclick = function () {
+                if (this.value == "instructor") {
+                    yearinput.value = null;
+                    yearinput.disabled = true;
+                } else {
+                    yearinput.disabled = false;
+                }
+            };
+        }
+    </script>
 {% endblock %}
