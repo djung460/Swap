@@ -88,7 +88,7 @@ class ClassRequiresEquipment(models.Model):
     def getClasses(equipmentid):
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT IFNULL(faculty, 'General') as faculty, classnum "
+                "SELECT IFNULL(faculty, 'General') AS faculty, classnum "
                 "FROM ClassRequiresEquipment "
                 "WHERE equipmentid = " + equipmentid + ";"
             )
@@ -150,7 +150,7 @@ class ConfirmedTrade(models.Model):
             cursor.execute(
                 "SELECT AVG(trades) "
                 "FROM( "
-                "SELECT COUNT(*) as trades "
+                "SELECT COUNT(*) AS trades "
                 "FROM ConfirmedTrade "
                 "GROUP BY requestUsername);"
             )
@@ -174,12 +174,12 @@ class Equipment(models.Model):
     def getAll():
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid"
+                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) AS quantity, IFNULL(c.faculty,'General') AS faculty, IFNULL(c.classNum,'') AS classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid"
             )
             return dictfetchall(cursor=cursor)
 
     def updateSearch(keyword, type, faculty, classnum, min):
-        baseQuery = "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid WHERE e.equipmentName LIKE '%" + keyword + "%'"
+        baseQuery = "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) AS quantity, IFNULL(c.faculty,'General') AS faculty, IFNULL(c.classNum,'') AS classNum FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid WHERE e.equipmentName LIKE '%" + keyword + "%'"
         with connection.cursor() as cursor:
             if (faculty != ""):
                 baseQuery += " AND c.faculty LIKE '%" + faculty + "%'"
@@ -207,9 +207,9 @@ class Equipment(models.Model):
     def getMax():
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT * FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                "SELECT * FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) AS quantity, IFNULL(c.faculty,'General') AS faculty, IFNULL(c.classNum,'') AS classNum "
                 "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid)"
-                "WHERE quantity = (SELECT MAX(quantity) FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                "WHERE quantity = (SELECT MAX(quantity) FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) AS quantity, IFNULL(c.faculty,'General') AS faculty, IFNULL(c.classNum,'') AS classNum "
                 "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid));")
 
             return dictfetchall(cursor=cursor)
@@ -218,9 +218,9 @@ class Equipment(models.Model):
     def getMin():
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT * FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                "SELECT * FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) AS quantity, IFNULL(c.faculty,'General') AS faculty, IFNULL(c.classNum,'') AS classNum "
                 "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid)"
-                "WHERE quantity = (SELECT MIN(quantity) FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                "WHERE quantity = (SELECT MIN(quantity) FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) AS quantity, IFNULL(c.faculty,'General') AS faculty, IFNULL(c.classNum,'') AS classNum "
                 "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid));")
 
             return dictfetchall(cursor=cursor)
@@ -229,7 +229,7 @@ class Equipment(models.Model):
     def getAvg():
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                "SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) AS quantity, IFNULL(c.faculty,'General') AS faculty, IFNULL(c.classNum,'') AS classNum "
                 "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid "
                 "WHERE quantity = (SELECT MAX(s2.quantity) FROM StudentHasEquipment s2 GROUP BY s2.equipmentid ORDER BY s2.quantity DESC);")
 
@@ -334,7 +334,6 @@ class Instructor(models.Model):
                 "WHERE instructorusername = %s",
                 [self.username])
             return dictfetchall(rows)
-
 
     def getStudentsWithAllEquipment(self, faculty, classnum, term):
         """
@@ -540,11 +539,11 @@ class Student(models.Model):
         with connection.cursor() as cursor:
             cursor.execute(
                 # TODO remove pairs that are already in pendingtable and where requestusername is your username
-                "SELECT DISTINCT StudentHasEquipment.equipmentID as ID1, "
-                "Equipment.equipmentName as Name, "
-                "StudentHasEquipment2.equipmentID as ID2, "
-                "Equipment2.equipmentName as Name2, "
-                "StudentHasEquipment2.username as OwnerUsername "
+                "SELECT DISTINCT StudentHasEquipment.equipmentID AS ID1, "
+                "Equipment.equipmentName AS Name, "
+                "StudentHasEquipment2.equipmentID AS ID2, "
+                "Equipment2.equipmentName AS Name2, "
+                "StudentHasEquipment2.username AS OwnerUsername "
 
                 "FROM "
                 "StudentHasEquipment, "
@@ -552,10 +551,10 @@ class Student(models.Model):
                 "ClassRequiresEquipment, "
                 "Equipment, "
 
-                "StudentHasEquipment as StudentHasEquipment2, "
-                "StudentTakesClass as StudentTakesClass2, "
-                "ClassRequiresEquipment as ClassRequiresEquipment2, "
-                "Equipment as Equipment2 "
+                "StudentHasEquipment AS StudentHasEquipment2, "
+                "StudentTakesClass AS StudentTakesClass2, "
+                "ClassRequiresEquipment AS ClassRequiresEquipment2, "
+                "Equipment AS Equipment2 "
 
                 "WHERE StudentTakesClass.username=%s "
                 "AND StudentTakesClass.faculty=ClassRequiresEquipment.faculty "
@@ -578,7 +577,7 @@ class Student(models.Model):
                 "AND ClassRequiresEquipment.equipmentID <> ClassRequiresEquipment2.equipmentID "
                 "AND StudentHasEquipment2.equipmentID ",
                 # TODO: Jacquiline did you mean to finish this?
-                #"NOT IN SELECT equipmentID FROM ClassRequresEquipment2 WHERE ClassRequiresEquipment2 ",
+                # "NOT IN SELECT equipmentID FROM ClassRequresEquipment2 WHERE ClassRequiresEquipment2 ",
                 [self.username])
             return dictfetchall(cursor=cursor)
 

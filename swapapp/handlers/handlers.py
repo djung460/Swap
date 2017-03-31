@@ -48,6 +48,8 @@ def searchequipment(request):
     numUsers = Student.getNum()
     numEquipment = StudentHasEquipment.getNum()
     maxEquipment = StudentHasEquipment.getMaxNum()
+    t = Equipment.getTypes()
+    f = Class.getFaculties()
 
     try:
         equiplist = Equipment.updateSearch(keyword=keyword, type=type, faculty=faculty, classnum=classnum, min=min)
@@ -60,7 +62,9 @@ def searchequipment(request):
             'avgTradesUser': avgTradesUser,
             'numUsers': numUsers,
             'numEquipment': numEquipment,
-            'maxEquipment': maxEquipment
+            'maxEquipment': maxEquipment,
+            'type': t,
+            'faculty': f
         })
     except IntegrityError:
         return HttpResponseRedirect('/search')
@@ -74,6 +78,9 @@ def equipmentmax(request):
     numUsers = Student.getNum()
     numEquipment = StudentHasEquipment.getNum()
     maxEquipment = StudentHasEquipment.getMaxNum()
+    type = Equipment.getTypes()
+    faculty = Class.getFaculties()
+
     for item in equiplist:
         item['classlist'] = ClassRequiresEquipment.getClasses(str(item['equipmentID']))
 
@@ -84,7 +91,9 @@ def equipmentmax(request):
         'avgTradesUser': avgTradesUser,
         'numUsers': numUsers,
         'numEquipment': numEquipment,
-        'maxEquipment': maxEquipment
+        'maxEquipment': maxEquipment,
+        'type': type,
+        'faculty': faculty
     })
 
 
@@ -96,6 +105,9 @@ def equipmentmin(request):
     numUsers = Student.getNum()
     numEquipment = StudentHasEquipment.getNum()
     maxEquipment = StudentHasEquipment.getMaxNum()
+    type = Equipment.getTypes()
+    faculty = Class.getFaculties()
+
     for item in equiplist:
         item['classlist'] = ClassRequiresEquipment.getClasses(str(item['equipmentID']))
 
@@ -106,7 +118,9 @@ def equipmentmin(request):
         'avgTradesUser': avgTradesUser,
         'numUsers': numUsers,
         'numEquipment': numEquipment,
-        'maxEquipment': maxEquipment
+        'maxEquipment': maxEquipment,
+        'type': type,
+        'faculty': faculty
     })
 
 
