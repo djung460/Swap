@@ -1,3 +1,5 @@
+from sqlite3 import IntegrityError
+
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.template import RequestContext
@@ -80,7 +82,6 @@ def student(request, user=''):
         return HttpResponseRedirect('/')
 
 
-
 def addclass(request, user=''):
     """
     View for adding a new class
@@ -122,18 +123,47 @@ def enroll(request, user=''):
 
 
 def addStudentEquipment(request, user=''):
-    print("Redirect to add student equipment")
-    """
-    View for adding an equipment to a student's owned equipment list
-    """
-    if request.user.is_authenticated:
-        equiplist = Equipment.getAll()
+    if request.method == 'GET':
+        print("Redirect to add student equipment")
+        """
+        View for adding an equipment to a student's owned equipment list
+        """
+        if request.user.is_authenticated:
+            equiplist = Equipment.getAll()
 
-        return render(request,'swap/student_addequipment.html', {
-            'equiplist': equiplist
-        })
+            return render(request, 'swap/student_addequipment.html', {
+                'equiplist': equiplist
+            })
+        else:
+            return HttpResponseRedirect('/')
     else:
-        return HttpResponseRedirect('/')
+        if request.user.is_authenticated:
+            username = request.user.username[1:]
+            stud = Student.get(username)
+
+            data = request.POST
+
+            equiplist = Equipment.getAll()
+
+            equipid = data['kind']
+            quantity = data['quantity']
+            try:
+                stud.addOwnEquipment(equipmentid=equipid, quantity=quantity)
+            except Exception:
+                print("student already has item")
+                error = "You already own this item!"
+                return render(request, 'swap/student_addequipment.html', {
+                    'equiplist': equiplist,
+                    'error': error
+                })
+
+            success = "Added succesfully!"
+            return render(request, 'swap/student_addequipment.html', {
+                'equiplist': equiplist,
+                'success': success
+            })
+        else:
+            return HttpResponseRedirect('/')
 
 
 def instructor(request, user=''):
@@ -184,7 +214,7 @@ def instructor_addequip(request, faculty='', classnum='', term=''):
     if request.user.is_authenticated:
         equiplist = Equipment.getAll()
 
-        return render(request,'swap/instructor_addequipment.html',{
+        return render(request, 'swap/instructor_addequipment.html', {
             'faculty': faculty,
             'classnum': classnum,
             'term': term,

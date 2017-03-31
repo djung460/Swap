@@ -7,6 +7,8 @@
 # Feel free to rename the models, but don't rename db_table values or field names.
 from __future__ import unicode_literals
 
+from sqlite3 import IntegrityError
+
 from django.db import models, connection
 
 from collections import namedtuple
@@ -205,7 +207,7 @@ class Equipment(models.Model):
     def getMax():
         with connection.cursor() as cursor:
             cursor.execute(
-                 "SELECT * FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
+                "SELECT * FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
                 "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid)"
                 "WHERE quantity = (SELECT MAX(quantity) FROM (SELECT e.equipmentID, e.equipmentName, e.equipmentType, IFNULL(SUM(s.quantity),0) as quantity, IFNULL(c.faculty,'General') as faculty, IFNULL(c.classNum,'') as classNum "
                 "FROM Equipment e LEFT JOIN StudentHasEquipment s ON e.equipmentid = s.equipmentid LEFT JOIN ClassRequiresEquipment c ON e.equipmentid = c.equipmentid GROUP BY e.equipmentid));")
@@ -469,11 +471,14 @@ class Student(models.Model):
         Adds an equipment that a student owns
         """
         with connection.cursor() as cursor:
-            cursor.execute(
-                "INSERT INTO StudentHasEquipment "
-                "(username, equipmentid, quantity, tradeable) "
-                "VALUES (%s,%s,%s,0)",
-                [self.username, equipmentid, quantity])
+            try:
+                cursor.execute(
+                    "INSERT INTO StudentHasEquipment "
+                    "(username, equipmentid, quantity, tradeable) "
+                    "VALUES (%s,%s,%s,0)",
+                    [self.username, equipmentid, quantity])
+            except IntegrityError:
+                raise IntegrityError
 
     def removeEquipment(self, equipmentid):
         """
@@ -506,7 +511,7 @@ class Student(models.Model):
                 "WHERE username=%s AND faculty=%s AND classnum=%s AND term=%s ",
                 [self.username, faculty, classnum, term])
 
-    def updateOwnedEquipment(self, equipmentid, quantity,tradeable):
+    def updateOwnedEquipment(self, equipmentid, quantity, tradeable):
         """
         Updates an equipment that a student owns
         """
@@ -515,7 +520,7 @@ class Student(models.Model):
                 "UPDATE StudentHasEquipment "
                 "SET quantity=%s, tradeable=%s "
                 "WHERE username=%s AND equipmentid=%s",
-                [quantity,tradeable, self.username, equipmentid])
+                [quantity, tradeable, self.username, equipmentid])
 
     def remove(self):
         with connection.cursor() as cursor:
@@ -710,9 +715,9 @@ class Student(models.Model):
             return cursor.fetchone()[0]
 
 
-#-------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
 # STUDENTHASEQUIPMENT
-#-------------------------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------------------------
 
 class StudentHasEquipment(models.Model):
     username = models.ForeignKey(Student, models.DO_NOTHING, db_column='username', primary_key=True)
