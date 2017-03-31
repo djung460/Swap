@@ -5,7 +5,7 @@
     <div class="main image">
         <img src="{% static 'swapapp/images/loginjoin_banner.jpg' %}"/>
     </div>
-    <form action="/api/auth/join" method="post" name="joinform"> {% csrf_token %}
+    <form action="/join" method="post" name="joinform"> {% csrf_token %}
         <div class="row uniform">
             <div class="12u$">
                 <h2>Join our community!</h2>
@@ -22,6 +22,9 @@
             <div class="6u$ 12u$(xsmall)">
                 <label>Username</label>
                 <input type="text" name="username" placeholder="John" maxlength="32" required autocomplete="off"/>
+            </div>
+            <div class="6u$ 12u$(xsmall)">
+                <p style="color:red"> {{ error_username }}</p>
             </div>
             <div class="6u$ 12u$(xsmall)">
                 <label>Password</label>
@@ -54,10 +57,16 @@
                 <label>Email</label>
                 <input type="text" name="email" maxlength="64" placeholder="john@doe.com" required autocomplete="off"/>
             </div>
+            <div class="12u$ 12u$(xsmall)">
+                <p style="color:red"> {{ error_email }}</p>
+            </div>
             <div class="6u$ 12u$(xsmall)">
                 <label>Phone number</label>
                 <input type="text" name="phonenumber" maxlength="12" placeholder="604-123-4567" required
                        autocomplete="off"/>
+            </div>
+            <div class="12u$ 12u$(xsmall)">
+                <p style="color:red"> {{ error_phonenumber }}</p>
             </div>
             <div class="3u 12u$(xsmall)">
                 <label>Current year</label>
