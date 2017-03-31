@@ -444,7 +444,7 @@ class Student(models.Model):
         """
         with connection.cursor() as cursor:
             cursor.execute(
-                "SELECT E.equipmentid, E.equipmentname, E.equipmenttype, SHE.quantity "
+                "SELECT E.equipmentid, E.equipmentname, E.equipmenttype, SHE.quantity, SHE.tradeable "
                 "FROM Student S, StudentHasEquipment SHE, Equipment E "
                 "WHERE S.username = SHE.username AND S.username = %s AND SHE.equipmentid = E.equipmentid",
                 [self.username])
@@ -470,8 +470,8 @@ class Student(models.Model):
         with connection.cursor() as cursor:
             cursor.execute(
                 "INSERT INTO StudentHasEquipment "
-                "(username, equipmentid, quantity) "
-                "VALUES (%s,%s,%s)",
+                "(username, equipmentid, quantity, tradeable) "
+                "VALUES (%s,%s,%s,0)",
                 [self.username, equipmentid, quantity])
 
     def removeEquipment(self, equipmentid):
@@ -505,16 +505,16 @@ class Student(models.Model):
                 "WHERE username=%s AND faculty=%s AND classnum=%s AND term=%s ",
                 [self.username, faculty, classnum, term])
 
-    def updateOwnedEquipment(self, equipmentid, quantity):
+    def updateOwnedEquipment(self, equipmentid, quantity,tradeable):
         """
         Updates an equipment that a student owns
         """
         with connection.cursor() as cursor:
             cursor.execute(
                 "UPDATE StudentHasEquipment "
-                "SET quantity=%s "
+                "SET quantity=%s, tradeable=%s "
                 "WHERE username=%s AND equipmentid=%s",
-                [quantity, self.username, equipmentid])
+                [quantity,tradeable, self.username, equipmentid])
 
     def remove(self):
         with connection.cursor() as cursor:
@@ -529,38 +529,44 @@ class Student(models.Model):
         with connection.cursor() as cursor:
             cursor.execute(
                 # TODO remove pairs that are already in pendingtable and where requestusername is your username
-                '''SELECT DISTINCT StudentHasEquipment.equipmentID as ID1, Equipment.equipmentName as Name,
-                StudentHasEquipment2.equipmentID as ID2, Equipment2.equipmentName as Name2, 
-                StudentHasEquipment2.username as OwnerUsername
-                
-                FROM
-                StudentHasEquipment,
-                StudentTakesClass,
-                ClassRequiresEquipment,
-                Equipment,
+                "SELECT DISTINCT StudentHasEquipment.equipmentID as ID1, "
+                "Equipment.equipmentName as Name, "
+                "StudentHasEquipment2.equipmentID as ID2, "
+                "Equipment2.equipmentName as Name2, "
+                "StudentHasEquipment2.username as OwnerUsername "
 
-                StudentHasEquipment as StudentHasEquipment2,
-                StudentTakesClass as StudentTakesClass2,
-                ClassRequiresEquipment as ClassRequiresEquipment2,
-                Equipment as Equipment2
+                "FROM "
+                "StudentHasEquipment, "
+                "StudentTakesClass, "
+                "ClassRequiresEquipment, "
+                "Equipment, "
 
-                WHERE StudentTakesClass.username=%s
-                AND StudentTakesClass.faculty=ClassRequiresEquipment.faculty
-                AND StudentTakesClass.classNum=ClassRequiresEquipment.classNum
-                AND StudentTakesClass.term=ClassRequiresEquipment.term
-                AND ClassRequiresEquipment.equipmentID=Equipment.equipmentID
-                AND ClassRequiresEquipment.equipmentID=StudentHasEquipment2.equipmentID
+                "StudentHasEquipment as StudentHasEquipment2, "
+                "StudentTakesClass as StudentTakesClass2, "
+                "ClassRequiresEquipment as ClassRequiresEquipment2, "
+                "Equipment as Equipment2 "
 
-                AND StudentTakesClass2.username=StudentHasEquipment2.username
-                AND StudentTakesClass2.faculty=ClassRequiresEquipment2.faculty
-                AND StudentTakesClass2.classNum=ClassRequiresEquipment2.classNum
-                AND StudentTakesClass2.term=ClassRequiresEquipment2.term
-                AND ClassRequiresEquipment2.equipmentID=Equipment2.equipmentID
-                AND ClassRequiresEquipment2.equipmentID=StudentHasEquipment.equipmentID
+                "WHERE StudentTakesClass.username=%s "
+                "AND StudentTakesClass.faculty=ClassRequiresEquipment.faculty "
+                "AND StudentTakesClass.classNum=ClassRequiresEquipment.classNum "
+                "AND StudentTakesClass.term=ClassRequiresEquipment.term "
+                "AND ClassRequiresEquipment.equipmentID=Equipment.equipmentID "
+                "AND ClassRequiresEquipment.equipmentID=StudentHasEquipment2.equipmentID "
 
-                AND StudentHasEquipment.username=StudentTakesClass.username
-                AND NOT StudentTakesClass2.username=StudentTakesClass.username
-                AND NOT ClassRequiresEquipment.equipmentID=ClassRequiresEquipment2.equipmentID''',
+                "AND StudentTakesClass2.username=StudentHasEquipment2.username "
+                "AND StudentTakesClass2.faculty=ClassRequiresEquipment2.faculty "
+                "AND StudentTakesClass2.classNum=ClassRequiresEquipment2.classNum "
+                "AND StudentTakesClass2.term=ClassRequiresEquipment2.term "
+                "AND ClassRequiresEquipment2.equipmentID=Equipment2.equipmentID "
+                "AND ClassRequiresEquipment2.equipmentID=StudentHasEquipment.equipmentID "
+
+                "AND StudentHasEquipment.username=StudentTakesClass.username "
+                # Username is different
+                "AND StudentTakesClass2.username <> StudentTakesClass.username "
+                # Equipment is different
+                "AND ClassRequiresEquipment.equipmentID <> ClassRequiresEquipment2.equipmentID "
+                "AND StudentHasEquipment2.equipmentID "
+                "NOT IN SELECT equipmentID FROM ClassRequresEquipment2 WHERE ClassRequiresEquipment2 ",
                 [self.username])
             return dictfetchall(cursor=cursor)
 
@@ -624,7 +630,7 @@ class Student(models.Model):
         """
         with connection.cursor() as cursor:
             if type == 'request':
-                #Confirmed trades that you've requested
+                # Confirmed trades that you've requested
                 cursor.execute(
                     "SELECT  CT.tradeID AS tradeID, "
                     "CT.requestusername AS requestusername, "
@@ -642,7 +648,7 @@ class Student(models.Model):
                     "AND E2.equipmentid = CT.requestequipid",
                     [self.username])
             else:
-                #Confirmed trades that you've responded to
+                # Confirmed trades that you've responded to
                 cursor.execute(
                     "SELECT CT.tradeID AS tradeID, "
                     "CT.requestUsername AS requestUsername, "

@@ -66,9 +66,19 @@ def updateequipment(request):
 
         equipmentid = data['equipmentid']
         quantity = data['quantity']
+        #tradeable = data['tradeable']
+
+        checkbox = request.POST.get('tradeable', False)
+
+        print('checkbox: ', checkbox=='on')
+
+        if checkbox =='on':
+            tradeable = 1
+        else:
+            tradeable = 0
 
         try:
-            stud.updateOwnedEquipment(equipmentid=equipmentid,quantity=quantity)
+            stud.updateOwnedEquipment(equipmentid=equipmentid,quantity=quantity,tradeable=tradeable)
         except IntegrityError:
             return HttpResponseRedirect('/student/' + username)
 

@@ -54,7 +54,8 @@ CREATE TABLE ClassRequiresEquipment(
 CREATE TABLE StudentHasEquipment(
     username VARCHAR(32) NOT NULL,
     equipmentID INT NOT NULL,
-    quantity INT NOT NULL, 
+    quantity INT NOT NULL,
+    tradeable INT NOT NULL,
 
     PRIMARY KEY (username, equipmentID),
     FOREIGN KEY(username)

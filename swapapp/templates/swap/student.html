@@ -35,7 +35,7 @@
                 Here you can view any offers other students have made to your trades, or trades you are awaiting for the
                 owner to accept.
             </p>
-        <h2 class="colored">Trades You've Requested</h2>
+            <h2 class="colored">Trades You've Requested</h2>
             <div class="table-wrapper">
                 <table>
                     <tr>
@@ -63,7 +63,7 @@
                                 <form method="post" action="/api/trades/pending/confirm"
                                       style="display: inline-block">
                                     {% csrf_token %}
-                                     <input type="hidden" name="tradeid" value="{{ trade.tradeID }}"/>
+                                    <input type="hidden" name="tradeid" value="{{ trade.tradeID }}"/>
                                     <input type="hidden" name="by" value="request"/>
                                     <input type="hidden" name="responseequipid" value="{{ trade.responseEquipID }}"/>
                                     <input type="hidden" name="requestequipid" value="{{ trade.requestEquipID }}"/>
@@ -178,6 +178,8 @@
                                     <input type="hidden" value="{{ obj.student.username }}"/>
                                     <input type="hidden" name="equipmentid" value="{{ equip.equipmentID }}">
                                     <input type="number" name="quantity" min="1" value="{{ equip.quantity }}">
+                                    <input type="checkbox" id="tradeable-{{ equip.equipmentID }}" name="tradeable" {% if equip.tradeable == 1 %}checked{% endif %}>
+                                    <label for="tradeable-{{ equip.equipmentID }}">Tradeable</label>
                                     <input type="submit" value="Save"/>
                                 </form>
                             </td>
