@@ -576,8 +576,9 @@ class Student(models.Model):
                 "AND StudentTakesClass2.username <> StudentTakesClass.username "
                 # Equipment is different
                 "AND ClassRequiresEquipment.equipmentID <> ClassRequiresEquipment2.equipmentID "
-                "AND StudentHasEquipment2.equipmentID "
-                "NOT IN SELECT equipmentID FROM ClassRequresEquipment2 WHERE ClassRequiresEquipment2 ",
+                "AND StudentHasEquipment2.equipmentID ",
+                # TODO: Jacquiline did you mean to finish this?
+                #"NOT IN SELECT equipmentID FROM ClassRequresEquipment2 WHERE ClassRequiresEquipment2 ",
                 [self.username])
             return dictfetchall(cursor=cursor)
 
