@@ -7,6 +7,7 @@ from django.shortcuts import render_to_response
 
 from swapapp.auth import auth
 from .models_ubc_courses import COURSES
+from .models_ubc_courses import TERMS
 from .models import *
 
 
@@ -83,12 +84,47 @@ def student(request, user=''):
 
 
 def addclass(request, user=''):
-    """
-    View for adding a new class
-    """
-    return render(request, 'swap/instructor_addclass.html', {
-        'coursecodelist': COURSES
-    })
+    if request.user.is_authenticated:
+        if request.method == 'GET':
+            """
+            View for adding a new class
+            """
+            return render(request, 'swap/instructor_addclass.html', {
+                'coursecodelist': COURSES,
+                'terms': TERMS
+            })
+        elif request.method=='POST':
+            if request.user.is_authenticated:
+                username = request.user.username[1:]
+                inst = Instructor.get(username)
+
+                data = request.POST
+
+                faculty = data['faculty']
+                classnum = data['classnum']
+                term = data['term']
+
+                try:
+                    inst.addCourse(faculty, classnum, term)
+                except Exception:
+                    print("Class already exists")
+                    error="Class already exists!"
+                    return render(request, 'swap/instructor_addclass.html', {
+                        'coursecodelist': COURSES,
+                        'terms': TERMS,
+                        'error':error
+                    })
+
+                success = "Class added succesfully!"
+                return render(request, 'swap/instructor_addclass.html', {
+                    'coursecodelist': COURSES,
+                    'terms': TERMS,
+                    'message': success
+                })
+            else:
+                return HttpResponseRedirect('/')
+    else:
+        return HttpResponseRedirect('/')
 
 
 def tradehistory(request, user=''):

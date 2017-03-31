@@ -10,12 +10,12 @@
     </div>
     <div class="row">
         <div class="12u$">
-                <h2 class="colored align-left"><span class=" icon fa-calendar"></span> Add a Class</h2>
-                <p>Let's begin by adding a course you will be teaching to our system.</p>
+            <h2 class="colored align-left"><span class=" icon fa-calendar"></span> Add a Class</h2>
+            <p>Let's begin by adding a course you will be teaching to our system.</p>
         </div>
     </div>
 
-    <form action="/api/instructor/class/add" method="post" name="addclassform"> {% csrf_token %}
+    <form action="/addclass" method="post" name="addclassform"> {% csrf_token %}
         <div class="row uniform">
 
             <div class="6u$">
@@ -32,7 +32,15 @@
             </div>
             <div class="3u$ 12u$(xsmall)">
                 <label>Term</label>
-                <input name="term" type="text" required autocomplete="off"/>
+                <select name="term">
+                    {% for term in terms %}
+                        <option value="{{ term }}">{{ term }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="6u$ 12u$(xsmall)">
+                <p style="color:red"> {{ error }}</p>
+                <p style="color:green"> {{ success }}</p>
             </div>
             <div class="6u$ 12u$(xsmall)">
                 <ul class="actions">

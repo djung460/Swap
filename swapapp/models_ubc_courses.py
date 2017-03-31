@@ -1,3 +1,5 @@
+TERMS = ('2016WT1','2016WT2')
+
 COURSES = (
     ('AANB', 'Applied Animal Biology'),
     ('AFST', 'African Studies'),
