@@ -572,12 +572,13 @@ class Student(models.Model):
                 "AND ClassRequiresEquipment2.equipmentID=StudentHasEquipment.equipmentID "
 
                 "AND StudentHasEquipment.username=StudentTakesClass.username "
+                "AND StudentHasEquipment.tradeable = 1 "
+                "AND StudentHasEquipment2.tradeable = 1 "
                 # Username is different
                 "AND StudentTakesClass2.username <> StudentTakesClass.username "
                 # Equipment is different
                 "AND ClassRequiresEquipment.equipmentID <> ClassRequiresEquipment2.equipmentID "
                 "AND StudentHasEquipment2.equipmentID ",
-                # TODO: Jacquiline did you mean to finish this?
                 #"NOT IN SELECT equipmentID FROM ClassRequresEquipment2 WHERE ClassRequiresEquipment2 ",
                 [self.username])
             return dictfetchall(cursor=cursor)
@@ -801,8 +802,8 @@ class StudentHasEquipment(models.Model):
             else:
                 cursor.execute(
                     "INSERT INTO StudentHasEquipment "
-                    "(username, equipmentid, quantity) "
-                    "VALUES(%s,%s,1)",
+                    "(username, equipmentid, quantity, tradeable) "
+                    "VALUES(%s,%s,1,0)",
                     [username, equipid])
 
 
